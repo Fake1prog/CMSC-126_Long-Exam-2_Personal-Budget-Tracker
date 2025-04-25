@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} | Gastadorcheck{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto">
+    <h2 class="text-3xl font-bold text-gray-800 mb-6">{{ title }}</h2>
+
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700">{{ form.category.label }}</label>
+                    {{ form.category }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">{{ form.amount.label }}</label>
+                    {{ form.amount }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">{{ form.period.label }}</label>
+                    {{ form.period }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">{{ form.start_date.label }}</label>
+                    {{ form.start_date }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">{{ form.end_date.label }}</label>
+                    {{ form.end_date }}
+                </div>
+            </div>
+
+            <div class="flex space-x-2 mt-4">
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition">
+                    Save Budget
+                </button>
+                <a href="{% url 'budget_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

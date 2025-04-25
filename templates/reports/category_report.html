@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+
+{% block title %}Category Report | Gastadorcheck{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-center">
+    <div>
+        <h2 class="text-3xl font-bold text-gray-800">Category Report</h2>
+        <p class="text-gray-600">
+            {% if selected_category %}
+                {{ selected_category.name }}
+            {% else %}
+                All Categories
+            {% endif %}
+            ({{ start_date|date:"M d, Y" }} - {{ end_date|date:"M d, Y" }})
+        </p>
+    </div>
+    <div>
+        <a href="{% url 'report_dashboard' %}" class="text-indigo-600 hover:text-indigo-800">
+            ← Back to Reports
+        </a>
+    </div>
+</div>
+
+<!-- Filter Form -->
+<div class="bg-white p-6 rounded-lg shadow-md mb-6">
+    <h3 class="text-xl font-semibold text-gray-700 mb-4">Filters</h3>
+    
+    <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+            <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <select name="category" id="category" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if selected_category and selected_category.id == category.id %}selected{% endif %}>
+                        {{ category.name }} ({{ category.get_type_display }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+            <input type="date" name="start_date" id="start_date" value="{{ start_date|date:'Y-m-d' }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+        </div>
+        <div>
+            <label for="end_date" class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+            <input type="date" name="end_date" id="end_date" value="{{ end_date|date:'Y-m-d' }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+        </div>
+        
+        <div class="md:col-span-3">
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition">
+                Apply Filters
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Monthly Trend Chart -->
+<div class="bg-white p-6 rounded-lg shadow-md mb-6">
+    <h3 class="text-xl font-semibold text-gray-700 mb-4">Monthly Trend</h3>
+    
+    {% if monthly_data %}
+        <div id="trend-chart" class="h-80"></div>
+    {% else %}
+        <p class="text-center py-12 text-gray-500 italic">No data available for the selected period.</p>
+    {% endif %}
+</div>
+
+<!-- Transactions List -->
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <h3 class="text-xl font-semibold text-gray-700 mb-4">Transactions</h3>
+    
+    {% if transactions %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="py-2 px-4 text-left">Date</th>
+                        <th class="py-2 px-4 text-left">Title</th>
+                        <th class="py-2 px-4 text-left">Category</th>
+                        <th class="py-2 px-4 text-left">Type</th>
+                        <th class="py-2 px-4 text-right">Amount</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y">
+                    {% for transaction in transactions %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-2 px-4">{{ transaction.date }}</td>
+                            <td class="py-2 px-4">{{ transaction.title }}</td>
+                            <td class="py-2 px-4">
+                                {% if transaction.category %}
+                                    {{ transaction.category.name }}
+                                {% else %}
+                                    Uncategorized
+                                {% endif %}
+                            </td>
+                            <td class="py-2 px-4">{{ transaction.get_type_display }}</td>
+                            <td class="py-2 px-4 text-right {% if transaction.type == 'INCOME' %}text-green-600{% else %}text-red-600{% endif %}">
+                                ${{ transaction.amount }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-gray-500 italic text-center py-4">No transactions found for the selected criteria.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if monthly_data %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const months = [
+            {% for data in monthly_data %}
+                "{{ data.month }}",
+            {% endfor %}
+        ];
+        
+        const income = [
+            {% for data in monthly_data %}
+                {{ data.income }},
+            {% endfor %}
+        ];
+        
+        const expenses = [
+            {% for data in monthly_data %}
+                {{ data.expense }},
+            {% endfor %}
+        ];
+        
+        const balances = [
+            {% for data in monthly_data %}
+                {{ data.balance }},
+            {% endfor %}
+        ];
+        
+        const options = {
+            series: [
+                {
+                    name: 'Income',
+                    type: 'column',
+                    data: income,
+                    color: '#10B981'
+                },
+                {
+                    name: 'Expenses',
+                    type: 'column',
+                    data: expenses,
+                    color: '#EF4444'
+                },
+                {
+                    name: 'Balance',
+                    type: 'line',
+                    data: balances,
+                    color: '#3B82F6'
+                }
+            ],
+            chart: {
+                height: 350,
+                type: 'line',
+                stacked: false,
+                toolbar: {
+                    show: true
+                }
+            },
+            plotOptions: {
+                bar: {
+                    columnWidth: '50%'
+                }
+            },
+            stroke: {
+                width: [0, 0, 3]
+            },
+            xaxis: {
+                categories: months
+            },
+            yaxis: [
+                {
+                    axisTicks: {
+                        show: true
+                    },
+                    axisBorder: {
+                        show: true,
+                        color: '#10B981'
+                    },
+                    labels: {
+                        style: {
+                            colors: '#10B981'
+                        }
+                    },
+                    title: {
+                        text: "Income/Expense",
+                        style: {
+                            color: '#10B981'
+                        }
+                    }
+                },
+                {
+                    opposite: true,
+                    axisTicks: {
+                        show: true
+                    },
+                    axisBorder: {
+                        show: true,
+                        color: '#3B82F6'
+                    },
+                    labels: {
+                        style: {
+                            colors: '#3B82F6'
+                        }
+                    },
+                    title: {
+                        text: "Balance",
+                        style: {
+                            color: '#3B82F6'
+                        }
+                    }
+                }
+            ],
+            tooltip: {
+                shared: true,
+                intersect: false,
+                y: {
+                    formatter: function(y) {
+                        if (typeof y !== "undefined") {
+                            return "$" + y.toFixed(2);
+                        }
+                        return y;
+                    }
+                }
+            },
+            legend: {
+                horizontalAlign: 'center'
+            }
+        };
+
+        const chart = new ApexCharts(document.querySelector("#trend-chart"), options);
+        chart.render();
+    });
+</script>
+{% endif %}
+{% endblock %}

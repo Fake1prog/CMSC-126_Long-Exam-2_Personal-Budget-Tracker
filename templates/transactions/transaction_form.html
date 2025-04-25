@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} | Gastadorcheck{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <h2 class="text-3xl font-bold text-gray-800 mb-6">{{ title }}</h2>
+
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700">{{ form.title.label }}</label>
+                    {{ form.title }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">{{ form.amount.label }}</label>
+                    {{ form.amount }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">{{ form.date.label }}</label>
+                    {{ form.date }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">{{ form.type.label }}</label>
+                    {{ form.type }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">{{ form.category.label }}</label>
+                    {{ form.category }}
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700">{{ form.notes.label }}</label>
+                    {{ form.notes }}
+                </div>
+            </div>
+
+            <div class="flex space-x-2 mt-4">
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition">
+                    Save Transaction
+                </button>
+                <a href="{% url 'transaction_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

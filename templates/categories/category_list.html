@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Categories | Gastadorcheck{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-center">
+    <h2 class="text-3xl font-bold text-gray-800">Categories</h2>
+    <a href="{% url 'category_add' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition">
+        Add Category
+    </a>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Income Categories -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h3 class="text-xl font-semibold text-green-600 mb-4">Income Categories</h3>
+        
+        {% if income_categories %}
+            <div class="space-y-2">
+                {% for category in income_categories %}
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded hover:bg-gray-100 transition">
+                        <div class="flex items-center">
+                            <span class="w-4 h-4 rounded-full mr-2" style="background-color: {{ category.color }}"></span>
+                            <span>{{ category.name }}</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <a href="{% url 'category_edit' category.id %}" class="text-indigo-600 hover:text-indigo-800">
+                                Edit
+                            </a>
+                            <a href="{% url 'category_delete' category.id %}" class="text-red-600 hover:text-red-800">
+                                Delete
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-500 italic">No income categories yet. Add your first category using the button above.</p>
+        {% endif %}
+    </div>
+    
+    <!-- Expense Categories -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h3 class="text-xl font-semibold text-red-600 mb-4">Expense Categories</h3>
+        
+        {% if expense_categories %}
+            <div class="space-y-2">
+                {% for category in expense_categories %}
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded hover:bg-gray-100 transition">
+                        <div class="flex items-center">
+                            <span class="w-4 h-4 rounded-full mr-2" style="background-color: {{ category.color }}"></span>
+                            <span>{{ category.name }}</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <a href="{% url 'category_edit' category.id %}" class="text-indigo-600 hover:text-indigo-800">
+                                Edit
+                            </a>
+                            <a href="{% url 'category_delete' category.id %}" class="text-red-600 hover:text-red-800">
+                                Delete
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-500 italic">No expense categories yet. Add your first category using the button above.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

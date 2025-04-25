@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Transactions | Gastadorcheck{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex justify-between items-center">
+    <h2 class="text-3xl font-bold text-gray-800">Transactions</h2>
+    <div class="flex space-x-2">
+        <a href="{% url 'transaction_add' %}?type=INCOME" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition">
+            Add Income
+        </a>
+        <a href="{% url 'transaction_add' %}?type=EXPENSE" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition">
+            Add Expense
+        </a>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div class="bg-white p-4 rounded-lg shadow-md">
+        <p class="text-sm text-gray-500">Income</p>
+        <p class="text-2xl font-bold text-green-600">${{ income_total }}</p>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow-md">
+        <p class="text-sm text-gray-500">Expenses</p>
+        <p class="text-2xl font-bold text-red-600">${{ expense_total }}</p>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow-md">
+        <p class="text-sm text-gray-500">Balance</p>
+        <p class="text-2xl font-bold {% if balance >= 0 %}text-blue-600{% else %}text-red-600{% endif %}">
+            ${{ balance }}
+        </p>
+    </div>
+</div>
+
+<!-- Filter Section -->
+<div class="bg-white p-6 mb-6 rounded-lg shadow-md" x-data="{ showFilters: false }">
+    <div class="flex justify-between items-center">
+        <h3 class="text-xl font-semibold text-gray-700">Filters</h3>
+        <button @click="showFilters = !showFilters" class="text-indigo-600 hover:text-indigo-800">
+            <span x-show="!showFilters">Show Filters</span>
+            <span x-show="showFilters">Hide Filters</span>
+        </button>
+    </div>
+    
+    <div x-show="showFilters" class="mt-4">
+        <form method="get" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Use crispy_forms_field tag instead -->
+            {% crispy filter.form %}
+
+            <div class="col-span-full flex space-x-2">
+                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition">
+                    Apply Filters
+                </button>
+                <a href="{% url 'transaction_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded transition">
+                    Clear Filters
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Rest of the template remains the same -->
+<!-- Transactions List -->
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <h3 class="text-xl font-semibold text-gray-700 mb-4">Transactions</h3>
+    
+    {% if transactions %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="py-2 px-4 text-left">Date</th>
+                        <th class="py-2 px-4 text-left">Title</th>
+                        <th class="py-2 px-4 text-left">Category</th>
+                        <th class="py-2 px-4 text-right">Amount</th>
+                        <th class="py-2 px-4 text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y">
+                    {% for transaction in transactions %}
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-2 px-4">{{ transaction.date }}</td>
+                            <td class="py-2 px-4">{{ transaction.title }}</td>
+                            <td class="py-2 px-4">
+                                {% if transaction.category %}
+                                    <span class="inline-block w-3 h-3 rounded-full mr-1" style="background-color: {{ transaction.category.color }}"></span>
+                                    {{ transaction.category.name }}
+                                {% else %}
+                                    Uncategorized
+                                {% endif %}
+                            </td>
+                            <td class="py-2 px-4 text-right {% if transaction.type == 'INCOME' %}text-green-600{% else %}text-red-600{% endif %}">
+                                ${{ transaction.amount }}
+                            </td>
+                            <td class="py-2 px-4 text-center">
+                                <div class="flex justify-center space-x-2">
+                                    <a href="{% url 'transaction_edit' transaction.id %}" class="text-indigo-600 hover:text-indigo-800">
+                                        Edit
+                                    </a>
+                                    <a href="{% url 'transaction_delete' transaction.id %}" class="text-red-600 hover:text-red-800">
+                                        Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-gray-500 italic text-center py-4">No transactions found. Add your first transaction using the buttons above.</p>
+    {% endif %}
+</div>
+{% endblock %}
