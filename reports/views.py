@@ -12,8 +12,57 @@ from datetime import datetime, timedelta
 @login_required
 def report_dashboard(request):
     """Main reports dashboard."""
+    # Get summary data for quick stats
+    today = timezone.now().date()
+    start_of_month = today.replace(day=1)
+
+    # Current month stats
+    current_month_income = Transaction.objects.filter(
+        user=request.user,
+        type='INCOME',
+        date__gte=start_of_month,
+        date__lte=today
+    ).aggregate(Sum('amount'))['amount__sum'] or 0
+
+    current_month_expenses = Transaction.objects.filter(
+        user=request.user,
+        type='EXPENSE',
+        date__gte=start_of_month,
+        date__lte=today
+    ).aggregate(Sum('amount'))['amount__sum'] or 0
+
+    # All time stats
+    total_income = Transaction.objects.filter(
+        user=request.user,
+        type='INCOME'
+    ).aggregate(Sum('amount'))['amount__sum'] or 0
+
+    total_expenses = Transaction.objects.filter(
+        user=request.user,
+        type='EXPENSE'
+    ).aggregate(Sum('amount'))['amount__sum'] or 0
+
+    # Get recent reports
+    recent_months = []
+    for i in range(3):
+        month_date = today.replace(day=1) - timedelta(days=i * 30)
+        month_name = month_date.strftime("%B %Y")
+        recent_months.append({
+            'name': month_name,
+            'month': month_date.month,
+            'year': month_date.year
+        })
+
     context = {
         'title': 'Reports',
+        'current_month_income': current_month_income,
+        'current_month_expenses': current_month_expenses,
+        'current_month_balance': current_month_income - current_month_expenses,
+        'total_income': total_income,
+        'total_expenses': total_expenses,
+        'total_balance': total_income - total_expenses,
+        'recent_months': recent_months,
+        'has_transactions': Transaction.objects.filter(user=request.user).exists()
     }
     return render(request, 'reports/report_dashboard.html', context)
 
@@ -21,6 +70,12 @@ def report_dashboard(request):
 @login_required
 def monthly_report(request):
     """Monthly income and expense report."""
+    # Get all user transactions first to check if any exist
+    has_any_transactions = Transaction.objects.filter(user=request.user).exists()
+
+    # Get user's oldest transaction date for validation
+    oldest_transaction = Transaction.objects.filter(user=request.user).order_by('date').first()
+
     # Get selected month or default to current month
     today = timezone.now().date()
     month = request.GET.get('month', today.month)
@@ -54,13 +109,33 @@ def monthly_report(request):
     expense_total = transactions.filter(type='EXPENSE').aggregate(Sum('amount'))['amount__sum'] or 0
 
     # Group by category
-    income_by_category = transactions.filter(type='INCOME').values('category__name').annotate(
+    income_by_category = transactions.filter(type='INCOME').values('category__name', 'category__color').annotate(
         total=Sum('amount')
     ).order_by('-total')
 
-    expense_by_category = transactions.filter(type='EXPENSE').values('category__name').annotate(
+    expense_by_category = transactions.filter(type='EXPENSE').values('category__name', 'category__color').annotate(
         total=Sum('amount')
     ).order_by('-total')
+
+    # Generate month navigation options
+    month_options = []
+    if oldest_transaction:
+        oldest_date = oldest_transaction.date
+        current_date = datetime(today.year, today.month, 1).date()
+
+        while current_date >= oldest_date.replace(day=1):
+            month_options.append({
+                'month': current_date.month,
+                'year': current_date.year,
+                'name': current_date.strftime('%B %Y'),
+                'selected': current_date.month == month and current_date.year == year
+            })
+
+            # Move to previous month
+            if current_date.month == 1:
+                current_date = datetime(current_date.year - 1, 12, 1).date()
+            else:
+                current_date = datetime(current_date.year, current_date.month - 1, 1).date()
 
     context = {
         'transactions': transactions,
@@ -73,6 +148,9 @@ def monthly_report(request):
         'end_date': end_date,
         'month': month,
         'year': year,
+        'month_options': month_options,
+        'has_any_transactions': has_any_transactions,
+        'oldest_transaction_date': oldest_transaction.date if oldest_transaction else None,
     }
     return render(request, 'reports/monthly_report.html', context)
 
@@ -80,6 +158,9 @@ def monthly_report(request):
 @login_required
 def category_report(request):
     """Category-based spending report."""
+    # Check if user has any transactions
+    has_any_transactions = Transaction.objects.filter(user=request.user).exists()
+
     # Get selected category or show all
     category_id = request.GET.get('category')
     if category_id:
@@ -148,6 +229,7 @@ def category_report(request):
         'end_date': end_date,
         'transactions': transactions,
         'monthly_data': monthly_data_list,
+        'has_any_transactions': has_any_transactions,
     }
     return render(request, 'reports/category_report.html', context)
 
