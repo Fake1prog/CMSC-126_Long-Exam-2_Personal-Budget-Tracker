@@ -47,4 +47,56 @@
         </form>
     </div>
 </div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const typeSelect = document.querySelector('.transaction-type-select');
+    const categorySelect = document.querySelector('.category-select');
+    
+    // Function to filter categories based on transaction type
+    function updateCategoryOptions() {
+        const selectedType = typeSelect.value;
+        const currentValue = categorySelect.value;
+        
+        // Make an AJAX request to get filtered categories
+        fetch(`/transactions/get-categories/?type=${selectedType}`)
+            .then(response => response.json())
+            .then(data => {
+                // Clear existing options
+                categorySelect.innerHTML = '';
+                
+                // Add placeholder option
+                const placeholderOption = document.createElement('option');
+                placeholderOption.value = '';
+                placeholderOption.textContent = '---------';
+                categorySelect.appendChild(placeholderOption);
+                
+                // Add filtered category options
+                data.categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.id;
+                    option.textContent = category.name;
+                    // Add data attributes for enhanced display
+                    option.setAttribute('data-color', category.color);
+                    option.setAttribute('data-icon', category.icon || '');
+                    categorySelect.appendChild(option);
+                });
+                
+                // Try to restore the previous selection if it exists in the new options
+                if (currentValue) {
+                    const exists = Array.from(categorySelect.options).some(opt => opt.value === currentValue);
+                    if (exists) {
+                        categorySelect.value = currentValue;
+                    }
+                }
+            });
+    }
+    
+    // Update categories when transaction type changes
+    if (typeSelect) {
+        typeSelect.addEventListener('change', updateCategoryOptions);
+    }
+});
+</script>
 {% endblock %}
+

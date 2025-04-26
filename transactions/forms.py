@@ -19,6 +19,7 @@ class TransactionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
+        transaction_type = kwargs.pop('initial_type', None)
         super(TransactionForm, self).__init__(*args, **kwargs)
 
         # Default to today's date for new transactions
@@ -27,7 +28,22 @@ class TransactionForm(forms.ModelForm):
 
         # Filter categories by user
         if user:
-            self.fields['category'].queryset = Category.objects.filter(
+            # Start with all user categories
+            categories = Category.objects.filter(
                 user=user,
                 is_active=True
             )
+
+            # If we know the transaction type (from URL parameter or instance)
+            if transaction_type:
+                self.fields['type'].initial = transaction_type
+                categories = categories.filter(type=transaction_type)
+            elif self.instance.pk and self.instance.type:
+                # For existing transactions, filter by their type
+                categories = categories.filter(type=self.instance.type)
+
+            self.fields['category'].queryset = categories
+
+            # Add class for JS filtering
+            self.fields['type'].widget.attrs.update({'class': 'transaction-type-select'})
+            self.fields['category'].widget.attrs.update({'class': 'category-select'})

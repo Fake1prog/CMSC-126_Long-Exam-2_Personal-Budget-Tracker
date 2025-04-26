@@ -35,3 +35,7 @@ class Category(models.Model):
             # No transactions, safe to hard delete
             self.delete()
             return True
+
+    def get_html_attributes(self):
+        """Return HTML attributes for use in dropdown menus."""
+        return f'data-type="{self.type}" data-color="{self.color}" data-icon="{self.icon}"'

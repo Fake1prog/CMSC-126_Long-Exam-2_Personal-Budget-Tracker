@@ -6,5 +6,12 @@ class CategoryForm(forms.ModelForm):
         model = Category
         fields = ['name', 'type', 'color', 'icon']
         widgets = {
-            'color': forms.TextInput(attrs={'type': 'color'}),
+            'color': forms.TextInput(attrs={'type': 'color', 'class': 'form-control'}),
+            'icon': forms.TextInput(attrs={'placeholder': 'Enter an emoji or icon name', 'class': 'form-control'}),
+        }
+        labels = {
+            'icon': 'Icon (emoji or name)',
+        }
+        help_texts = {
+            'icon': 'You can use emoji (e.g., 🍎) or an icon name',
         }

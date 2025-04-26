@@ -6,6 +6,7 @@ from categories.models import Category
 from .forms import TransactionForm 
 from django.db.models import Sum
 import django_filters
+from django.http import JsonResponse
 
 
 class TransactionFilter(django_filters.FilterSet):
@@ -18,6 +19,23 @@ class TransactionFilter(django_filters.FilterSet):
             'type': ['exact'],
             'category': ['exact'],
         }
+
+
+@login_required
+def get_categories(request):
+    """Return filtered categories as JSON based on transaction type."""
+    transaction_type = request.GET.get('type')
+
+    if transaction_type in ['INCOME', 'EXPENSE']:
+        categories = Category.objects.filter(
+            user=request.user,
+            type=transaction_type,
+            is_active=True
+        ).values('id', 'name', 'color', 'icon')
+
+        return JsonResponse({'categories': list(categories)})
+
+    return JsonResponse({'categories': []})
 
 
 @login_required
@@ -48,9 +66,9 @@ def transaction_list(request):
 def transaction_add(request):
     """Add a new transaction."""
     # Pre-set the type if provided in GET parameters
-    initial_data = {}
+    initial_type = None
     if request.GET.get('type') in ['INCOME', 'EXPENSE']:
-        initial_data['type'] = request.GET.get('type')
+        initial_type = request.GET.get('type')
 
     if request.method == 'POST':
         form = TransactionForm(request.POST, user=request.user)
@@ -61,7 +79,7 @@ def transaction_add(request):
             messages.success(request, 'Transaction added successfully!')
             return redirect('transaction_list')
     else:
-        form = TransactionForm(user=request.user, initial=initial_data)
+        form = TransactionForm(user=request.user, initial_type=initial_type)
 
     context = {
         'form': form,
@@ -82,14 +100,17 @@ def transaction_edit(request, transaction_id):
             messages.success(request, 'Transaction updated successfully!')
             return redirect('transaction_list')
     else:
-        form = TransactionForm(instance=transaction, user=request.user)
+        form = TransactionForm(
+            instance=transaction,
+            user=request.user,
+            initial_type=transaction.type
+        )
 
     context = {
         'form': form,
         'title': 'Edit Transaction',
     }
     return render(request, 'transactions/transaction_form.html', context)
-
 
 @login_required
 def transaction_delete(request, transaction_id):
