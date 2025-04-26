@@ -14,6 +14,16 @@ def home(request):
     return render(request, 'core/home.html')
 
 
+def about(request):
+    """About page view."""
+    return render(request, 'core/about.html')
+
+
+def contact(request):
+    """Contact page view."""
+    return render(request, 'core/contact.html')
+
+
 @login_required
 def dashboard(request):
     """Dashboard view for authenticated users."""

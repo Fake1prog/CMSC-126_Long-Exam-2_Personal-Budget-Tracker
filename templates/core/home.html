@@ -1,39 +1,80 @@
 {% extends 'base.html' %}
 
-{% block title %}Welcome to Gastadorcheck{% endblock %}
+{% block title %}GastadorCheck - Smart Financial Tracking{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/landing.css">
+{% endblock %}
 
 {% block content %}
-<div class="text-center py-12">
-    <h1 class="text-4xl font-bold text-indigo-600 mb-4">Welcome to Gastadorcheck</h1>
-    <p class="text-xl text-gray-600 mb-8">Take control of your finances with our simple and powerful budgeting tool.</p>
-    
-    <div class="flex justify-center space-x-4">
-        <a href="{% url 'login' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded transition">
-            Log In
-        </a>
-        <a href="{% url 'register' %}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded transition">
-            Sign Up
-        </a>
+<div class="home-header">
+    <a href="{% url 'home' %}" class="home-logo">GastadorCheck</a>
+    <nav class="home-nav">
+        <a href="{% url 'about' %}" class="nav-link">About</a>
+        <a href="{% url 'contact' %}" class="nav-link">Contact</a>
+        <a href="{% url 'register' %}" class="get-started-btn">Get Started Free</a>
+    </nav>
+</div>
+
+<div class="home-content">
+    <div class="hero-section">
+        <div class="hero-text">
+            <h1 class="hero-title">
+                Smart<br>
+                tracking for<br>
+                smarter<br>
+                financial moves
+            </h1>
+            <p class="hero-description">
+                Welcome to GastadorCheck — your partner in smarter spending
+                and better saving. Start tracking your expenses today and take
+                control of your financial journey.
+            </p>
+            <div>
+                <a href="{% url 'register' %}" class="hero-cta">Get 1 month Free Trial →</a>
+                <p class="hero-cta-text">No Card Required. Cancel Anytime</p>
+            </div>
+        </div>
+
+        <div class="hero-image">
+            <img src="/static/img/money.png" alt="Financial Dashboard"
+                 onerror="this.src='/static/img/dashboard-placeholder.png'; this.alt='Dashboard Preview';">
+        </div>
     </div>
-    
-    <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <div class="text-indigo-500 text-4xl mb-4">📊</div>
-            <h3 class="text-xl font-semibold mb-2">Track Expenses</h3>
-            <p class="text-gray-600">Record and categorize your daily expenses with ease.</p>
+
+    <h2 class="management-title">Manage Your Finances Effortlessly</h2>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <img src="/static/img/track.png" alt="Track Expenses"
+                     onerror="this.innerHTML='<span style=\'font-size: 36px; color: #333;\'>📊</span>';">
+            </div>
+            <h3 class="feature-title">Track Expenses</h3>
+            <p class="feature-description">Record and categorize your daily expenses with ease</p>
         </div>
-        
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <div class="text-indigo-500 text-4xl mb-4">💰</div>
-            <h3 class="text-xl font-semibold mb-2">Set Budgets</h3>
-            <p class="text-gray-600">Create budgets for different categories and track your progress.</p>
+
+        <div class="feature-card">
+            <div class="feature-icon">
+                <img src="/static/img/budget.png" alt="Set Budgets"
+                     onerror="this.innerHTML='<span style=\'font-size: 36px; color: #333;\'>💰</span>';">
+            </div>
+            <h3 class="feature-title">Set Budgets</h3>
+            <p class="feature-description">Create budgets for different categories and track your progress</p>
         </div>
-        
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <div class="text-indigo-500 text-4xl mb-4">📈</div>
-            <h3 class="text-xl font-semibold mb-2">Visualize Data</h3>
-            <p class="text-gray-600">Get insights with beautiful charts and reports.</p>
+
+        <div class="feature-card">
+            <div class="feature-icon">
+                <img src="/static/img/visualize.png" alt="Visualize Data"
+                     onerror="this.innerHTML='<span style=\'font-size: 36px; color: #333;\'>📈</span>';">
+            </div>
+            <h3 class="feature-title">Visualize data</h3>
+            <p class="feature-description">Get insights with beautiful charts and reports</p>
         </div>
     </div>
 </div>
+
+<footer class="home-footer">
+    <p>&copy; 2025 GastadorCheck Budget Tracker. All rights reserved</p>
+</footer>
 {% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}About - GastadorCheck{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow-md rounded-lg p-8 max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">About GastadorCheck</h1>
+    
+    <div class="mb-8">
+        <h2 class="text-xl font-semibold text-indigo-600 mb-3">Our Mission</h2>
+        <p class="text-gray-700 mb-4">
+            GastadorCheck was created with a simple mission: to help people take control of their finances 
+            through intuitive expense tracking and smart budgeting tools. We believe that financial management 
+            should be accessible, easy to understand, and even enjoyable.
+        </p>
+    </div>
+    
+    <div class="mb-8">
+        <h2 class="text-xl font-semibold text-indigo-600 mb-3">What Makes Us Different</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-medium text-gray-800 mb-2">User-Friendly Interface</h3>
+                <p class="text-gray-600">Our platform is designed to be intuitive and straightforward, 
+                making it easy to track your expenses and manage your budgets.</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-medium text-gray-800 mb-2">Powerful Insights</h3>
+                <p class="text-gray-600">Get detailed reports and visualizations that help you understand 
+                your spending habits and make better financial decisions.</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-medium text-gray-800 mb-2">Secure & Private</h3>
+                <p class="text-gray-600">Your financial data is kept secure with industry-standard encryption. 
+                Your privacy is our priority.</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h3 class="font-medium text-gray-800 mb-2">Accessible Anywhere</h3>
+                <p class="text-gray-600">Access your financial information from any device, at any time, 
+                whether you're at home or on the go.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mb-8">
+        <h2 class="text-xl font-semibold text-indigo-600 mb-3">Our Story</h2>
+        <p class="text-gray-700 mb-4">
+            GastadorCheck started as a project by computer science students who wanted to create a better way 
+            to manage personal finances. After experiencing frustration with existing tools that were either 
+            too complex or too simplistic, they decided to build something that struck the perfect balance.
+        </p>
+        <p class="text-gray-700 mb-4">
+            Today, GastadorCheck has grown into a comprehensive financial management tool that helps users 
+            track expenses, set budgets, and gain insights into their spending habits—all with a clean, 
+            intuitive interface.
+        </p>
+    </div>
+    
+    <div class="text-center mt-10">
+        <a href="{% url 'register' %}" class="bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-700 transition">
+            Get Started with GastadorCheck Today
+        </a>
+    </div>
+</div>
+{% endblock %}

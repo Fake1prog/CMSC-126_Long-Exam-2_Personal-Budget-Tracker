@@ -20,8 +20,9 @@
 
     {% block extra_css %}{% endblock %}
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
-    <!-- Header -->
+<body class="{% if request.path == '/' %}home-page{% else %}bg-gray-100 min-h-screen flex flex-col{% endif %}">
+    {% if request.path != '/' %}
+    <!-- Regular Header -->
     <header class="bg-indigo-600 text-white shadow-md">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <a href="{% url 'home' %}" class="text-2xl font-bold">Gastadorcheck</a>
@@ -50,9 +51,10 @@
             </nav>
         </div>
     </header>
+    {% endif %}
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8 flex-grow">
+    <main class="{% if request.path != '/' %}container mx-auto px-4 py-8 flex-grow{% endif %}">
         {% if messages %}
             <div class="messages mb-4">
                 {% for message in messages %}
@@ -66,12 +68,14 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer -->
+    {% if request.path != '/' %}
+    <!-- Regular Footer -->
     <footer class="bg-gray-800 text-white py-4">
         <div class="container mx-auto px-4 text-center">
             <p>&copy; {% now "Y" %} Gastadorcheck Budget Tracker. All rights reserved.</p>
         </div>
     </footer>
+    {% endif %}
 
     {% block extra_js %}{% endblock %}
 </body>
