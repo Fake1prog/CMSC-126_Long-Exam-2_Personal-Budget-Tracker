@@ -1,22 +1,49 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}Login | Gastadorcheck{% endblock %}
+{% block title %}Login | GastadorCheck{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/landing.css">
+{% endblock %}
+
+{% block body_classes %}home-page{% endblock %}
+{% block main_classes %}{% endblock %}
+
+{% block header %}
+<!-- Header -->
+<div class="home-header">
+    <a href="{% url 'home' %}" class="home-logo">GastadorCheck</a>
+    <nav class="home-nav">
+        <a href="{% url 'about' %}" class="nav-link">About</a>
+        <a href="{% url 'contact' %}" class="nav-link">Contact</a>
+        <a href="{% url 'register' %}" class="get-started-btn">Get Started Free</a>
+    </nav>
+</div>
+{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Log In to Your Account</h2>
+<!-- Login Form Container -->
+<div class="auth-container max-w-md mx-auto my-8">
+    <h2 class="auth-title">Welcome Back!</h2>
+
     <form method="POST">
         {% csrf_token %}
         {{ form|crispy }}
-        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mt-4 transition">
-            Log In
-        </button>
+        <button type="submit" class="auth-button mt-4">Log In</button>
     </form>
+
     <div class="mt-4 text-center">
-        <small class="text-gray-600">
-            Need an account? <a href="{% url 'register' %}" class="text-indigo-600 hover:text-indigo-800">Sign Up</a>
-        </small>
+        <p class="auth-link">
+            Need an account? <a href="{% url 'register' %}" class="auth-link-anchor">Sign Up</a>
+        </p>
     </div>
 </div>
+{% endblock %}
+
+{% block footer %}
+<!-- Footer -->
+<footer class="home-footer">
+    <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
+</footer>
 {% endblock %}

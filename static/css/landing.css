@@ -178,6 +178,7 @@ body.home-page {
     font-size: 0.9rem;
     color: #333;
     margin-top: 1rem;
+    background-color: rgb(255 255 255 / 20%);
 }
 
 /* Responsive adjustments */
@@ -247,4 +248,84 @@ body.home-page {
   .management-title {
     font-size: 1.8rem;
   }
+}
+
+/*******************************************************************************/
+
+/* Add these styles to your landing.css */
+
+/* Registration Form Container */
+.auth-container {
+    max-width: 500px;
+    margin: 2rem auto;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Title */
+.auth-title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: #000;
+}
+
+/* Form Fields */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.6);
+    font-size: 1rem;
+}
+
+/* Submit Button */
+.auth-button {
+    width: 100%;
+    background-color: #FD9069;
+    color: white;
+    font-weight: 500;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+/* Login Link */
+.auth-link {
+    display: block;
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.auth-link a {
+    color: #FD9069;
+    text-decoration: none;
+}
+
+/* Help text for password requirements */
+.help-text {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 0.25rem;
 }

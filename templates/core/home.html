@@ -6,7 +6,11 @@
 <link rel="stylesheet" href="/static/css/landing.css">
 {% endblock %}
 
+{% block body_classes %}home-page{% endblock %}
+{% block main_classes %}{% endblock %}
+
 {% block content %}
+<!-- Header -->
 <div class="home-header">
     <a href="{% url 'home' %}" class="home-logo">GastadorCheck</a>
     <nav class="home-nav">
@@ -16,6 +20,7 @@
     </nav>
 </div>
 
+<!-- Hero Section -->
 <div class="home-content">
     <div class="hero-section">
         <div class="hero-text">
@@ -42,13 +47,14 @@
         </div>
     </div>
 
+    <!-- Features Section -->
     <h2 class="management-title">Manage Your Finances Effortlessly</h2>
 
     <div class="features-grid">
         <div class="feature-card">
             <div class="feature-icon">
                 <img src="/static/img/track.png" alt="Track Expenses"
-                     onerror="this.innerHTML='<span style=\'font-size: 36px; color: #333;\'>📊</span>';">
+                     onerror="this.innerHTML='<span style=\'font-size: 36px; color: #333;\'>📊</span>'; ">
             </div>
             <h3 class="feature-title">Track Expenses</h3>
             <p class="feature-description">Record and categorize your daily expenses with ease</p>
@@ -57,7 +63,7 @@
         <div class="feature-card">
             <div class="feature-icon">
                 <img src="/static/img/budget.png" alt="Set Budgets"
-                     onerror="this.innerHTML='<span style=\'font-size: 36px; color: #333;\'>💰</span>';">
+                     onerror="this.innerHTML='<span style=\'font-size: 36px; color: #333;\'>💰</span>'; ">
             </div>
             <h3 class="feature-title">Set Budgets</h3>
             <p class="feature-description">Create budgets for different categories and track your progress</p>
@@ -66,7 +72,7 @@
         <div class="feature-card">
             <div class="feature-icon">
                 <img src="/static/img/visualize.png" alt="Visualize Data"
-                     onerror="this.innerHTML='<span style=\'font-size: 36px; color: #333;\'>📈</span>';">
+                     onerror="this.innerHTML='<span style=\'font-size: 36px; color: #333;\'>📈</span>'; ">
             </div>
             <h3 class="feature-title">Visualize data</h3>
             <p class="feature-description">Get insights with beautiful charts and reports</p>
@@ -74,6 +80,7 @@
     </div>
 </div>
 
+<!-- Footer -->
 <footer class="home-footer">
     <p>&copy; 2025 GastadorCheck Budget Tracker. All rights reserved</p>
 </footer>

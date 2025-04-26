@@ -2,63 +2,90 @@
 
 {% block title %}About - GastadorCheck{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/landing.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}
+
+{% block body_classes %}home-page{% endblock %}
+{% block main_classes %}{% endblock %}
+
 {% block content %}
-<div class="bg-white shadow-md rounded-lg p-8 max-w-4xl mx-auto">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">About GastadorCheck</h1>
-    
-    <div class="mb-8">
-        <h2 class="text-xl font-semibold text-indigo-600 mb-3">Our Mission</h2>
-        <p class="text-gray-700 mb-4">
-            GastadorCheck was created with a simple mission: to help people take control of their finances 
-            through intuitive expense tracking and smart budgeting tools. We believe that financial management 
-            should be accessible, easy to understand, and even enjoyable.
+<!-- Header -->
+<div class="home-header">
+    <a href="{% url 'home' %}" class="home-logo">GastadorCheck</a>
+    <nav class="home-nav">
+        <a href="{% url 'about' %}" class="nav-link">About</a>
+        <a href="{% url 'contact' %}" class="nav-link">Contact</a>
+        <a href="{% url 'login' %}" class="get-started-btn">Log In</a>
+    </nav>
+</div>
+
+<!-- Main Content -->
+<div class="auth-container max-w-4xl mx-auto">
+    <h1 class="auth-title">About GastadorCheck</h1>
+
+    <!-- Mission Section -->
+    <div class="mb-8 pb-4 border-b border-gray-200">
+        <h2 class="section-title">Our Mission</h2>
+        <p class="text-gray-700">
+            Empowering you to take control of your finances with simple, intuitive tools for tracking expenses,
+            setting budgets, and gaining clear insights into your spending habits.
         </p>
     </div>
-    
-    <div class="mb-8">
-        <h2 class="text-xl font-semibold text-indigo-600 mb-3">What Makes Us Different</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-gray-50 p-4 rounded-lg">
-                <h3 class="font-medium text-gray-800 mb-2">User-Friendly Interface</h3>
-                <p class="text-gray-600">Our platform is designed to be intuitive and straightforward, 
-                making it easy to track your expenses and manage your budgets.</p>
-            </div>
-            <div class="bg-gray-50 p-4 rounded-lg">
-                <h3 class="font-medium text-gray-800 mb-2">Powerful Insights</h3>
-                <p class="text-gray-600">Get detailed reports and visualizations that help you understand 
-                your spending habits and make better financial decisions.</p>
-            </div>
-            <div class="bg-gray-50 p-4 rounded-lg">
-                <h3 class="font-medium text-gray-800 mb-2">Secure & Private</h3>
-                <p class="text-gray-600">Your financial data is kept secure with industry-standard encryption. 
-                Your privacy is our priority.</p>
-            </div>
-            <div class="bg-gray-50 p-4 rounded-lg">
-                <h3 class="font-medium text-gray-800 mb-2">Accessible Anywhere</h3>
-                <p class="text-gray-600">Access your financial information from any device, at any time, 
-                whether you're at home or on the go.</p>
-            </div>
-        </div>
+
+    <!-- Why Choose Us Section -->
+    <div class="mb-8 pb-4 border-b border-gray-200">
+        <h2 class="section-title">Why Choose Us?</h2>
+        <ul class="text-gray-700 space-y-3">
+            <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+                <div>
+                    <strong class="text-gray-800">Simple & Intuitive Design:</strong> Our platform is built for ease of use, making financial tracking straightforward.
+                </div>
+            </li>
+            <li class="flex items-start">
+                <i class="fas fa-chart-line text-blue-500 mr-2 mt-1"></i>
+                <div>
+                    <strong class="text-gray-800">Clear Financial Insights:</strong> Visualize your spending with simple reports and charts to make better decisions.
+                </div>
+            </li>
+            <li class="flex items-start">
+                <i class="fas fa-lock text-purple-500 mr-2 mt-1"></i>
+                <div>
+                    <strong class="text-gray-800">Secure & Private Data:</strong> Your financial information is protected with robust security measures.
+                </div>
+            </li>
+            <li class="flex items-start">
+                <i class="fas fa-mobile-alt text-indigo-500 mr-2 mt-1"></i>
+                <div>
+                    <strong class="text-gray-800">Access Your Data Anywhere:</strong> Manage your money on the go from any device.
+                </div>
+            </li>
+        </ul>
     </div>
-    
+
+    <!-- Our Story Section -->
     <div class="mb-8">
-        <h2 class="text-xl font-semibold text-indigo-600 mb-3">Our Story</h2>
-        <p class="text-gray-700 mb-4">
-            GastadorCheck started as a project by computer science students who wanted to create a better way 
-            to manage personal finances. After experiencing frustration with existing tools that were either 
-            too complex or too simplistic, they decided to build something that struck the perfect balance.
-        </p>
-        <p class="text-gray-700 mb-4">
-            Today, GastadorCheck has grown into a comprehensive financial management tool that helps users 
-            track expenses, set budgets, and gain insights into their spending habits—all with a clean, 
-            intuitive interface.
+        <h2 class="section-title">Our Story</h2>
+        <p class="text-gray-700">
+            We were once those who experienced the stress of income shortfalls due to poor financial planning.
+            This personal struggle inspired us to create GastadorCheck – a tool designed to help others effectively
+            manage their finances and avoid similar challenges. We built this platform to share the power of clear
+            financial tracking and smart budgeting.
         </p>
     </div>
-    
+
+    <!-- Call to Action Button -->
     <div class="text-center mt-10">
-        <a href="{% url 'register' %}" class="bg-indigo-600 text-white py-2 px-6 rounded-lg hover:bg-indigo-700 transition">
-            Get Started with GastadorCheck Today
+        <a href="{% url 'register' %}" class="landing-cta-button">
+            Get Started Free
         </a>
     </div>
 </div>
+
+<!-- Footer -->
+<footer class="home-footer">
+    <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
+</footer>
 {% endblock %}

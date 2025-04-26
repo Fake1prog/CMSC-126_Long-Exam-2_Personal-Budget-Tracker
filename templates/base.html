@@ -5,56 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Gastadorcheck - Budget Tracker{% endblock %}</title>
 
-    <!-- Include Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></script> {# Tailwind CSS for utility-first styling #}
 
-    <!-- AlpineJS -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script> {# Alpine.js for minimal JavaScript interactivity #}
 
-    <!-- ApexCharts -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> {# ApexCharts for building interactive charts and graphs #}
 
-    <!-- Flatpickr for date selection -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> {# Flatpickr CSS for datepicker styling #}
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script> {# Flatpickr JS for date and time picker functionality #}
 
     {% block extra_css %}{% endblock %}
 </head>
-<body class="{% if request.path == '/' %}home-page{% else %}bg-gray-100 min-h-screen flex flex-col{% endif %}">
-    {% if request.path != '/' %}
-    <!-- Regular Header -->
-    <header class="bg-indigo-600 text-white shadow-md">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="{% url 'home' %}" class="text-2xl font-bold">Gastadorcheck</a>
-            <nav>
-                <ul class="flex space-x-4">
-                    {% if user.is_authenticated %}
-                        <li><a href="{% url 'dashboard' %}" class="hover:text-indigo-200">Dashboard</a></li>
-                        <li><a href="{% url 'transaction_list' %}" class="hover:text-indigo-200">Transactions</a></li>
-                        <li><a href="{% url 'category_list' %}" class="hover:text-indigo-200">Categories</a></li>
-                        <li><a href="{% url 'budget_list' %}" class="hover:text-indigo-200">Budgets</a></li>
-                        <li><a href="{% url 'report_dashboard' %}" class="hover:text-indigo-200">Reports</a></li>
-                        <li><a href="{% url 'profile' %}" class="hover:text-indigo-200">Profile</a></li>
-                        <li>
-                            <form method="post" action="{% url 'logout' %}" class="inline">
-                                {% csrf_token %}
-                                <button type="submit" class="bg-transparent border-0 text-white hover:text-indigo-200 p-0 cursor-pointer">
-                                    Logout
-                                </button>
-                            </form>
-                        </li>
-                    {% else %}
-                        <li><a href="{% url 'login' %}" class="hover:text-indigo-200">Login</a></li>
-                        <li><a href="{% url 'register' %}" class="hover:text-indigo-200">Register</a></li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </div>
-    </header>
-    {% endif %}
+<body class="min-h-screen flex flex-col {% block body_classes %}{% endblock %}">
 
-    <!-- Main Content -->
-    <main class="{% if request.path != '/' %}container mx-auto px-4 py-8 flex-grow{% endif %}">
+    {% block header %}{% endblock %}
+
+    <main class="flex-grow {% block main_classes %}container mx-auto px-4 py-8{% endblock %}">
         {% if messages %}
             <div class="messages mb-4">
                 {% for message in messages %}
@@ -68,14 +35,7 @@
         {% block content %}{% endblock %}
     </main>
 
-    {% if request.path != '/' %}
-    <!-- Regular Footer -->
-    <footer class="bg-gray-800 text-white py-4">
-        <div class="container mx-auto px-4 text-center">
-            <p>&copy; {% now "Y" %} Gastadorcheck Budget Tracker. All rights reserved.</p>
-        </div>
-    </footer>
-    {% endif %}
+    {% block footer %}{% endblock %}
 
     {% block extra_js %}{% endblock %}
 </body>
