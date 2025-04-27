@@ -3,7 +3,13 @@
 {% block title %}GastadorCheck - Smart Financial Tracking{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="/static/css/landing.css">
+  <!-- load Inter first -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+    rel="stylesheet"
+  >
+  <!-- then your landing.css -->
+  <link rel="stylesheet" href="/static/css/landing.css">
 {% endblock %}
 
 {% block body_classes %}home-page{% endblock %}
@@ -26,7 +32,7 @@
         <div class="hero-text">
             <h1 class="hero-title">
                 Smart<br>
-                tracking for<br>
+                <strong>tracking</strong> for<br>
                 smarter<br>
                 financial moves
             </h1>
