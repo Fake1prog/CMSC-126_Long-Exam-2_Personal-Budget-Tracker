@@ -1,38 +1,60 @@
-{% extends 'base.html' %}
+{% extends 'base_dashboard.html' %}  {# Extends the dashboard base template #}
 
-{% block title %}Delete Category | Gastadorcheck{% endblock %}
+{% block title %}Delete Category | Gastadorcheck{% endblock %} {# Sets the page title #}
+
+{% block extra_css %}
+    {# Links to additional CSS files #}
+    <link rel="stylesheet" href="/static/css/landing.css"> {# Custom CSS for background #}
+{% endblock %}
+
+{% block body_classes %}home-page{% endblock %} {# Applies a body class for styling #}
+
+{% block header %}{% endblock %} {# Overrides and removes the header block #}
 
 {% block content %}
-<div class="max-w-md mx-auto">
-    <h2 class="text-3xl font-bold text-gray-800 mb-6">Delete Category</h2>
-    
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <p class="mb-4">Are you sure you want to delete the category:</p>
-        <div class="bg-gray-100 p-4 rounded mb-4 flex items-center">
-            <span class="w-4 h-4 rounded-full mr-2" style="background-color: {{ object.color }}"></span>
-            <span class="font-bold">{{ object.name }}</span>
-            <span class="ml-2 text-gray-500">({{ object.get_type_display }})</span>
-        </div>
-        
-        <div class="mb-4">
-            <p class="text-amber-700">
-                {% if object.transaction_set.exists %}
-                Note: Transactions that use this category will be moved to the "Other" category or archived.
-                {% endif %}
-            </p>
-        </div>
-        
-        <form method="POST">
-            {% csrf_token %}
-            <div class="flex space-x-2">
-                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition">
-                    Yes, Delete
-                </button>
-                <a href="{% url 'category_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition">
-                    Cancel
-                </a>
+    {# Main content container with background and blur effects #}
+    <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-lg shadow p-6 my-8">
+
+        {# Content specific to the category delete confirmation page #}
+        <div class="max-w-md mx-auto">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Delete Category</h2>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Are you sure you want to delete the category:</p>
+                <div class="bg-gray-100 p-4 rounded mb-4 flex items-center">
+                    <span class="w-4 h-4 rounded-full mr-2" style="background-color: {{ object.color }}"></span>
+                    <span class="font-bold">{{ object.name }}</span>
+                    <span class="ml-2 text-gray-500">({{ object.get_type_display }})</span>
+                </div>
+
+                <div class="mb-4">
+                    <p class="text-amber-700">
+                        {% if object.transaction_set.exists %}
+                        Note: Transactions that use this category will be moved to the "Other" category or archived.
+                        {% endif %}
+                    </p>
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="flex space-x-2">
+                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition">
+                            Yes, Delete
+                        </button>
+                        <a href="{% url 'category_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
-</div>
+        </div>
+
+    </div> {# End main content container #}
+{% endblock %}
+
+{% block footer %}
+    {# Custom footer block #}
+    <footer class="home-footer">
+        <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
+    </footer>
 {% endblock %}

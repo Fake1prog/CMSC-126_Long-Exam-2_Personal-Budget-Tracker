@@ -1,80 +1,107 @@
-{% extends 'base.html' %}
+{% extends 'base_dashboard.html' %}  {# Extend the main dashboard base template #}
 
 {% block title %}Budgets | Gastadorcheck{% endblock %}
 
+{% block extra_css %}
+    {# Link to custom CSS for page background or other styles #}
+    <link rel="stylesheet" href="/static/css/landing.css">
+{% endblock %}
+
+{% block body_classes %}home-page{% endblock %} {# Apply body class for background styling #}
+
 {% block content %}
-<div class="mb-6 flex justify-between items-center">
-    <h2 class="text-3xl font-bold text-gray-800">Budgets</h2>
-    <a href="{% url 'budget_add' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition">
-        Add Budget
-    </a>
-</div>
+    {# Main content container with semi-transparent background and blur effect #}
+    <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-lg shadow p-6 my-8">
 
-<div class="bg-white p-6 rounded-lg shadow-md">
-    {% if budgets %}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {% for budget in budgets %}
-                <div class="border rounded-lg p-4 hover:shadow-md transition">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="font-semibold">{{ budget.category.name }}</h3>
-                        <span class="text-sm text-gray-500">{{ budget.get_period_display }}</span>
-                    </div>
-                    
-                    <div class="mb-2">
-                        <div class="flex justify-between text-sm text-gray-600 mb-1">
-                            <span>Budget: ${{ budget.amount }}</span>
-                            <span>Spent: ${{ budget.spent }}</span>
-                        </div>
-                        
-                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                            {% if budget.amount > 0 %}
-                                {% with percentage=budget.spent|floatformat:2 %}
-                                    {% if budget.is_over %}
-                                        <div class="h-2.5 rounded-full bg-red-600" style="width: 100%"></div>
-                                    {% else %}
-                                        <div class="h-2.5 rounded-full
-                                            {% if percentage > 80 %}bg-yellow-500{% else %}bg-green-600{% endif %}"
-                                            style="width: {{ percentage }}%">
-                                        </div>
-                                    {% endif %}
-                                {% endwith %}
-                            {% endif %}
-                        </div>
+        {# --- Your original budget_list.html content starts here --- #}
 
-                        <p class="text-sm mt-1 {% if budget.is_over %}text-red-600 font-semibold{% elif budget.remaining <= budget.amount|floatformat:2 %}text-yellow-500{% else %}text-green-600{% endif %}">
-                            {% if budget.is_over %}
-                                Over budget by ${{ budget.remaining|floatformat:2 }}
-                            {% else %}
-                                ${{ budget.remaining|floatformat:2 }} remaining
-                            {% endif %}
-                        </p>
-                    </div>
-                    
-                    <div class="text-sm text-gray-500 mb-2">
-                        <p>Start date: {{ budget.start_date }}</p>
-                        {% if budget.end_date %}
-                            <p>End date: {{ budget.end_date }}</p>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="flex space-x-2 mt-2">
-                        <a href="{% url 'budget_edit' budget.id %}" class="text-indigo-600 hover:text-indigo-800 text-sm">
-                            Edit
-                        </a>
-                        <a href="{% url 'budget_delete' budget.id %}" class="text-red-600 hover:text-red-800 text-sm">
-                            Delete
-                        </a>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="text-center py-8">
-            <p class="text-gray-500 italic mb-4">You don't have any budgets set up yet.</p>
+        <div class="mb-6 flex justify-between items-center">
+            <h2 class="text-3xl font-bold text-gray-800">Budgets</h2>
             <a href="{% url 'budget_add' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition">
-                Create Your First Budget
+                Add Budget
             </a>
         </div>
-    {% endif %}
-</div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            {% if budgets %}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {% for budget in budgets %}
+                        <div class="border rounded-lg p-4 hover:shadow-md transition">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-semibold">{{ budget.category.name }}</h3>
+                                <span class="text-sm text-gray-500">{{ budget.get_period_display }}</span>
+                            </div>
+
+                            <div class="mb-2">
+                                <div class="flex justify-between text-sm text-gray-600 mb-1">
+                                    <span>Budget: ${{ budget.amount }}</span>
+                                    <span>Spent: ${{ budget.spent }}</span>
+                                </div>
+
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    {% if budget.amount > 0 %}
+                                        {# --- Original Percentage Calculation Logic --- #}
+                                        {% with percentage=budget.spent|floatformat:2 %} {# Note: This uses spent amount as percentage #}
+                                            {% if budget.is_over %}
+                                                <div class="h-2.5 rounded-full bg-red-600" style="width: 100%"></div>
+                                            {% else %}
+                                                <div class="h-2.5 rounded-full
+                                                    {% if percentage > 80 %}bg-yellow-500{% else %}bg-green-600{% endif %}"
+                                                    style="width: {{ percentage }}%"> {# Note: Width is set using the spent amount #}
+                                                </div>
+                                            {% endif %}
+                                        {% endwith %}
+                                        {# --- End Original Percentage Calculation Logic --- #}
+                                    {% endif %}
+                                </div>
+
+                                {# --- Original Remaining Text Logic --- #}
+                                <p class="text-sm mt-1 {% if budget.is_over %}text-red-600 font-semibold{% elif budget.remaining <= budget.amount|floatformat:2 %}text-yellow-500{% else %}text-green-600{% endif %}">
+                                    {% if budget.is_over %}
+                                        Over budget by ${{ budget.remaining|floatformat:2 }}
+                                    {% else %}
+                                        ${{ budget.remaining|floatformat:2 }} remaining
+                                    {% endif %}
+                                </p>
+                                {# --- End Original Remaining Text Logic --- #}
+                            </div>
+
+                            <div class="text-sm text-gray-500 mb-2">
+                                <p>Start date: {{ budget.start_date }}</p>
+                                {% if budget.end_date %}
+                                    <p>End date: {{ budget.end_date }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div class="flex space-x-2 mt-2">
+                                <a href="{% url 'budget_edit' budget.id %}" class="text-indigo-600 hover:text-indigo-800 text-sm">
+                                    Edit
+                                </a>
+                                <a href="{% url 'budget_delete' budget.id %}" class="text-red-600 hover:text-red-800 text-sm">
+                                    Delete
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-8">
+                    <p class="text-gray-500 italic mb-4">You don't have any budgets set up yet.</p>
+                    <a href="{% url 'budget_add' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition">
+                        Create Your First Budget
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        {# --- Your original budget_list.html content ends here --- #}
+
+    </div> {# End main content container #}
+{% endblock %}
+
+{% block footer %}
+    {# Page Footer with home-footer class #}
+    <footer class="home-footer">
+        <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
+    </footer>
 {% endblock %}

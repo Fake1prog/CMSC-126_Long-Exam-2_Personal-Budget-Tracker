@@ -1,59 +1,82 @@
-{% extends 'base.html' %}
+{% extends 'base_dashboard.html' %}  {# Extend the main dashboard base template #}
 {% load crispy_forms_tags %}
 
 {% block title %}Profile | Gastadorcheck{% endblock %}
 
+{% block extra_css %}
+    {# Link to custom CSS for page background or other styles #}
+    <link rel="stylesheet" href="/static/css/landing.css">
+{% endblock %}
+
+{% block body_classes %}home-page{% endblock %} {# Apply body class for background styling #}
+
 {% block content %}
-<div class="max-w-2xl mx-auto">
-    <h2 class="text-3xl font-bold text-gray-800 mb-6">Your Profile</h2>
-    
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h3 class="text-xl font-semibold text-gray-700 mb-4">Account Information</h3>
-        <form method="POST">
-            {% csrf_token %}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    {{ u_form.username|as_crispy_field }}
-                </div>
-                <div>
-                    {{ u_form.email|as_crispy_field }}
-                </div>
+    {# Main content container with semi-transparent background and blur effect #}
+    <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-lg shadow p-6 my-8">
+
+        {# --- Your original profile.html content starts here --- #}
+
+        <div class="max-w-2xl mx-auto">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Your Profile</h2>
+
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4">Account Information</h3>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            {{ u_form.username|as_crispy_field }}
+                        </div>
+                        <div>
+                            {{ u_form.email|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    <h4 class="text-lg font-semibold text-gray-700 mt-4 mb-2">Preferences</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            {{ p_form.default_currency|as_crispy_field }}
+                        </div>
+                        <div>
+                            {{ p_form.date_format_preference|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition">
+                            Update Profile
+                        </button>
+                    </div>
+                </form>
             </div>
 
-            <h4 class="text-lg font-semibold text-gray-700 mt-4 mb-2">Preferences</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    {{ p_form.default_currency|as_crispy_field }}
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4">Account Statistics</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-100 p-4 rounded">
+                        <p class="text-sm text-gray-500">Total Transactions</p>
+                        <p class="text-xl font-bold text-indigo-600">{{ user.transaction_set.count }}</p>
+                    </div>
+                    <div class="bg-gray-100 p-4 rounded">
+                        <p class="text-sm text-gray-500">Categories Created</p>
+                        <p class="text-xl font-bold text-indigo-600">{{ user.category_set.count }}</p>
+                    </div>
+                    <div class="bg-gray-100 p-4 rounded">
+                        <p class="text-sm text-gray-500">Active Budgets</p>
+                        <p class="text-xl font-bold text-indigo-600">{{ user.budget_set.count }}</p>
+                    </div>
                 </div>
-                <div>
-                    {{ p_form.date_format_preference|as_crispy_field }}
-                </div>
-            </div>
-
-            <div class="mt-4">
-                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition">
-                    Update Profile
-                </button>
-            </div>
-        </form>
-    </div>
-    
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-xl font-semibold text-gray-700 mb-4">Account Statistics</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-gray-100 p-4 rounded">
-                <p class="text-sm text-gray-500">Total Transactions</p>
-                <p class="text-xl font-bold text-indigo-600">{{ user.transaction_set.count }}</p>
-            </div>
-            <div class="bg-gray-100 p-4 rounded">
-                <p class="text-sm text-gray-500">Categories Created</p>
-                <p class="text-xl font-bold text-indigo-600">{{ user.category_set.count }}</p>
-            </div>
-            <div class="bg-gray-100 p-4 rounded">
-                <p class="text-sm text-gray-500">Active Budgets</p>
-                <p class="text-xl font-bold text-indigo-600">{{ user.budget_set.count }}</p>
             </div>
         </div>
-    </div>
-</div>
+
+        {# --- Your original profile.html content ends here --- #}
+
+    </div> {# End main content container #}
+{% endblock %}
+
+{% block footer %}
+    {# Page Footer with home-footer class #}
+    <footer class="home-footer">
+        <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
+    </footer>
 {% endblock %}

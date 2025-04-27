@@ -1,102 +1,139 @@
-{% extends 'base.html' %}
+{% extends 'base_dashboard.html' %}  {# Extend the main dashboard base template #}
+{% load crispy_forms_tags %}
 
 {% block title %}{{ title }} | Gastadorcheck{% endblock %}
 
-{% block content %}
-<div class="max-w-2xl mx-auto">
-    <h2 class="text-3xl font-bold text-gray-800 mb-6">{{ title }}</h2>
-
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <form method="POST">
-            {% csrf_token %}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700">{{ form.title.label }}</label>
-                    {{ form.title }}
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">{{ form.amount.label }}</label>
-                    {{ form.amount }}
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">{{ form.date.label }}</label>
-                    {{ form.date }}
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">{{ form.type.label }}</label>
-                    {{ form.type }}
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">{{ form.category.label }}</label>
-                    {{ form.category }}
-                </div>
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700">{{ form.notes.label }}</label>
-                    {{ form.notes }}
-                </div>
-            </div>
-
-            <div class="flex space-x-2 mt-4">
-                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition">
-                    Save Transaction
-                </button>
-                <a href="{% url 'transaction_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition">
-                    Cancel
-                </a>
-            </div>
-        </form>
-    </div>
-</div>
-    
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const typeSelect = document.querySelector('.transaction-type-select');
-    const categorySelect = document.querySelector('.category-select');
-    
-    // Function to filter categories based on transaction type
-    function updateCategoryOptions() {
-        const selectedType = typeSelect.value;
-        const currentValue = categorySelect.value;
-        
-        // Make an AJAX request to get filtered categories
-        fetch(`/transactions/get-categories/?type=${selectedType}`)
-            .then(response => response.json())
-            .then(data => {
-                // Clear existing options
-                categorySelect.innerHTML = '';
-                
-                // Add placeholder option
-                const placeholderOption = document.createElement('option');
-                placeholderOption.value = '';
-                placeholderOption.textContent = '---------';
-                categorySelect.appendChild(placeholderOption);
-                
-                // Add filtered category options
-                data.categories.forEach(category => {
-                    const option = document.createElement('option');
-                    option.value = category.id;
-                    option.textContent = category.name;
-                    // Add data attributes for enhanced display
-                    option.setAttribute('data-color', category.color);
-                    option.setAttribute('data-icon', category.icon || '');
-                    categorySelect.appendChild(option);
-                });
-                
-                // Try to restore the previous selection if it exists in the new options
-                if (currentValue) {
-                    const exists = Array.from(categorySelect.options).some(opt => opt.value === currentValue);
-                    if (exists) {
-                        categorySelect.value = currentValue;
-                    }
-                }
-            });
-    }
-    
-    // Update categories when transaction type changes
-    if (typeSelect) {
-        typeSelect.addEventListener('change', updateCategoryOptions);
-    }
-});
-</script>
+{% block extra_css %}
+    {# Link to custom CSS for page background or other styles #}
+    <link rel="stylesheet" href="/static/css/landing.css">
+    {# Add any specific CSS for forms if needed #}
 {% endblock %}
 
+{% block body_classes %}home-page{% endblock %} {# Apply body class for background styling #}
+
+{% block header %}{% endblock %} {# <--- EXCLUDE HEADER: Override the header block with nothing #}
+
+{% block content %}
+    {# Main content container with semi-transparent background and blur effect #}
+    <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-lg shadow p-6 my-8">
+
+        {# --- Your original form content starts here --- #}
+
+        <div class="max-w-2xl mx-auto">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">{{ title }}</h2>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <form method="POST">
+                    {% csrf_token %}
+                    {# Using as_crispy_field is generally preferred with crispy forms #}
+                    {# If you need manual control, ensure you include form.media in the head #}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="md:col-span-2">
+                             {{ form.title|as_crispy_field }}
+                        </div>
+                        <div>
+                            {{ form.amount|as_crispy_field }}
+                        </div>
+                        <div>
+                            {{ form.date|as_crispy_field }}
+                        </div>
+                        <div>
+                             {{ form.type|as_crispy_field }}
+                        </div>
+                        <div>
+                            {{ form.category|as_crispy_field }}
+                        </div>
+                        <div class="md:col-span-2">
+                            {{ form.notes|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-2 mt-4">
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition">
+                            Save Transaction
+                        </button>
+                        <a href="{% url 'transaction_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {# --- Your original form content ends here --- #}
+
+    </div> {# End main content container #}
+{% endblock %}
+
+{% block extra_js %}
+    {# Include the JavaScript for the category filtering here #}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const typeSelect = document.querySelector('.transaction-type-select'); // Assuming crispy adds this class or adjust selector
+        const categorySelect = document.querySelector('.category-select'); // Assuming crispy adds this class or adjust selector
+
+        // Function to filter categories based on transaction type
+        function updateCategoryOptions() {
+            const selectedType = typeSelect.value;
+            const currentValue = categorySelect.value;
+
+            // Make an AJAX request to get filtered categories
+            fetch(`/transactions/get-categories/?type=${selectedType}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Clear existing options
+                    categorySelect.innerHTML = '';
+
+                    // Add placeholder option
+                    const placeholderOption = document.createElement('option');
+                    placeholderOption.value = '';
+                    placeholderOption.textContent = '---------';
+                    categorySelect.appendChild(placeholderOption);
+
+                    // Add filtered category options
+                    data.categories.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category.id;
+                        option.textContent = category.name;
+                        // Add data attributes for enhanced display (if needed client-side)
+                        option.setAttribute('data-color', category.color);
+                        option.setAttribute('data-icon', category.icon || '');
+                        categorySelect.appendChild(option);
+                    });
+
+                    // Try to restore the previous selection if it exists in the new options
+                    if (currentValue) {
+                        const exists = Array.from(categorySelect.options).some(opt => opt.value === currentValue);
+                        if (exists) {
+                            categorySelect.value = currentValue;
+                        }
+                    }
+                });
+        }
+
+        // Initial update based on the pre-selected type (for edit forms)
+        if (typeSelect && categorySelect) {
+             // If it's an edit page, the type select will have a value on load
+            updateCategoryOptions(); // Call on load to populate categories based on initial type
+
+            // Update categories when transaction type changes (for add/edit forms)
+            typeSelect.addEventListener('change', updateCategoryOptions);
+        }
+
+         // Optional: Initialize Flatpickr for date fields
+        flatpickr("#id_date", {
+             dateFormat: "Y-m-d", // Match your desired date format
+         });
+    });
+    </script>
+    {# Add Crispy Forms JS if needed and not already in base_dashboard.html's head #}
+    {{ form.media.js }}
+{% endblock %}
+
+
+{% block footer %}
+    {# Page Footer with home-footer class #}
+    <footer class="home-footer">
+        <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
+    </footer>
+{% endblock %}

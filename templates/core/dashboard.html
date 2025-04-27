@@ -1,91 +1,99 @@
-{% extends 'base.html' %}
+{% extends 'base_dashboard.html' %}  {# Extending the base_dashboard template which already has the header #}
 
-{% block title %}Dashboard | Gastadorcheck{% endblock %}
+{% block title %}Dashboard | GastadorCheck{% endblock %}  {# Page title #}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/landing.css">  {# Link to the landing.css for the gradient background and other styles #}
+{% endblock %}
+
+{% block body_classes %}home-page{% endblock %}  {# Apply the 'home-page' class from landing.css for the gradient background #}
 
 {% block content %}
-<div class="mb-6">
-    <h2 class="text-3xl font-bold text-gray-800">Dashboard</h2>
-    <p class="text-gray-600">Welcome back, {{ user.username }}!</p>
-</div>
+<div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-lg shadow p-6 my-8">
+    <div class="mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">Dashboard</h2>
+        <p class="text-gray-600">Welcome back, {{ user.username }}!</p>
+    </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <!-- Summary Card -->
-    <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-xl font-semibold text-gray-700 mb-4">This Month</h3>
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <p class="text-sm text-gray-500">Income</p>
-                <p class="text-xl font-bold text-green-600">${{ income }}</p>
-            </div>
-            <div>
-                <p class="text-sm text-gray-500">Expenses</p>
-                <p class="text-xl font-bold text-red-600">${{ expenses }}</p>
-            </div>
-            <div class="col-span-2">
-                <p class="text-sm text-gray-500">Balance</p>
-                <p class="text-xl font-bold {% if balance >= 0 %}text-blue-600{% else %}text-red-600{% endif %}">
-                    ${{ balance }}
-                </p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Summary Card -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">This Month</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="text-sm text-gray-500">Income</p>
+                    <p class="text-xl font-bold text-green-600">${{ income }}</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Expenses</p>
+                    <p class="text-xl font-bold text-red-600">${{ expenses }}</p>
+                </div>
+                <div class="col-span-2">
+                    <p class="text-sm text-gray-500">Balance</p>
+                    <p class="text-xl font-bold {% if balance >= 0 %}text-blue-600{% else %}text-red-600{% endif %}">
+                        ${{ balance }}
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Quick Actions Card -->
-    <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-xl font-semibold text-gray-700 mb-4">Quick Actions</h3>
-        <div class="space-y-2">
-            <a href="{% url 'transaction_add' %}?type=INCOME" class="block w-full bg-green-100 hover:bg-green-200 text-green-700 p-3 rounded transition">
-                Add Income
-            </a>
-            <a href="{% url 'transaction_add' %}?type=EXPENSE" class="block w-full bg-red-100 hover:bg-red-200 text-red-700 p-3 rounded transition">
-                Add Expense
-            </a>
-            <a href="{% url 'category_list' %}" class="block w-full bg-purple-100 hover:bg-purple-200 text-purple-700 p-3 rounded transition">
-                Manage Categories
-            </a>
-            <a href="{% url 'budget_list' %}" class="block w-full bg-blue-100 hover:bg-blue-200 text-blue-700 p-3 rounded transition">
-                Manage Budgets
-            </a>
-        </div>
-    </div>
-    
-    <!-- Recent Transactions Card -->
-    <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-xl font-semibold text-gray-700 mb-4">Recent Transactions</h3>
-        {% if recent_transactions %}
-            <div class="space-y-3">
-                {% for transaction in recent_transactions %}
-                    <div class="flex justify-between items-center {% if transaction.type == 'INCOME' %}text-green-600{% else %}text-red-600{% endif %} border-b pb-2">
-                        <div>
-                            <p class="font-medium">{{ transaction.title }}</p>
-                            <p class="text-xs text-gray-500">{{ transaction.date }}</p>
-                        </div>
-                        <p class="font-bold">${{ transaction.amount }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="mt-4 text-center">
-                <a href="{% url 'transaction_list' %}" class="text-indigo-600 hover:text-indigo-800 text-sm">
-                    View All Transactions
+
+        <!-- Quick Actions Card -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Quick Actions</h3>
+            <div class="space-y-2">
+                <a href="{% url 'transaction_add' %}?type=INCOME" class="block w-full bg-green-100 hover:bg-green-200 text-green-700 p-3 rounded transition">
+                    Add Income
+                </a>
+                <a href="{% url 'transaction_add' %}?type=EXPENSE" class="block w-full bg-red-100 hover:bg-red-200 text-red-700 p-3 rounded transition">
+                    Add Expense
+                </a>
+                <a href="{% url 'category_list' %}" class="block w-full bg-purple-100 hover:bg-purple-200 text-purple-700 p-3 rounded transition">
+                    Manage Categories
+                </a>
+                <a href="{% url 'budget_list' %}" class="block w-full bg-blue-100 hover:bg-blue-200 text-blue-700 p-3 rounded transition">
+                    Manage Budgets
                 </a>
             </div>
-        {% else %}
-            <p class="text-gray-500 italic">No transactions yet.</p>
-        {% endif %}
+        </div>
+
+        <!-- Recent Transactions Card -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Recent Transactions</h3>
+            {% if recent_transactions %}
+                <div class="space-y-3">
+                    {% for transaction in recent_transactions %}
+                        <div class="flex justify-between items-center {% if transaction.type == 'INCOME' %}text-green-600{% else %}text-red-600{% endif %} border-b pb-2">
+                            <div>
+                                <p class="font-medium">{{ transaction.title }}</p>
+                                <p class="text-xs text-gray-500">{{ transaction.date }}</p>
+                            </div>
+                            <p class="font-bold">${{ transaction.amount }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="mt-4 text-center">
+                    <a href="{% url 'transaction_list' %}" class="text-indigo-600 hover:text-indigo-800 text-sm">
+                        View All Transactions
+                    </a>
+                </div>
+            {% else %}
+                <p class="text-gray-500 italic">No transactions yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Expense Breakdown Chart -->
+    <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-lg shadow p-6 mt-8 mb-8">
+        <h3 class="text-xl font-semibold text-gray-700 mb-4">Expense Breakdown</h3>
+        <div id="expenseChart" class="h-64">
+            {% if expense_by_category %}
+                <!-- Chart will be rendered here by JS -->
+            {% else %}
+                <p class="text-center py-20 text-gray-500 italic">Add transactions to see your expense breakdown.</p>
+            {% endif %}
+        </div>
     </div>
 </div>
-
-<div class="mt-8 bg-white rounded-lg shadow p-6">
-    <h3 class="text-xl font-semibold text-gray-700 mb-4">Expense Breakdown</h3>
-    <div id="expenseChart" class="h-64">
-        {% if expense_by_category %}
-            <!-- Chart will be rendered here by JS -->
-        {% else %}
-            <p class="text-center py-20 text-gray-500 italic">Add transactions to see your expense breakdown.</p>
-        {% endif %}
-    </div>
-</div>
-
 {% endblock %}
 
 {% block extra_js %}
@@ -98,19 +106,19 @@
                 "{{ category.category__name }}",
             {% endfor %}
         ];
-        
+
         const amounts = [
             {% for category in expense_by_category %}
                 {{ category.total }},
             {% endfor %}
         ];
-        
+
         const colors = [
             {% for category in expense_by_category %}
                 "{{ category.category__color|default:'#7CB9E8' }}",
             {% endfor %}
         ];
-        
+
         // Create expense breakdown chart
         const options = {
             series: amounts,
@@ -138,4 +146,10 @@
     });
 </script>
 {% endif %}
+{% endblock %}
+
+{% block footer %}
+<footer class="home-footer">
+    <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
+</footer>
 {% endblock %}

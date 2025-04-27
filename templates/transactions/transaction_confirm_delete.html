@@ -1,34 +1,56 @@
-{% extends 'base.html' %}
+{% extends 'base_dashboard.html' %}  {# Extends the dashboard base template #}
 
-{% block title %}Delete Transaction | Gastadorcheck{% endblock %}
+{% block title %}Delete Transaction | Gastadorcheck{% endblock %} {# Sets the page title #}
+
+{% block extra_css %}
+    {# Links to additional CSS files #}
+    <link rel="stylesheet" href="/static/css/landing.css"> {# Custom CSS for background #}
+{% endblock %}
+
+{% block body_classes %}home-page{% endblock %} {# Applies a body class for styling #}
+
+{% block header %}{% endblock %} {# Overrides and removes the header block #}
 
 {% block content %}
-<div class="max-w-md mx-auto">
-    <h2 class="text-3xl font-bold text-gray-800 mb-6">Delete Transaction</h2>
-    
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <p class="mb-4">Are you sure you want to delete the transaction:</p>
-        <div class="bg-gray-100 p-4 rounded mb-4">
-            <p><strong>Title:</strong> {{ object.title }}</p>
-            <p><strong>Amount:</strong> ${{ object.amount }}</p>
-            <p><strong>Date:</strong> {{ object.date }}</p>
-            <p><strong>Type:</strong> {{ object.get_type_display }}</p>
-            {% if object.category %}
-                <p><strong>Category:</strong> {{ object.category.name }}</p>
-            {% endif %}
-        </div>
-        
-        <form method="POST">
-            {% csrf_token %}
-            <div class="flex space-x-2">
-                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition">
-                    Yes, Delete
-                </button>
-                <a href="{% url 'transaction_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition">
-                    Cancel
-                </a>
+    {# Main content container with background and blur effects #}
+    <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-lg shadow p-6 my-8">
+
+        {# Content specific to the transaction delete confirmation page #}
+        <div class="max-w-md mx-auto">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Delete Transaction</h2>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <p class="mb-4">Are you sure you want to delete the transaction:</p>
+                <div class="bg-gray-100 p-4 rounded mb-4">
+                    <p><strong>Title:</strong> {{ object.title }}</p>
+                    <p><strong>Amount:</strong> ${{ object.amount }}</p>
+                    <p><strong>Date:</strong> {{ object.date }}</p>
+                    <p><strong>Type:</strong> {{ object.get_type_display }}</p>
+                    {% if object.category %}
+                        <p><strong>Category:</strong> {{ object.category.name }}</p>
+                    {% endif %}
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="flex space-x-2">
+                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition">
+                            Yes, Delete
+                        </button>
+                        <a href="{% url 'transaction_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
-</div>
+        </div>
+
+    </div> {# End main content container #}
+{% endblock %}
+
+{% block footer %}
+    {# Custom footer block #}
+    <footer class="home-footer">
+        <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
+    </footer>
 {% endblock %}
