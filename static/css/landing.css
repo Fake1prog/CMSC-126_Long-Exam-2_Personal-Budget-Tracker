@@ -333,4 +333,22 @@ body.home-page {
     color: #666;
     margin-top: 0.25rem;
 }
-
+/* Dashboard welcome heading */
+.welcome-heading {
+    font-size: 1.875rem;        /* matches Tailwind’s text-3xl */
+    margin-bottom: 1.5rem;      /* space below, optional */
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  
+  .welcome-heading .welcome-text {
+    font-style: italic;
+    color: #6B7280;             /* gray-500 */
+  }
+  
+  .welcome-heading .welcome-user {
+    font-weight: bold;
+    color: #FD9069;
+    margin-left: 0.25rem;       /* small gap before the name */
+  }

@@ -11,8 +11,11 @@
 {% block content %}
 <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-lg shadow p-6 my-8">
     <div class="mb-6">
-        <h2 class="text-3xl font-bold text-gray-800">Dashboard</h2>
-        <p class="text-gray-600">Welcome back, {{ user.username }}!</p>
+        <h2 class="text-3xl flex flex-wrap items-baseline">
+            <span class="italic text-gray-500">Welcome Back,</span>
+            <span class="font-semibold text-[#FF4300] ml-1">{{ user.username }}!</span>
+        </h2>
+        
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
