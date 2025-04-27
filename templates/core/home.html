@@ -4,6 +4,10 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="/static/css/landing.css">
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+rel="stylesheet"
+>
 {% endblock %}
 
 {% block body_classes %}home-page{% endblock %}
@@ -52,29 +56,29 @@
 
     <div class="features-grid">
         <div class="feature-card">
+            <h3 class="feature-title">Track Expenses</h3>
             <div class="feature-icon">
                 <img src="/static/img/track.png" alt="Track Expenses"
                      onerror="this.innerHTML='<span style=\'font-size: 36px; color: #333;\'>📊</span>'; ">
             </div>
-            <h3 class="feature-title">Track Expenses</h3>
             <p class="feature-description">Record and categorize your daily expenses with ease</p>
         </div>
 
         <div class="feature-card">
+            <h3 class="feature-title">Set Budgets</h3>
             <div class="feature-icon">
                 <img src="/static/img/budget.png" alt="Set Budgets"
                      onerror="this.innerHTML='<span style=\'font-size: 36px; color: #333;\'>💰</span>'; ">
             </div>
-            <h3 class="feature-title">Set Budgets</h3>
             <p class="feature-description">Create budgets for different categories and track your progress</p>
         </div>
 
         <div class="feature-card">
+            <h3 class="feature-title">Visualize data</h3>
             <div class="feature-icon">
                 <img src="/static/img/visualize.png" alt="Visualize Data"
                      onerror="this.innerHTML='<span style=\'font-size: 36px; color: #333;\'>📈</span>'; ">
             </div>
-            <h3 class="feature-title">Visualize data</h3>
             <p class="feature-description">Get insights with beautiful charts and reports</p>
         </div>
     </div>
