@@ -17,9 +17,11 @@
         </h2>  
     </div>
 
+
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Summary Card -->
-        <div class="bg-white bg-opacity-30 backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
+        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
             <h3 class="text-xl font-semibold text-gray-700 mb-4">This Month</h3>
             <div class="grid grid-cols-2 gap-4">
                 <div>
@@ -38,28 +40,32 @@
                 </div>
             </div>
         </div>
-
+    
         <!-- Quick Actions Card -->
-        <div class="bg-white bg-opacity-30 backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
+        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
             <h3 class="text-xl font-semibold text-gray-700 mb-4">Quick Actions</h3>
             <div class="space-y-2">
-                <a href="{% url 'transaction_add' %}?type=INCOME" class="block w-full bg-green-100 hover:bg-green-200 text-green-700 p-3 rounded transition">
+                <a href="{% url 'transaction_add' %}?type=INCOME"
+                   class="block w-full bg-green-100 hover:bg-green-200 text-green-700 p-3 rounded transition">
                     Add Income
                 </a>
-                <a href="{% url 'transaction_add' %}?type=EXPENSE" class="block w-full bg-red-100 hover:bg-red-200 text-red-700 p-3 rounded transition">
+                <a href="{% url 'transaction_add' %}?type=EXPENSE"
+                   class="block w-full bg-red-100 hover:bg-red-200 text-red-700 p-3 rounded transition">
                     Add Expense
                 </a>
-                <a href="{% url 'category_list' %}" class="block w-full bg-purple-100 hover:bg-purple-200 text-purple-700 p-3 rounded transition">
+                <a href="{% url 'category_list' %}"
+                   class="block w-full bg-purple-100 hover:bg-purple-200 text-purple-700 p-3 rounded transition">
                     Manage Categories
                 </a>
-                <a href="{% url 'budget_list' %}" class="block w-full bg-blue-100 hover:bg-blue-200 text-blue-700 p-3 rounded transition">
+                <a href="{% url 'budget_list' %}"
+                   class="block w-full bg-blue-100 hover:bg-blue-200 text-blue-700 p-3 rounded transition">
                     Manage Budgets
                 </a>
             </div>
         </div>
-
+    
         <!-- Recent Transactions Card -->
-        <div class="bg-white bg-opacity-30 backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
+        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6 lg:row-span-2">
             <h3 class="text-xl font-semibold text-gray-700 mb-4">Recent Transactions</h3>
             {% if recent_transactions %}
                 <div class="space-y-3">
@@ -82,19 +88,22 @@
                 <p class="text-gray-500 italic">No transactions yet.</p>
             {% endif %}
         </div>
-    </div>
-
-    <!-- Expense Breakdown Chart -->
-    <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-[40px] shadow p-6 mt-8 mb-8">
-        <h3 class="text-xl font-semibold text-gray-700 mb-4">Expense Breakdown</h3>
-        <div id="expenseChart" class="h-64">
-            {% if expense_by_category %}
-                <!-- Chart will be rendered here by JS -->
-            {% else %}
-                <p class="text-center py-20 text-gray-500 italic">Add transactions to see your expense breakdown.</p>
-            {% endif %}
+    
+        <!-- Expense Breakdown Chart -->
+        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6 lg:col-span-2">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Expense Breakdown</h3>
+            <div id="expenseChart" class="h-64">
+                {% if expense_by_category %}
+                    <!-- Chart will be rendered here by JS -->
+                {% else %}
+                    <p class="text-center py-20 text-gray-500 italic">
+                      Add transactions to see your expense breakdown.
+                    </p>
+                {% endif %}
+            </div>
         </div>
     </div>
+    
 </div>
 {% endblock %}
 
