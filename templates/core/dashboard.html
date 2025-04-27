@@ -9,18 +9,17 @@
 {% block body_classes %}home-page{% endblock %}  {# Apply the 'home-page' class from landing.css for the gradient background #}
 
 {% block content %}
-<div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-lg shadow p-6 my-8">
+<div class="my-8">
     <div class="mb-6">
         <h2 class="text-3xl flex flex-wrap items-baseline">
             <span class="italic text-gray-500">Welcome Back,</span>
             <span class="font-semibold text-[#FF4300] ml-1">{{ user.username }}!</span>
-        </h2>
-        
+        </h2>  
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Summary Card -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white bg-opacity-30 backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
             <h3 class="text-xl font-semibold text-gray-700 mb-4">This Month</h3>
             <div class="grid grid-cols-2 gap-4">
                 <div>
@@ -41,7 +40,7 @@
         </div>
 
         <!-- Quick Actions Card -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white bg-opacity-30 backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
             <h3 class="text-xl font-semibold text-gray-700 mb-4">Quick Actions</h3>
             <div class="space-y-2">
                 <a href="{% url 'transaction_add' %}?type=INCOME" class="block w-full bg-green-100 hover:bg-green-200 text-green-700 p-3 rounded transition">
@@ -60,7 +59,7 @@
         </div>
 
         <!-- Recent Transactions Card -->
-        <div class="bg-white rounded-lg shadow p-6">
+        <div class="bg-white bg-opacity-30 backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
             <h3 class="text-xl font-semibold text-gray-700 mb-4">Recent Transactions</h3>
             {% if recent_transactions %}
                 <div class="space-y-3">
@@ -86,7 +85,7 @@
     </div>
 
     <!-- Expense Breakdown Chart -->
-    <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-lg shadow p-6 mt-8 mb-8">
+    <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-[40px] shadow p-6 mt-8 mb-8">
         <h3 class="text-xl font-semibold text-gray-700 mb-4">Expense Breakdown</h3>
         <div id="expenseChart" class="h-64">
             {% if expense_by_category %}
