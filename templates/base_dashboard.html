@@ -22,22 +22,54 @@
         <a href="{% url 'home' %}" class="text-2xl font-bold">Gastadorcheck</a>
         <nav>
             <ul class="flex space-x-4">
-                <li><a href="{% url 'dashboard' %}" class="text-gray-800 hover:text-gray-600">Dashboard</a></li>
-                <li><a href="{% url 'transaction_list' %}" class="text-gray-800 hover:text-gray-600">Transactions</a></li>
-                <li><a href="{% url 'category_list' %}" class="text-gray-800 hover:text-gray-600">Categories</a></li>
-                <li><a href="{% url 'budget_list' %}" class="text-gray-800 hover:text-gray-600">Budgets</a></li>
-                <li><a href="{% url 'report_dashboard' %}" class="text-gray-800 hover:text-gray-600">Reports</a></li>
-                <li><a href="{% url 'profile' %}" class="text-gray-800 hover:text-gray-600">Profile</a></li>
-                <li>
-                    <form method="post" action="{% url 'logout' %}" class="inline">
-                        {% csrf_token %}
-                        <button type="submit" class="bg-transparent border-0 text-gray-800 hover:text-gray-600 p-0 cursor-pointer">
-                            Logout
-                        </button>
-                    </form>
-                </li>
+              <li>
+                <a
+                  href="{% url 'dashboard' %}"
+                  class="{% if request.resolver_match.url_name == 'dashboard' %}text-[#FF4300]{% else %}text-gray-800 hover:text-gray-600{% endif %}"
+                >Dashboard</a>
+              </li>
+              <li>
+                <a
+                  href="{% url 'transaction_list' %}"
+                  class="{% if request.resolver_match.url_name == 'transaction_list' %}text-[#FF4300]{% else %}text-gray-800 hover:text-gray-600{% endif %}"
+                >Transactions</a>
+              </li>
+              <li>
+                <a
+                  href="{% url 'category_list' %}"
+                  class="{% if request.resolver_match.url_name == 'category_list' %}text-[#FF4300]{% else %}text-gray-800 hover:text-gray-600{% endif %}"
+                >Categories</a>
+              </li>
+              <li>
+                <a
+                  href="{% url 'budget_list' %}"
+                  class="{% if request.resolver_match.url_name == 'budget_list' %}text-[#FF4300]{% else %}text-gray-800 hover:text-gray-600{% endif %}"
+                >Budgets</a>
+              </li>
+              <li>
+                <a
+                  href="{% url 'report_dashboard' %}"
+                  class="{% if request.resolver_match.url_name == 'report_dashboard' %}text-[#FF4300]{% else %}text-gray-800 hover:text-gray-600{% endif %}"
+                >Reports</a>
+              </li>
+              <li>
+                <a
+                  href="{% url 'profile' %}"
+                  class="{% if request.resolver_match.url_name == 'profile' %}text-[#FF4300]{% else %}text-gray-800 hover:text-gray-600{% endif %}"
+                >Profile</a>
+              </li>
+              <li>
+                <form method="post" action="{% url 'logout' %}" class="inline">
+                  {% csrf_token %}
+                  <button
+                    type="submit"
+                    class="{% if request.resolver_match.url_name == 'logout' %}text-[#FF4300]{% else %}text-gray-800 hover:text-gray-600{% endif %}"
+                  >Logout</button>
+                </form>
+              </li>
             </ul>
-        </nav>
+          </nav>
+          
     </div>
     </header>
     {% endblock %}
