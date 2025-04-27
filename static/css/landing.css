@@ -1,14 +1,4 @@
-html {
-    font-family: 'Inter', sans-serif;
-  }
-  
-  /* Optionally adjust global weights/styles */
-  body {
-    font-weight: 400;
-    line-height: 1.6;
-    color: #333;
-  }
-* Gradient Mesh Background */
+/* Gradient Mesh Background */
 body.home-page {
     background: radial-gradient(circle at 10% 20%, #C8FFDF 0%, transparent 30%),
                 radial-gradient(circle at 80% 30%, #FCD789 0%, transparent 40%),
@@ -216,16 +206,17 @@ body.home-page {
         grid-template-columns: 1fr;
     }
 
-.feature-card {
-    background: rgba(255, 255, 255, 0.2); /* more transparent for glass effect */
-    backdrop-filter: blur(12px); /* strong blur for glassmorphism */
-    -webkit-backdrop-filter: blur(12px); /* Safari support */
-    border-radius: 16px;
-    padding: 2rem 1.5rem;
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.4); /* subtle white border */
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25); /* soft shadow for depth */
-}
+    .feature-card {
+        background: rgba(255, 255, 255, 0.2); /* more transparent for glass effect */
+        backdrop-filter: blur(12px); /* strong blur for glassmorphism */
+        -webkit-backdrop-filter: blur(12px); /* Safari support */
+        border-radius: 16px;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.4); /* subtle white border */
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); /* soft shadow for depth */
+    }
+    
 
     .home-content {
         padding: 0 1.5rem;
