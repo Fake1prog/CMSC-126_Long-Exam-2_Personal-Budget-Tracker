@@ -17,7 +17,7 @@
 
         <div class="mb-6 flex justify-between items-center">
             <h2 class="text-3xl font-bold text-gray-800">Budgets</h2>
-            <a href="{% url 'budget_add' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition">
+            <a href="{% url 'budget_add' %}" class="bg-[#FD9069] hover:opacity-90 text-white px-4 py-2 rounded transition">
                 Add Budget
             </a>
         </div>
@@ -40,22 +40,19 @@
 
                                 <div class="w-full bg-gray-200 rounded-full h-2.5">
                                     {% if budget.amount > 0 %}
-                                        {# --- Original Percentage Calculation Logic --- #}
-                                        {% with percentage=budget.spent|floatformat:2 %} {# Note: This uses spent amount as percentage #}
+                                        {% with percentage=budget.spent|floatformat:2 %}
                                             {% if budget.is_over %}
                                                 <div class="h-2.5 rounded-full bg-red-600" style="width: 100%"></div>
                                             {% else %}
                                                 <div class="h-2.5 rounded-full
                                                     {% if percentage > 80 %}bg-yellow-500{% else %}bg-green-600{% endif %}"
-                                                    style="width: {{ percentage }}%"> {# Note: Width is set using the spent amount #}
+                                                    style="width: {{ percentage }}%"> 
                                                 </div>
                                             {% endif %}
                                         {% endwith %}
-                                        {# --- End Original Percentage Calculation Logic --- #}
                                     {% endif %}
                                 </div>
 
-                                {# --- Original Remaining Text Logic --- #}
                                 <p class="text-sm mt-1 {% if budget.is_over %}text-red-600 font-semibold{% elif budget.remaining <= budget.amount|floatformat:2 %}text-yellow-500{% else %}text-green-600{% endif %}">
                                     {% if budget.is_over %}
                                         Over budget by ${{ budget.remaining|floatformat:2 }}
@@ -63,7 +60,6 @@
                                         ${{ budget.remaining|floatformat:2 }} remaining
                                     {% endif %}
                                 </p>
-                                {# --- End Original Remaining Text Logic --- #}
                             </div>
 
                             <div class="text-sm text-gray-500 mb-2">
@@ -87,7 +83,7 @@
             {% else %}
                 <div class="text-center py-8">
                     <p class="text-gray-500 italic mb-4">You don't have any budgets set up yet.</p>
-                    <a href="{% url 'budget_add' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition">
+                    <a href="{% url 'budget_add' %}" class="bg-[#FD9069] hover:opacity-90 text-white px-4 py-2 rounded transition">
                         Create Your First Budget
                     </a>
                 </div>
