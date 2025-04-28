@@ -1,138 +1,139 @@
-{% extends 'base_dashboard.html' %}  {# Extend the main dashboard base template #}
+{% extends 'base_dashboard.html' %}
 {% load crispy_forms_tags %}
 
 {% block title %}{{ title }} | Gastadorcheck{% endblock %}
 
 {% block extra_css %}
-    {# Link to custom CSS for page background or other styles #}
     <link rel="stylesheet" href="/static/css/landing.css">
-    {# Add any specific CSS for forms if needed #}
 {% endblock %}
 
-{% block body_classes %}home-page{% endblock %} {# Apply body class for background styling #}
-
-{% block header %}{% endblock %} {# <--- EXCLUDE HEADER: Override the header block with nothing #}
+{% block body_classes %}home-page{% endblock %}
 
 {% block content %}
-    {# Main content container with semi-transparent background and blur effect #}
-    <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-lg shadow p-6 my-8">
+<div>
+    <!-- Form Title -->
+    <h1 class="transaction-header">{{ title }}</h1>
 
-        {# --- Your original form content starts here --- #}
-
-        <div class="max-w-2xl mx-auto">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6">{{ title }}</h2>
-
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <form method="POST">
-                    {% csrf_token %}
-                    {# Using as_crispy_field is generally preferred with crispy forms #}
-                    {# If you need manual control, ensure you include form.media in the head #}
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="md:col-span-2">
-                             {{ form.title|as_crispy_field }}
-                        </div>
-                        <div>
-                            {{ form.amount|as_crispy_field }}
-                        </div>
-                        <div>
-                            {{ form.date|as_crispy_field }}
-                        </div>
-                        <div>
-                             {{ form.type|as_crispy_field }}
-                        </div>
-                        <div>
-                            {{ form.category|as_crispy_field }}
-                        </div>
-                        <div class="md:col-span-2">
-                            {{ form.notes|as_crispy_field }}
-                        </div>
-                    </div>
-
-                    <div class="flex space-x-2 mt-4">
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition">
-                            Save Transaction
-                        </button>
-                        <a href="{% url 'transaction_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition">
-                            Cancel
-                        </a>
-                    </div>
-                </form>
+    <!-- Transaction Form -->
+    <div class="transaction-card">
+        <form method="POST" class="max-w-4xl mx-auto">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="md:col-span-2">
+                    <label class="transaction-label">Title</label>
+                    <input type="text" name="title" id="id_title" class="transaction-input" value="{{ form.title.value|default:'' }}" required>
+                </div>
+                
+                <div>
+                    <label class="transaction-label">Amount</label>
+                    <input type="number" name="amount" id="id_amount" class="transaction-input" value="{{ form.amount.value|default:'' }}" step="0.01" min="0.01" required>
+                </div>
+                
+                <div>
+                    <label class="transaction-label">Date</label>
+                    <input type="date" name="date" id="id_date" class="transaction-input" value="{{ form.date.value|date:'Y-m-d'|default:'' }}" required>
+                </div>
+                
+                <div>
+                    <label class="transaction-label">Type</label>
+                    <select name="type" id="id_type" class="transaction-select" required>
+                        <option value="INCOME" {% if form.type.value == 'INCOME' %}selected{% endif %}>Income</option>
+                        <option value="EXPENSE" {% if form.type.value == 'EXPENSE' %}selected{% endif %}>Expense</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="transaction-label">Category</label>
+                    <select name="category" id="id_category" class="transaction-select">
+                        <option value="">---------</option>
+                        {% for choice in form.category.field.choices %}
+                            {% if choice.0 %}
+                                <option value="{{ choice.0 }}" {% if form.category.value|stringformat:"s" == choice.0|stringformat:"s" %}selected{% endif %}>
+                                    {{ choice.1 }}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="md:col-span-2">
+                    <label class="transaction-label">Notes</label>
+                    <textarea name="notes" id="id_notes" class="transaction-textarea">{{ form.notes.value|default:'' }}</textarea>
+                </div>
             </div>
-        </div>
 
-        {# --- Your original form content ends here --- #}
-
-    </div> {# End main content container #}
+            <div class="flex justify-end space-x-4 mt-8">
+                <a href="{% url 'transaction_list' %}" class="secondary-button">
+                    Cancel
+                </a>
+                <button type="submit" class="primary-button">
+                    Save Transaction
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
-    {# Include the JavaScript for the category filtering here #}
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const typeSelect = document.querySelector('.transaction-type-select'); // Assuming crispy adds this class or adjust selector
-        const categorySelect = document.querySelector('.category-select'); // Assuming crispy adds this class or adjust selector
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Category filtering logic
+    const typeSelect = document.getElementById('id_type');
+    const categorySelect = document.getElementById('id_category');
 
-        // Function to filter categories based on transaction type
-        function updateCategoryOptions() {
-            const selectedType = typeSelect.value;
-            const currentValue = categorySelect.value;
+    function updateCategoryOptions() {
+        const selectedType = typeSelect.value;
+        const currentValue = categorySelect.value;
 
-            // Make an AJAX request to get filtered categories
-            fetch(`/transactions/get-categories/?type=${selectedType}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Clear existing options
-                    categorySelect.innerHTML = '';
+        fetch(`/transactions/get-categories/?type=${selectedType}`)
+            .then(response => response.json())
+            .then(data => {
+                // Clear existing options
+                categorySelect.innerHTML = '';
 
-                    // Add placeholder option
-                    const placeholderOption = document.createElement('option');
-                    placeholderOption.value = '';
-                    placeholderOption.textContent = '---------';
-                    categorySelect.appendChild(placeholderOption);
+                // Add placeholder option
+                const placeholderOption = document.createElement('option');
+                placeholderOption.value = '';
+                placeholderOption.textContent = '---------';
+                categorySelect.appendChild(placeholderOption);
 
-                    // Add filtered category options
-                    data.categories.forEach(category => {
-                        const option = document.createElement('option');
-                        option.value = category.id;
-                        option.textContent = category.name;
-                        // Add data attributes for enhanced display (if needed client-side)
-                        option.setAttribute('data-color', category.color);
-                        option.setAttribute('data-icon', category.icon || '');
-                        categorySelect.appendChild(option);
-                    });
-
-                    // Try to restore the previous selection if it exists in the new options
-                    if (currentValue) {
-                        const exists = Array.from(categorySelect.options).some(opt => opt.value === currentValue);
-                        if (exists) {
-                            categorySelect.value = currentValue;
-                        }
-                    }
+                // Add filtered category options
+                data.categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.id;
+                    option.textContent = category.name;
+                    categorySelect.appendChild(option);
                 });
-        }
 
-        // Initial update based on the pre-selected type (for edit forms)
-        if (typeSelect && categorySelect) {
-             // If it's an edit page, the type select will have a value on load
-            updateCategoryOptions(); // Call on load to populate categories based on initial type
+                // Try to restore the previous selection if it exists in the new options
+                if (currentValue) {
+                    const exists = Array.from(categorySelect.options).some(opt => opt.value === currentValue);
+                    if (exists) {
+                        categorySelect.value = currentValue;
+                    }
+                }
+            });
+    }
 
-            // Update categories when transaction type changes (for add/edit forms)
-            typeSelect.addEventListener('change', updateCategoryOptions);
-        }
+    // Initial update and event listener
+    if (typeSelect && categorySelect) {
+        updateCategoryOptions();
+        typeSelect.addEventListener('change', updateCategoryOptions);
+    }
 
-         // Optional: Initialize Flatpickr for date fields
+    // Initialize date picker
+    if (typeof flatpickr !== 'undefined') {
         flatpickr("#id_date", {
-             dateFormat: "Y-m-d", // Match your desired date format
-         });
-    });
-    </script>
-    {# Add Crispy Forms JS if needed and not already in base_dashboard.html's head #}
-    {{ form.media.js }}
+            dateFormat: "Y-m-d",
+        });
+    }
+});
+</script>
 {% endblock %}
 
-
 {% block footer %}
-    {# Page Footer with home-footer class #}
     <footer class="home-footer">
         <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
     </footer>

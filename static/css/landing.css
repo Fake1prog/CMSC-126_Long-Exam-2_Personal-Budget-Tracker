@@ -256,8 +256,6 @@ body.home-page {
 
 /*******************************************************************************/
 
-/* Add these styles to your landing.css */
-
 /* Registration Form Container */
 .auth-container {
     max-width: 500px;
@@ -348,7 +346,315 @@ body.home-page {
   }
   
   .welcome-heading .welcome-user {
-    font-weight: Bo;
+    font-weight: bold;
     color: #FD9069;
     margin-left: 0.25rem;       /* small gap before the name */
   }
+
+/* Transaction Page Specific CSS */
+
+/* Main transaction title styling */
+.transaction-title {
+    color: rgb(255 67 0 );
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    margin-top: 1.5rem;
+}
+
+/* Card styling for transaction pages */
+.transaction-card {
+    background-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 40px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Smaller cards for summary display */
+.transaction-summary-card {
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 40px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Inner card for transaction details */
+.transaction-inner-card {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Summary values */
+.income-value {
+    color: #4ADE80;
+    font-size: 2.25rem;
+    font-weight: 700;
+}
+
+.expense-value {
+    color: #F87171;
+    font-size: 2.25rem;
+    font-weight: 700;
+}
+
+.balance-value {
+    color: #EAB308;
+    font-size: 2.25rem;
+    font-weight: 700;
+}
+
+/* Card label text */
+.card-label {
+    color: #6B7280;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Button styling */
+.income-button {
+    background-color: rgba(74, 222, 128, 0.45);
+    color: #4B5563;
+    padding: 0.75rem 1.5rem;
+    border-radius: 15px;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.income-button:hover {
+    background-color: rgba(74, 222, 128, 0.6);
+}
+
+.expense-button {
+    background-color: rgba(248, 113, 113, 0.45);
+    color: #4B5563;
+    padding: 0.75rem 1.5rem;
+    border-radius: 15px;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.expense-button:hover {
+    background-color: rgba(248, 113, 113, 0.6);
+}
+
+.primary-button {
+    background-color: #F78166;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 15px;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.primary-button:hover {
+    background-color: #E56F5A;
+}
+
+.secondary-button {
+    background-color: #D1D5DB;
+    color: #4B5563;
+    padding: 0.75rem 1.5rem;
+    border-radius: 15px;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.secondary-button:hover {
+    background-color: #9CA3AF;
+}
+
+.delete-button {
+    background-color: #F87171;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 15px;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.delete-button:hover {
+    background-color: #EF4444;
+}
+
+/* Filter toggle link */
+.filter-toggle {
+    color: #F78166;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.filter-toggle:hover {
+    color: #E56F5A;
+}
+
+/* Form inputs for transaction pages */
+.transaction-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.5);
+    font-size: 1rem;
+}
+
+.transaction-input:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.transaction-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.5);
+    font-size: 1rem;
+    appearance: auto;
+}
+
+select option {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.transaction-textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.5);
+    font-size: 1rem;
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Input labels */
+.transaction-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4B5563;
+    margin-bottom: 0.5rem;
+}
+
+/* Table styling for transactions */
+.transaction-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.transaction-table th {
+    color: #4B5563;
+    font-weight: 500;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+}
+
+.transaction-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+    color: #4B5563;
+}
+
+.transaction-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Action links in table */
+.edit-link {
+    color: #6366F1;
+    text-decoration: none;
+}
+
+.edit-link:hover {
+    color: #4F46E5;
+}
+
+.delete-link {
+    color: #F87171;
+    text-decoration: none;
+}
+
+.delete-link:hover {
+    color: #EF4444;
+}
+
+/* Category dot in table */
+.category-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+/* Transaction headers */
+.transaction-header {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: rgb(255 67 0 );
+    margin-bottom: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+/* Fix for flatpickr input */
+.flatpickr-input.transaction-input {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Empty state message */
+.empty-transactions {
+    text-align: center;
+    padding: 3rem 0;
+    color: #6B7280;
+    font-style: italic;
+}
+
+/* Transaction table header styling */
+.transaction-table-header {
+    color: #4B5563;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Income amount in table */
+.income-amount {
+    color: #4ADE80;
+    font-weight: 500;
+}
+
+/* Expense amount in table */
+.expense-amount {
+    color: #F87171;
+    font-weight: 500;
+}
+
+/* Filter container to ensure consistent page layout */
+.filter-content-container {
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+}
+
+/* Hide Alpine.js elements before initialization */
+[x-cloak] {
+    display: none !important;
+}
+
+/* Make table columns consistent width */
+.transaction-table th.w-1\/6 {
+    width: 16.666667%;
+}
+
+.transaction-table th.w-1\/5 {
+    width: 20%;
+}
