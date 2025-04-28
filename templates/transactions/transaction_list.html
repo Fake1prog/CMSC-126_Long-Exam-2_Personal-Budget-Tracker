@@ -9,103 +9,235 @@
 
 {% block body_classes %}home-page{% endblock %}
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+  /* Custom range slider styles */
+  .range-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+  }
+
+  .range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #5bf19d;
+    cursor: pointer;
+  }
+
+  .range-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #5bf19d;
+    cursor: pointer;
+  }
+</style>
+
 {% block content %}
-<div>
-    <!-- Transactions Title - Positioned similar to dashboard -->
-    <h1 class="transaction-title">Transactions</h1>
+<div class="my-8">
+    <!-- Transactions Title -->
+    <div class="mb-6">
+        <h2 class="text-3xl flex flex-wrap items-baseline">
+            <span class="italic text-gray-500">Your</span>
+            <span class="font-semibold text-[#FF4300] ml-1">Transactions</span>
+        </h2>
+    </div>
 
     <!-- Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div class="transaction-summary-card">
-            <p class="card-label">Income</p>
-            <p class="income-value">${{ income_total }}</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
+            <p class="text-sm text-gray-500">Income</p>
+            <p class="text-2xl font-bold text-green-600">${{ income_total }}</p>
         </div>
-        <div class="transaction-summary-card">
-            <p class="card-label">Expenses</p>
-            <p class="expense-value">${{ expense_total }}</p>
+        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
+            <p class="text-sm text-gray-500">Expenses</p>
+            <p class="text-2xl font-bold text-red-600">${{ expense_total }}</p>
         </div>
-        <div class="transaction-summary-card">
-            <p class="card-label">Balance</p>
-            <p class="balance-value">${{ balance }}</p>
+        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
+            <p class="text-sm text-gray-500">Balance</p>
+            <p class="text-2xl font-bold {% if balance >= 0 %}text-blue-600{% else %}text-red-600{% endif %}">${{ balance }}</p>
         </div>
     </div>
-    
+
     <!-- Action Buttons -->
     <div class="flex justify-end mb-6 space-x-4">
-        <a href="{% url 'transaction_add' %}?type=INCOME" class="income-button">
+        <a href="{% url 'transaction_add' %}?type=INCOME"
+           class="bg-[rgba(253,144,105,0.45)] text-[#767676] hover:opacity-90 py-2 px-4 rounded-[15px] transition duration-150 flex items-center">
             Add Income
         </a>
-        <a href="{% url 'transaction_add' %}?type=EXPENSE" class="expense-button">
+        <a href="{% url 'transaction_add' %}?type=EXPENSE"
+           class="bg-[rgba(106,194,143,0.77)] text-[#767676] hover:opacity-90 py-2 px-4 rounded-[15px] transition duration-150 flex items-center">
             Add Expense
         </a>
     </div>
 
-    <!-- Filters Panel -->
-    <div class="transaction-card" x-data="{ showFilters: false }">
-        <div class="flex justify-between items-center filter-container">
-            <h3 class="text-xl font-medium text-gray-700">Filters</h3>
-            <button @click="showFilters = !showFilters" class="filter-toggle">
+    <!-- Improved Filters Panel -->
+    <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6 mb-6" x-data="{ showFilters: true, minAmount: 0, maxAmount: 1000000 }">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-semibold text-gray-700">Filters</h3>
+            <button @click="showFilters = !showFilters" class="text-[#FF4300] hover:text-[#FF6B30] transition duration-150">
                 <span x-show="!showFilters">Show Filters</span>
                 <span x-show="showFilters">Hide Filters</span>
             </button>
         </div>
 
-        <div x-show="showFilters" class="mt-4">
-            <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                    <label class="transaction-label">Title contains</label>
-                    <input type="text" name="title__icontains" class="transaction-input">
+        <div x-show="showFilters">
+            <form method="get" class="space-y-5">
+                <!-- Title contains -->
+                <div class="mb-4">
+                    <label for="title__icontains" class="block text-sm font-medium text-gray-700 mb-1">Title contains</label>
+                    <input type="text" name="title__icontains" id="title__icontains" class="w-full h-10 px-4 rounded-xl border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]">
                 </div>
-                
-                <div>
-                    <label class="transaction-label">Amount is less than</label>
-                    <input type="number" name="amount__lt" class="transaction-input">
+
+                <!-- Amount Range -->
+                <div class="mb-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                        <div>
+                            <label for="amount__gt" class="block text-sm font-medium text-gray-700 mb-1">Amount is greater than</label>
+                            <div class="relative rounded-lg shadow-sm">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">$</span>
+                                </div>
+                                <input
+                                    type="number"
+                                    name="amount__gt"
+                                    id="amount__gt"
+                                    x-model="minAmount"
+                                    class="w-full h-10 pl-8 rounded-xl border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]"
+                                >
+                            </div>
+                        </div>
+                        <div>
+                            <label for="amount__lt" class="block text-sm font-medium text-gray-700 mb-1">Amount is less than</label>
+                            <div class="relative rounded-lg shadow-sm">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">$</span>
+                                </div>
+                                <input
+                                    type="number"
+                                    name="amount__lt"
+                                    id="amount__lt"
+                                    x-model="maxAmount"
+                                    class="w-full h-10 pl-8 rounded-xl border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                <!-- Range slider visualization - simplified and color-matched -->
+                <div class="mt-2 px-2">
+                    <div class="relative pt-1">
+                        <p class="text-xs text-gray-500 mb-1">Min amount: $<span x-text="minAmount"></span></p>
+                        <div class="flex items-center">
+                            <span class="text-xs text-gray-500 mr-2">$0</span>
+                            <input
+                                type="range"
+                                min="0"
+                                max="1000000"
+                                step="10"
+                                x-model="minAmount"
+                                class="range-slider mb-3 w-full h-2 appearance-none bg-blue-100 rounded-full"
+                            >
+                            <span class="text-xs text-gray-500 ml-2">$1000000</span>
+                        </div>
+
+                        <p class="text-xs text-gray-500 mb-1">Max amount: $<span x-text="maxAmount"></span></p>
+                        <div class="flex items-center">
+                            <span class="text-xs text-gray-500 mr-2">$0</span>
+                            <input
+                                type="range"
+                                min="0"
+                                max="1000000"
+                                step="10"
+                                x-model="maxAmount"
+                                class="range-slider w-full h-2 appearance-none bg-blue-100 rounded-full"
+                            >
+                            <span class="text-xs text-gray-500 ml-2">$1000000</span>
+                        </div>
+                    </div>
                 </div>
-                
-                <div>
-                    <label class="transaction-label">Amount is greater than</label>
-                    <input type="number" name="amount__gt" class="transaction-input">
                 </div>
-                
-                <div>
-                    <label class="transaction-label">Date year</label>
-                    <input type="number" name="date__year" class="transaction-input">
+
+                <!-- Date Range Picker -->
+                <div class="mb-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="date_start" class="block text-sm font-medium text-gray-700 mb-1">Date from</label>
+                            <div class="relative rounded-lg shadow-sm">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <input
+                                    type="text"
+                                    name="date_start"
+                                    id="date_start"
+                                    class="datepicker w-full h-10 pl-10 rounded-xl border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]"
+                                    placeholder="Select start date"
+                                >
+                                <!-- Hidden fields for the actual filtering -->
+                                <input type="hidden" name="date__gte" id="date__gte">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="date_end" class="block text-sm font-medium text-gray-700 mb-1">Date to</label>
+                            <div class="relative rounded-lg shadow-sm">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <input
+                                    type="text"
+                                    name="date_end"
+                                    id="date_end"
+                                    class="datepicker w-full h-10 pl-10 rounded-xl border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]"
+                                    placeholder="Select end date"
+                                >
+                                <!-- Hidden fields for the actual filtering -->
+                                <input type="hidden" name="date__lte" id="date__lte">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-                <div>
-                    <label class="transaction-label">Date month</label>
-                    <input type="number" name="date__month" min="1" max="12" class="transaction-input">
+
+                <!-- Type and Category -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="type" class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                        <select name="type" id="type" class="w-full h-10 rounded-xl border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]">
+                            <option value="">All</option>
+                            <option value="INCOME">Income</option>
+                            <option value="EXPENSE">Expense</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                        <select name="category" id="category" class="w-full h-10 rounded-xl border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
-                
-                <div>
-                    <label class="transaction-label">Date day</label>
-                    <input type="number" name="date__day" min="1" max="31" class="transaction-input">
-                </div>
-                
-                <div>
-                    <label class="transaction-label">Type</label>
-                    <select name="type" class="transaction-select">
-                        <option value="">All</option>
-                        <option value="INCOME">Income</option>
-                        <option value="EXPENSE">Expense</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <label class="transaction-label">Category</label>
-                    <select name="category" class="transaction-select">
-                        <option value="">All Categories</option>
-                        {% for category in filter.form.category.field.queryset %}
-                            <option value="{{ category.id }}">{{ category.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <div class="md:col-span-3 flex justify-end space-x-4 mt-4">
-                    <button type="submit" class="primary-button">
+
+                <!-- Action Buttons -->
+                <div class="flex justify-end space-x-4 mt-6">
+                    <button type="submit" class="bg-[#FF4300] hover:bg-[#FF6B30] text-white font-medium py-2 px-5 rounded-xl transition duration-150">
                         Apply Filters
                     </button>
-                    <a href="{% url 'transaction_list' %}" class="secondary-button">
+                    <a href="{% url 'transaction_list' %}" class="bg-gray-200 text-gray-700 hover:bg-gray-300 font-medium py-2 px-5 rounded-xl transition duration-150">
                         Clear Filters
                     </a>
                 </div>
@@ -114,44 +246,51 @@
     </div>
 
     <!-- Transactions Table -->
-    <div class="transaction-card">
+    <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-semibold text-gray-700">Transactions</h3>
+            {% if transactions.count > 0 %}
+                <span class="text-sm text-gray-700">Showing {{ transactions.count }} transaction(s)</span>
+            {% endif %}
+        </div>
+
         {% if transactions %}
             <div class="overflow-x-auto">
-                <table class="transaction-table">
+                <table class="min-w-full">
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>Title</th> 
-                            <th>Categories</th>
-                            <th>Amount</th> <!-- Left-aligned by default -->
-                            <th class="text-center">Actions</th>
+                            <th class="py-4 px-4 text-left font-semibold text-gray-700">Date</th>
+                            <th class="py-4 px-4 text-left font-semibold text-gray-700">Title</th>
+                            <th class="py-4 px-4 text-left font-semibold text-gray-700">Category</th>
+                            <th class="py-4 px-4 text-right font-semibold text-gray-700">Amount</th>
+                            <th class="py-4 px-4 text-center font-semibold text-gray-700">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for transaction in transactions %}
-                            <tr>
-                                <td>{{ transaction.date }}</td>
-                                <td>{{ transaction.title }}</td>
-                                <td>
+                            <tr class="border-b border-gray-100">
+                                <td class="py-4 px-4">{{ transaction.date }}</td>
+                                <td class="py-4 px-4">{{ transaction.title }}</td>
+                                <td class="py-4 px-4">
                                     {% if transaction.category %}
-                                        <span class="inline-flex items-center">
-                                            <span class="category-dot" style="background-color: {{ transaction.category.color }}"></span>
+                                        <div class="flex items-center">
+                                            <span class="w-3 h-3 rounded-full mr-2" style="background-color: {{ transaction.category.color }}"></span>
                                             {{ transaction.category.name }}
-                                        </span>
+                                        </div>
                                     {% else %}
-                                        Uncategorized
+                                        <span class="text-gray-500">Uncategorized</span>
                                     {% endif %}
                                 </td>
-                                <td class="{% if transaction.type == 'INCOME' %}income-amount{% else %}expense-amount{% endif %}">
+                                <td class="py-4 px-4 text-right {% if transaction.type == 'INCOME' %}text-green-600{% else %}text-red-600{% endif %} font-medium">
                                     ${{ transaction.amount }}
                                 </td>
-                                <td class="text-center">
-                                    <div class="flex justify-center space-x-2">
-                                        <a href="{% url 'transaction_edit' transaction.id %}" class="edit-link">
+                                <td class="py-4 px-4 text-center">
+                                    <div class="flex justify-center space-x-3">
+                                        <a href="{% url 'transaction_edit' transaction.id %}" class="text-indigo-600 hover:text-indigo-800 text-sm">
                                             Edit
                                         </a>
-                                        <span class="text-gray-400">·</span>
-                                        <a href="{% url 'transaction_delete' transaction.id %}" class="delete-link">
+                                        <span class="text-gray-300">·</span>
+                                        <a href="{% url 'transaction_delete' transaction.id %}" class="text-red-600 hover:text-red-800 text-sm">
                                             Delete
                                         </a>
                                     </div>
@@ -162,12 +301,90 @@
                 </table>
             </div>
         {% else %}
-            <div class="empty-transactions">
-                No transactions found. Add your first transaction using the buttons above.
+            <div class="text-center py-10">
+                <div class="text-gray-400 text-5xl mb-4">📋</div>
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">No transactions yet</h3>
+                <p class="text-gray-700 mb-6">Start adding income and expenses to track your finances.</p>
+
+                <div class="flex justify-center space-x-4">
+                    <a href="{% url 'transaction_add' %}?type=INCOME"
+                       class="bg-[rgba(253,144,105,0.45)] text-[#767676] hover:opacity-90 py-2 px-4 rounded-[15px] transition duration-150">
+                        Add Income
+                    </a>
+                    <a href="{% url 'transaction_add' %}?type=EXPENSE"
+                       class="bg-[rgba(106,194,143,0.77)] text-[#767676] hover:opacity-90 py-2 px-4 rounded-[15px] transition duration-150">
+                        Add Expense
+                    </a>
+                </div>
             </div>
         {% endif %}
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize date pickers
+    const dateStartPicker = flatpickr("#date_start", {
+        dateFormat: "Y-m-d",
+        onChange: function(selectedDates, dateStr) {
+            // Update the hidden field for actual filtering
+            document.getElementById('date__gte').value = dateStr;
+        }
+    });
+
+    const dateEndPicker = flatpickr("#date_end", {
+        dateFormat: "Y-m-d",
+        onChange: function(selectedDates, dateStr) {
+            // Update the hidden field for actual filtering
+            document.getElementById('date__lte').value = dateStr;
+        }
+    });
+
+    // Initialize with existing values if available
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // Set initial date values from URL parameters if they exist
+    if (urlParams.has('date__gte')) {
+        const startDate = urlParams.get('date__gte');
+        dateStartPicker.setDate(startDate);
+        document.getElementById('date__gte').value = startDate;
+    }
+
+    if (urlParams.has('date__lte')) {
+        const endDate = urlParams.get('date__lte');
+        dateEndPicker.setDate(endDate);
+        document.getElementById('date__lte').value = endDate;
+    }
+
+    // Set amount values from URL parameters
+    if (urlParams.has('amount__gt')) {
+        const minAmount = urlParams.get('amount__gt');
+        document.getElementById('amount__gt').value = minAmount;
+    }
+
+    if (urlParams.has('amount__lt')) {
+        const maxAmount = urlParams.get('amount__lt');
+        document.getElementById('amount__lt').value = maxAmount;
+    }
+
+    // Set selected type and category if available
+    if (urlParams.has('type')) {
+        document.getElementById('type').value = urlParams.get('type');
+    }
+
+    if (urlParams.has('category')) {
+        document.getElementById('category').value = urlParams.get('category');
+    }
+
+    // Set title if available
+    if (urlParams.has('title__icontains')) {
+        document.getElementById('title__icontains').value = urlParams.get('title__icontains');
+    }
+});
+</script>
 {% endblock %}
 
 {% block footer %}
