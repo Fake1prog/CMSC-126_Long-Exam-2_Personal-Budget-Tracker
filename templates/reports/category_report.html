@@ -1,238 +1,239 @@
-{% extends 'base_dashboard.html' %}  {# Extends the dashboard base template #}
+{% extends 'base_dashboard.html' %}
 
-{% block title %}Category Report | Gastadorcheck{% endblock %} {# Sets the page title #}
+{% block title %}Category Report | Gastadorcheck{% endblock %}
 
 {% block extra_css %}
-    {# Links to additional CSS files #}
-    <link rel="stylesheet" href="/static/css/landing.css"> {# Custom CSS for background #}
-    {# Add any report-specific CSS if needed #}
+    <link rel="stylesheet" href="/static/css/landing.css">
 {% endblock %}
 
-{% block body_classes %}home-page{% endblock %} {# Applies a body class for styling #}
-
-{% block header %}{% endblock %} {# Overrides and removes the header block #}
+{% block body_classes %}home-page{% endblock %}
 
 {% block content %}
-    {# Main content container with background and blur effects #}
-    <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-lg shadow p-6 my-8">
-
-        {# Content specific to the category report page #}
-        <div class="mb-6 flex justify-between items-center">
-            <div>
-                <h2 class="text-3xl font-bold text-gray-800">Category Report</h2>
-                <p class="text-gray-600">
-                    {% if selected_category %}
-                        {{ selected_category.name }}
-                    {% else %}
-                        All Categories
-                    {% endif %}
-                    ({{ start_date|date:"M d, Y" }} - {{ end_date|date:"M d, Y" }})
-                </p>
-            </div>
-            <div>
-                <a href="{% url 'report_dashboard' %}" class="text-indigo-600 hover:text-indigo-800">
-                    ← Back to Reports
-                </a>
-            </div>
+<div class="my-8">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h2 class="text-3xl flex flex-wrap items-baseline">
+                <span class="font-semibold text-[#FF4300] ml">Category</span>
+                <span class="font-semibold text-[#FF4300] ml-1">Report</span>
+            </h2>
+            <p class="text-gray-600">
+                {% if selected_category %}
+                    {{ selected_category.name }}
+                {% else %}
+                    All Categories
+                {% endif %}
+                ({{ start_date|date:"M d, Y" }} - {{ end_date|date:"M d, Y" }})
+            </p>
         </div>
+        <a href="{% url 'report_dashboard' %}" class="text-indigo-600 hover:text-indigo-800 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Reports
+        </a>
+    </div>
 
-        {% if not has_any_transactions %}
-            <div class="bg-amber-50 border border-amber-200 rounded-lg p-6 text-center">
-                <div class="text-amber-500 text-4xl mb-4">📊</div>
+    {% if not has_any_transactions %}
+        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
+            <div class="text-center py-10">
+                <div class="text-amber-500 text-5xl mb-4">📊</div>
                 <h3 class="text-xl font-semibold text-amber-700 mb-2">No transactions yet!</h3>
                 <p class="text-amber-600 mb-4">Start adding income and expenses to see your category reports.</p>
-                <div class="flex justify-center space-x-2">
-                    <a href="{% url 'transaction_add' %}?type=INCOME" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition">
+                <div class="flex justify-center space-x-4">
+                    <a href="{% url 'transaction_add' %}?type=INCOME" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition">
                         Add Income
                     </a>
-                    <a href="{% url 'transaction_add' %}?type=EXPENSE" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition">
+                    <a href="{% url 'transaction_add' %}?type=EXPENSE" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition">
                         Add Expense
                     </a>
                 </div>
             </div>
-        {% else %}
-            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                <h3 class="text-xl font-semibold text-gray-700 mb-4">Filters</h3>
+        </div>
+    {% else %}
+        <!-- Filters Card -->
+        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6 mb-6">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Filters</h3>
 
-                <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                        <select name="category" id="category" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                            <option value="">All Categories</option>
-                            {% for category in categories %}
-                                <option value="{{ category.id }}" {% if selected_category and selected_category.id == category.id %}selected{% endif %}>
-                                    {{ category.name }} ({{ category.get_type_display }})
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div>
-                        <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
-                        <input type="date" name="start_date" id="start_date" value="{{ start_date|date:'Y-m-d' }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                    </div>
-                    <div>
-                        <label for="end_date" class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
-                        <input type="date" name="end_date" id="end_date" value="{{ end_date|date:'Y-m-d' }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            <form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                    <select name="category" id="category" class="w-full rounded-md border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}" {% if selected_category and selected_category.id == category.id %}selected{% endif %}>
+                                {{ category.name }} ({{ category.get_type_display }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                    <input type="date" name="start_date" id="start_date" value="{{ start_date|date:'Y-m-d' }}" class="w-full rounded-md border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label for="end_date" class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                    <input type="date" name="end_date" id="end_date" value="{{ end_date|date:'Y-m-d' }}" class="w-full rounded-md border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+
+                <div class="md:col-span-3 flex space-x-2">
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition">
+                        Apply Filters
+                    </button>
+                    <a href="{% url 'category_report' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition">
+                        Reset Filters
+                    </a>
+                    <a href="{% url 'export_data' %}?start_date={{ start_date|date:'Y-m-d' }}&end_date={{ end_date|date:'Y-m-d' }}{% if selected_category %}&category={{ selected_category.id }}{% endif %}"
+                       class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition flex items-center ml-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Export Data
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        {% if transactions %}
+            <!-- Summary Card -->
+            <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6 mb-6">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4">Summary</h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-sm rounded p-4">
+                        <p class="text-sm text-gray-700">Total Transactions</p>
+                        <p class="text-xl font-bold text-indigo-600">{{ transactions.count }}</p>
                     </div>
 
-                    <div class="md:col-span-3 flex space-x-2">
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition">
-                            Apply Filters
-                        </button>
-                        <a href="{% url 'category_report' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition">
-                            Reset Filters
-                        </a>
-                        <a href="{% url 'export_data' %}?start_date={{ start_date|date:'Y-m-d' }}&end_date={{ end_date|date:'Y-m-d' }}{% if selected_category %}&category={{ selected_category.id }}{% endif %}"
-                           class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition flex items-center ml-auto">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            Export Data
-                        </a>
+                    <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-sm rounded p-4">
+                        <p class="text-sm text-gray-700">Total Income</p>
+                        <p class="text-xl font-bold text-green-600">${{ transactions|dictsortreversed:"type"|first|default:"0.00" }}</p>
                     </div>
-                </form>
+
+                    <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-sm rounded p-4">
+                        <p class="text-sm text-gray-700">Total Expenses</p>
+                        <p class="text-xl font-bold text-red-600">${{ transactions|dictsortreversed:"type"|last|default:"0.00" }}</p>
+                    </div>
+                </div>
             </div>
 
-            {% if transactions %}
-                <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                    <h3 class="text-xl font-semibold text-gray-700 mb-4">Summary</h3>
+            <!-- Monthly Trend Chart -->
+            <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6 mb-6">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4">Monthly Trend</h3>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="bg-gray-50 p-4 rounded">
-                            <p class="text-sm text-gray-500">Total Transactions</p>
-                            <p class="text-xl font-bold text-indigo-600">{{ transactions.count }}</p>
-                        </div>
+                {% if monthly_data %}
+                    <div id="trend-chart" class="h-80"></div>
 
-                        <div class="bg-gray-50 p-4 rounded">
-                            <p class="text-sm text-gray-500">Total Income</p>
-                            {# Note: Assuming transactions is a QuerySet and contains objects with a 'type' field. This filter logic might need verification based on your data structure #}
-                            <p class="text-xl font-bold text-green-600">${{ transactions|dictsortreversed:"type"|first|default:"0.00" }}</p>
-                        </div>
-
-                        <div class="bg-gray-50 p-4 rounded">
-                            <p class="text-sm text-gray-500">Total Expenses</p>
-                            {# Note: Assuming transactions is a QuerySet and contains objects with a 'type' field. This filter logic might need verification based on your data structure #}
-                            <p class="text-xl font-bold text-red-600">${{ transactions|dictsortreversed:"type"|last|default:"0.00" }}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-                    <h3 class="text-xl font-semibold text-gray-700 mb-4">Monthly Trend</h3>
-
-                    {% if monthly_data %}
-                        <div id="trend-chart" class="h-80"></div>
-
-                        <div class="mt-4 overflow-x-auto">
-                            <table class="min-w-full bg-white border border-gray-200">
-                                <thead class="bg-gray-100">
-                                    <tr>
-                                        <th class="py-2 px-4 text-left border-b">Month</th>
-                                        <th class="py-2 px-4 text-right border-b">Income</th>
-                                        <th class="py-2 px-4 text-right border-b">Expenses</th>
-                                        <th class="py-2 px-4 text-right border-b">Balance</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y">
-                                    {% for data in monthly_data %}
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="py-2 px-4">{{ data.month }}</td>
-                                            <td class="py-2 px-4 text-right text-green-600">${{ data.income }}</td>
-                                            <td class="py-2 px-4 text-right text-red-600">${{ data.expense }}</td>
-                                            <td class="py-2 px-4 text-right {% if data.balance >= 0 %}text-blue-600{% else %}text-red-600{% endif %}">
-                                                ${{ data.balance }}
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% else %}
-                        <p class="text-center py-12 text-gray-500 italic">No data available for the selected period and category.</p>
-                    {% endif %}
-                </div>
-
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-semibold text-gray-700">Transactions</h3>
-                        {% if transactions.count > 0 %}
-                            <span class="text-sm text-gray-500">Showing {{ transactions.count }} transaction(s)</span>
-                        {% endif %}
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full bg-white">
-                            <thead class="bg-gray-100">
+                    <div class="mt-4 overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead>
                                 <tr>
-                                    <th class="py-2 px-4 text-left">Date</th>
-                                    <th class="py-2 px-4 text-left">Title</th>
-                                    <th class="py-2 px-4 text-left">Category</th>
-                                    <th class="py-2 px-4 text-left">Type</th>
-                                    <th class="py-2 px-4 text-right">Amount</th>
-                                    <th class="py-2 px-4 text-center">Actions</th>
+                                    <th class="py-4 px-4 text-left font-semibold text-gray-700">Month</th>
+                                    <th class="py-4 px-4 text-right font-semibold text-gray-700">Income</th>
+                                    <th class="py-4 px-4 text-right font-semibold text-gray-700">Expenses</th>
+                                    <th class="py-4 px-4 text-right font-semibold text-gray-700">Balance</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y">
-                                {% for transaction in transactions %}
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="py-2 px-4">{{ transaction.date }}</td>
-                                        <td class="py-2 px-4">{{ transaction.title }}</td>
-                                        <td class="py-2 px-4">
-                                            {% if transaction.category %}
-                                                <div class="flex items-center">
-                                                    <span class="w-3 h-3 rounded-full mr-2" style="background-color: {{ transaction.category.color }}"></span>
-                                                    {{ transaction.category.name }}
-                                                </div>
-                                            {% else %}
-                                                Uncategorized
-                                            {% endif %}
-                                        </td>
-                                        <td class="py-2 px-4">{{ transaction.get_type_display }}</td>
-                                        <td class="py-2 px-4 text-right {% if transaction.type == 'INCOME' %}text-green-600{% else %}text-red-600{% endif %}">
-                                            ${{ transaction.amount }}
-                                        </td>
-                                        <td class="py-2 px-4 text-center">
-                                            <div class="flex justify-center space-x-2">
-                                                <a href="{% url 'transaction_edit' transaction.id %}" class="text-indigo-600 hover:text-indigo-800 text-sm">
-                                                    Edit
-                                                </a>
-                                                <a href="{% url 'transaction_delete' transaction.id %}" class="text-red-600 hover:text-red-800 text-sm">
-                                                    Delete
-                                                </a>
-                                            </div>
+                            <tbody>
+                                {% for data in monthly_data %}
+                                    <tr class="border-b border-gray-100">
+                                        <td class="py-4 px-4">{{ data.month }}</td>
+                                        <td class="py-4 px-4 text-right text-green-600 font-medium">${{ data.income }}</td>
+                                        <td class="py-4 px-4 text-right text-red-600 font-medium">${{ data.expense }}</td>
+                                        <td class="py-4 px-4 text-right {% if data.balance >= 0 %}text-blue-600{% else %}text-red-600{% endif %} font-medium">
+                                            ${{ data.balance }}
                                         </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
-                </div>
-            {% else %}
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <div class="py-10">
-                        <div class="text-gray-400 text-5xl mb-4">🔍</div>
-                        <h3 class="text-xl font-semibold text-gray-700 mb-2">No matching transactions</h3>
-                        <p class="text-gray-500 mb-6">No transactions found matching your filter criteria.</p>
+                {% else %}
+                    <div class="text-center py-12">
+                        <p class="text-gray-700 italic">No data available for the selected period and category.</p>
+                    </div>
+                {% endif %}
+            </div>
 
-                        <div class="flex justify-center space-x-3">
-                            <a href="{% url 'category_report' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition">
-                                Reset Filters
-                            </a>
-                            <a href="{% url 'transaction_add' %}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition">
-                                Add Transaction
-                            </a>
-                        </div>
+            <!-- Transactions Table -->
+            <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold text-gray-700">Transactions</h3>
+                    {% if transactions.count > 0 %}
+                        <span class="text-sm text-gray-700">Showing {{ transactions.count }} transaction(s)</span>
+                    {% endif %}
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr>
+                                <th class="py-4 px-4 text-left font-semibold text-gray-700">Date</th>
+                                <th class="py-4 px-4 text-left font-semibold text-gray-700">Title</th>
+                                <th class="py-4 px-4 text-left font-semibold text-gray-700">Category</th>
+                                <th class="py-4 px-4 text-left font-semibold text-gray-700">Type</th>
+                                <th class="py-4 px-4 text-right font-semibold text-gray-700">Amount</th>
+                                <th class="py-4 px-4 text-center font-semibold text-gray-700">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in transactions %}
+                                <tr class="border-b border-gray-100">
+                                    <td class="py-4 px-4">{{ transaction.date }}</td>
+                                    <td class="py-4 px-4">{{ transaction.title }}</td>
+                                    <td class="py-4 px-4">
+                                        {% if transaction.category %}
+                                            <div class="flex items-center">
+                                                <span class="w-3 h-3 rounded-full mr-2" style="background-color: {{ transaction.category.color }}"></span>
+                                                {{ transaction.category.name }}
+                                            </div>
+                                        {% else %}
+                                            Uncategorized
+                                        {% endif %}
+                                    </td>
+                                    <td class="py-4 px-4">{{ transaction.get_type_display }}</td>
+                                    <td class="py-4 px-4 text-right {% if transaction.type == 'INCOME' %}text-green-600{% else %}text-red-600{% endif %} font-medium">
+                                        ${{ transaction.amount }}
+                                    </td>
+                                    <td class="py-4 px-4 text-center">
+                                        <div class="flex justify-center space-x-3">
+                                            <a href="{% url 'transaction_edit' transaction.id %}" class="text-indigo-600 hover:text-indigo-800 text-sm">
+                                                Edit
+                                            </a>
+                                            <span class="text-gray-300">·</span>
+                                            <a href="{% url 'transaction_delete' transaction.id %}" class="text-red-600 hover:text-red-800 text-sm">
+                                                Delete
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% else %}
+            <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
+                <div class="text-center py-10">
+                    <div class="text-gray-400 text-5xl mb-4">🔍</div>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-2">No matching transactions</h3>
+                    <p class="text-gray-700 mb-6">No transactions found matching your filter criteria.</p>
+
+                    <div class="flex justify-center space-x-3">
+                        <a href="{% url 'category_report' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition">
+                            Reset Filters
+                        </a>
+                        <a href="{% url 'transaction_add' %}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition">
+                            Add Transaction
+                        </a>
                     </div>
                 </div>
-            {% endif %}
+            </div>
         {% endif %}
-
-    </div> {# End main content container #}
+    {% endif %}
+</div>
 {% endblock %}
 
 {% block extra_js %}
-{# Includes additional JavaScript files or scripts #}
-{# Script for ApexCharts rendering #}
 {% if monthly_data %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -285,20 +286,49 @@
                 height: 350,
                 type: 'line',
                 stacked: false,
+                fontFamily: 'Inter, sans-serif',
                 toolbar: {
                     show: true
-                }
+                },
+                animations: {
+                    enabled: true,
+                    easing: 'easeinout',
+                    speed: 800
+                },
+                background: 'transparent'
             },
             plotOptions: {
                 bar: {
-                    columnWidth: '50%'
+                    columnWidth: '50%',
+                    borderRadius: 5
                 }
             },
             stroke: {
                 width: [0, 0, 3]
             },
+            grid: {
+                borderColor: 'rgba(255, 255, 255, 0.1)',
+                strokeDashArray: 5,
+                xaxis: {
+                    lines: {
+                        show: true
+                    }
+                },
+                padding: {
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 10
+                }
+            },
             xaxis: {
-                categories: months
+                categories: months,
+                labels: {
+                    style: {
+                        colors: '#6B7280',
+                        fontFamily: 'Inter, sans-serif'
+                    }
+                }
             },
             yaxis: [
                 {
@@ -311,17 +341,19 @@
                     },
                     labels: {
                         style: {
-                            colors: '#10B981'
+                            colors: '#10B981',
+                            fontFamily: 'Inter, sans-serif'
                         }
                     },
                     title: {
                         text: "Income/Expense",
                         style: {
-                            color: '#10B981'
+                            color: '#10B981',
+                            fontFamily: 'Inter, sans-serif'
                         }
                     },
                     tooltip: {
-                         enabled: true // Ensure tooltips are enabled
+                         enabled: true
                     }
                 },
                 {
@@ -335,23 +367,29 @@
                     },
                     labels: {
                         style: {
-                            colors: '#3B82F6'
+                            colors: '#3B82F6',
+                            fontFamily: 'Inter, sans-serif'
                         }
                     },
                     title: {
                         text: "Balance",
                          style: {
-                             color: '#3B82F6'
+                             color: '#3B82F6',
+                             fontFamily: 'Inter, sans-serif'
                          }
                     },
                      tooltip: {
-                         enabled: true // Ensure tooltips are enabled
+                         enabled: true
                      }
                 }
             ],
+            dataLabels: {
+                enabled: false
+            },
             tooltip: {
                 shared: true,
                 intersect: false,
+                theme: 'light',
                 y: {
                     formatter: function(y) {
                         if (typeof y !== "undefined") {
@@ -363,7 +401,18 @@
             },
             legend: {
                 horizontalAlign: 'left',
-                offsetX: 40
+                offsetX: 40,
+                fontFamily: 'Inter, sans-serif',
+                labels: {
+                    colors: '#374151'
+                },
+                markers: {
+                    width: 12,
+                    height: 12,
+                    strokeWidth: 0,
+                    strokeColor: '#fff',
+                    radius: 12
+                }
             }
         };
 
@@ -371,31 +420,29 @@
         chart.render();
     });
 </script>
-{% endif %}
 
-{# Optional: Initialize date pickers for date fields in filter form if needed #}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Assuming default Django form field IDs for date fields
-        const startDateInput = document.querySelector('#start_date'); // Assuming filter form date input ID
-        if (startDateInput) {
+        // Initialize date pickers for filter form
+        const startDateInput = document.querySelector('#start_date');
+        if (startDateInput && typeof flatpickr !== 'undefined') {
              flatpickr(startDateInput, {
-                 dateFormat: "Y-m-d", // Match your desired date format
+                 dateFormat: "Y-m-d",
              });
         }
 
-        const endDateInput = document.querySelector('#end_date'); // Assuming filter form date input ID
-         if (endDateInput) {
+        const endDateInput = document.querySelector('#end_date');
+         if (endDateInput && typeof flatpickr !== 'undefined') {
              flatpickr(endDateInput, {
-                 dateFormat: "Y-m-d", // Match your desired date format
+                 dateFormat: "Y-m-d",
              });
          }
     });
 </script>
+{% endif %}
 {% endblock %}
 
 {% block footer %}
-    {# Custom footer block #}
     <footer class="home-footer">
         <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
     </footer>
