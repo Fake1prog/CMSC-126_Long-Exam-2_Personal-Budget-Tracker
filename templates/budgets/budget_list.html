@@ -1,32 +1,27 @@
-{% extends 'base_dashboard.html' %}  {# Extend the main dashboard base template #}
+{% extends 'base_dashboard.html' %}
 
 {% block title %}Budgets | Gastadorcheck{% endblock %}
 
 {% block extra_css %}
-    {# Link to custom CSS for page background or other styles #}
     <link rel="stylesheet" href="/static/css/landing.css">
 {% endblock %}
 
-{% block body_classes %}home-page{% endblock %} {# Apply body class for background styling #}
+{% block body_classes %}home-page{% endblock %}
 
 {% block content %}
-    {# Main content container with semi-transparent background and blur effect #}
-    <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-lg shadow p-6 my-8">
-
-        {# --- Your original budget_list.html content starts here --- #}
-
+    <div class="my-8">
         <div class="mb-6 flex justify-between items-center">
-            <h2 class="text-3xl font-bold text-gray-800">Budgets</h2>
-            <a href="{% url 'budget_add' %}" class="bg-[#FD9069] hover:opacity-90 text-white px-4 py-2 rounded transition">
+            <h2 class="text-3xl font-bold text-[#FD9069]">Budgets</h2>
+            <a href="{% url 'budget_add' %}" class="bg-[#FD9069] hover:opacity-90 text-white px-4 py-2 rounded-[10px] transition">
                 Add Budget
             </a>
         </div>
 
-        <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow-md p-6">
             {% if budgets %}
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {% for budget in budgets %}
-                        <div class="border rounded-lg p-4 hover:shadow-md transition">
+                        <div class="border rounded-[40px] p-4 hover:shadow-md transition">
                             <div class="flex justify-between items-start mb-2">
                                 <h3 class="font-semibold">{{ budget.category.name }}</h3>
                                 <span class="text-sm text-gray-500">{{ budget.get_period_display }}</span>
@@ -70,10 +65,10 @@
                             </div>
 
                             <div class="flex space-x-2 mt-2">
-                                <a href="{% url 'budget_edit' budget.id %}" class="text-indigo-600 hover:text-indigo-800 text-sm">
+                                <a href="{% url 'budget_edit' budget.id %}" class="text-indigo-600 hover:text-indigo-800 text-sm rounded-[10px]">
                                     Edit
                                 </a>
-                                <a href="{% url 'budget_delete' budget.id %}" class="text-red-600 hover:text-red-800 text-sm">
+                                <a href="{% url 'budget_delete' budget.id %}" class="text-red-600 hover:text-red-800 text-sm rounded-[10px]">
                                     Delete
                                 </a>
                             </div>
@@ -83,20 +78,16 @@
             {% else %}
                 <div class="text-center py-8">
                     <p class="text-gray-500 italic mb-4">You don't have any budgets set up yet.</p>
-                    <a href="{% url 'budget_add' %}" class="bg-[#FD9069] hover:opacity-90 text-white px-4 py-2 rounded transition">
+                    <a href="{% url 'budget_add' %}" class="bg-[#FD9069] hover:opacity-90 text-white px-4 py-2 rounded-[10px] transition">
                         Create Your First Budget
                     </a>
                 </div>
             {% endif %}
         </div>
-
-        {# --- Your original budget_list.html content ends here --- #}
-
-    </div> {# End main content container #}
+    </div>
 {% endblock %}
 
 {% block footer %}
-    {# Page Footer with home-footer class #}
     <footer class="home-footer">
         <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
     </footer>
