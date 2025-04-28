@@ -1,97 +1,88 @@
-{% extends 'base_dashboard.html' %}  {# Extends the dashboard base template #}
-{# {% load crispy_forms_tags %} #} {# Load crispy forms if used elsewhere in the form, but not explicitly used in provided snippet #}
-
-{% block title %}{{ title }} | Gastadorcheck{% endblock %} {# Sets the page title #}
-
+{% extends 'base_dashboard.html' %}
+{% block title %}{{ title }} | Gastadorcheck{% endblock %}
 {% block extra_css %}
-    {# Links to additional CSS files #}
-    <link rel="stylesheet" href="/static/css/landing.css"> {# Custom CSS for background #}
-    {# Add any specific CSS for forms if needed #}
+  <link rel="stylesheet" href="/static/css/landing.css">
 {% endblock %}
+{% block body_classes %}home-page{% endblock %}
 
-{% block body_classes %}home-page{% endblock %} {# Applies a body class for styling #}
-
-{% block header %}{% endblock %} {# Overrides and removes the header block #}
 
 {% block content %}
-    {# Main content container with background and blur effects #}
-    <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-lg shadow p-6 my-8">
+  <div class="w-full max-w-xl mx-auto my-8">
+    <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow-md p-6">
+      <!-- Title moved inside glass container -->
+      <h2 class="text-3xl font-bold text-[#FD9069] mb-6 text-center">{{ title }}</h2>
 
-        {# Content specific to the budget add/edit form #}
-        <div class="max-w-xl mx-auto">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6">{{ title }}</h2>
+      <form method="POST" class="space-y-6">
+        {% csrf_token %}
 
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <form method="POST">
-                    {% csrf_token %}
-                    {# Renders form fields manually #}
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700">{{ form.category.label }}</label>
-                            {{ form.category }}
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">{{ form.amount.label }}</label>
-                            {{ form.amount }}
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">{{ form.period.label }}</label>
-                            {{ form.period }}
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">{{ form.start_date.label }}</label>
-                            {{ form.start_date }}
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">{{ form.end_date.label }}</label>
-                            {{ form.end_date }}
-                        </div>
-                    </div>
-
-                    <div class="flex space-x-2 mt-4">
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition">
-                            Save Budget
-                        </button>
-                        <a href="{% url 'budget_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition">
-                            Cancel
-                        </a>
-                    </div>
-                </form>
-            </div>
+        <div>
+          <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+            {{ form.category.label }}
+          </label>
+          {{ form.category }}
         </div>
 
-    </div> {# End main content container #}
+        <div>
+          <label for="{{ form.amount.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+            {{ form.amount.label }}
+          </label>
+          {{ form.amount }}
+        </div>
+
+        <div>
+          <label for="{{ form.period.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+            {{ form.period.label }}
+          </label>
+          {{ form.period }}
+        </div>
+
+        <div>
+          <label for="{{ form.start_date.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+            {{ form.start_date.label }}
+          </label>
+          {{ form.start_date }}
+        </div>
+
+        <div>
+          <label for="{{ form.end_date.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+            {{ form.end_date.label }}
+          </label>
+          {{ form.end_date }}
+        </div>
+
+        <div class="mt-6 flex justify-start space-x-4">
+          <button
+            type="submit"
+            class="bg-[#FD9069] hover:opacity-90 text-white font-semibold py-2 px-6 rounded-[10px] shadow transition"
+          >
+            Save Budget
+          </button>
+          <a
+            href="{% url 'budget_list' %}"
+            class="bg-[#C5C5C5]/50 hover:opacity-90 text-white font-semibold py-2 px-6 rounded-[10px] shadow transition"
+          >
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
 {% endblock %}
 
 {% block footer %}
-    {# Custom footer block #}
-    <footer class="home-footer">
-        <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
-    </footer>
+  <footer class="home-footer">
+    <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
+  </footer>
 {% endblock %}
 
 {% block extra_js %}
-    {# Includes additional JavaScript files or scripts #}
-    {# Optional: Initialize date pickers if needed for date fields #}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-             // Assuming default Django form field IDs for date fields
-            const startDateInput = document.querySelector('#id_start_date');
-            if (startDateInput) {
-                 flatpickr(startDateInput, {
-                     dateFormat: "Y-m-d", // Match your desired date format
-                 });
-            }
-
-            const endDateInput = document.querySelector('#id_end_date');
-             if (endDateInput) {
-                 flatpickr(endDateInput, {
-                     dateFormat: "Y-m-d", // Match your desired date format
-                 });
-             }
-        });
-    </script>
-    {# Add Crispy Forms JS media if needed and not already in base_dashboard.html #}
-    {# This is often required for Crispy Forms' own JavaScript functionalities #}
-    {# {% if form.media.js %}{{ form.media.js }}{% endif %} #}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const opts = { dateFormat: "Y-m-d" };
+    const startEl = document.querySelector('#id_start_date');
+    const endEl   = document.querySelector('#id_end_date');
+    if (startEl) flatpickr(startEl, opts);
+    if (endEl)   flatpickr(endEl,   opts);
+  });
+</script>
 {% endblock %}
