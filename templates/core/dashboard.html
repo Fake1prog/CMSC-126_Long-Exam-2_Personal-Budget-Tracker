@@ -45,71 +45,69 @@
         <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
             <h3 class="text-xl font-semibold text-gray-700 mb-4">Quick Actions</h3>
             <div class="grid grid-cols-2 gap-4 justify-items-center">
-            <a
-                href="{% url 'transaction_add' %}?type=INCOME"
-                class="w-28 aspect-square bg-[rgba(253,144,105,0.45)] text-[#767676] rounded-[15px] transition flex items-center justify-center p-2 text-center"
-            >
-                Add<br>Income
-            </a>
-            <a
-                href="{% url 'transaction_add' %}?type=EXPENSE"
-                class="w-28 aspect-square bg-[rgba(106,194,143,0.77)] text-[#767676] rounded-[15px] transition flex items-center justify-center p-2 text-center"
-            >
-                Add<br>Expenses
-            </a>
-            <a
-                href="{% url 'category_list' %}"
-                class="w-28 aspect-square bg-[rgba(252,215,137,0.65)] text-[#767676] rounded-[15px] transition flex items-center justify-center p-2 text-center"
-            >
-                Manage<br>Categories
-            </a>
-            <a
-                href="{% url 'budget_list' %}"
-                class="w-28 aspect-square bg-[#D9D9D9]/100 hover:bg-[#D9D9D9]/100 text-[#767676] rounded-[15px] transition flex items-center justify-center p-2 text-center"
-            >
-                Manage<br>Budgets
-            </a>
-            </div>
-        </div>
-  
-  
-  
-  
-  
-  
-    
-        <!-- Recent Transactions Card -->
-        <div
-        class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6 lg:row-span-2 flex flex-col"
-        >
-        <h3 class="text-xl font-semibold text-gray-700 mb-4">Recent Transactions</h3>
-
-        <!-- content area: will grow to fill card and center message -->
-        <div class="flex-grow flex items-center justify-center">
-        {% if recent_transactions %}
-            <div class="space-y-3 w-full">
-            {% for transaction in recent_transactions %}
-                <div
-                class="flex justify-between items-center {% if transaction.type == 'INCOME' %}text-green-600{% else %}text-red-600{% endif %} border-b pb-2"
+                <a
+                    href="{% url 'transaction_add' %}?type=INCOME"
+                    class="w-28 aspect-square bg-[#FD9069] hover:bg-[rgba(253,144,105,0.45)] text-white font-bold rounded-[15px] transition transform hover:scale-105 hover:shadow-md flex items-center justify-center p-2 text-center"
                 >
-                <div>
-                    <p class="font-medium">{{ transaction.title }}</p>
-                    <p class="text-xs text-gray-500">{{ transaction.date }}</p>
-                </div>
-                <p class="font-bold">₱{{ transaction.amount }}</p>
-                </div>
-            {% endfor %}
-            <div class="mt-4 text-center">
-                <a href="{% url 'transaction_list' %}" class="text-indigo-600 hover:text-indigo-800 text-sm">
-                View All Transactions
+                    Add<br>Income
                 </a>
+                <a
+                    href="{% url 'transaction_add' %}?type=EXPENSE"
+                    class="w-28 aspect-square bg-[#6AC28F] hover:bg-[rgba(106,194,143,0.65)] text-white font-bold rounded-[15px] transition transform hover:scale-105 hover:shadow-md flex items-center justify-center p-2 text-center"
+                >
+                    Add<br>Expenses
+                </a>
+                <a
+                    href="{% url 'category_list' %}"
+                    class="w-28 aspect-square bg-[#F7C357] hover:bg-[#FCD789] text-white font-bold rounded-[15px] transition transform hover:scale-105 hover:shadow-md flex items-center justify-center p-2 text-center"
+                >
+                    Manage<br>Categories
+                </a>
+                <a
+                    href="{% url 'budget_list' %}"
+                    class="w-28 aspect-square bg-[#A4A4A4] hover:bg-[#C6C4C4] text-white font-bold rounded-[15px] transition transform hover:scale-105 hover:shadow-md flex items-center justify-center p-2 text-center"
+                >
+                    Manage<br>Budgets
+                </a>
+
+
             </div>
+            
+        </div>
+  
+  
+  
+        <!-- Recent Transactions Card -->
+        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6 lg:row-span-2 flex flex-col">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Recent Transactions</h3>
+
+            <!-- content area: aligned to top -->
+            <div class="flex-grow">
+                {% if recent_transactions %}
+                    <div class="space-y-3 w-full">
+                        {% for transaction in recent_transactions %}
+                            <div
+                                class="flex justify-between items-center {% if transaction.type == 'INCOME' %}text-green-600{% else %}text-red-600{% endif %} border-b pb-2"
+                            >
+                                <div>
+                                    <p class="font-medium">{{ transaction.title }}</p>
+                                    <p class="text-xs text-gray-500">{{ transaction.date }}</p>
+                                </div>
+                                <p class="font-bold">${{ transaction.amount }}</p>
+                            </div>
+                        {% endfor %}
+                        <div class="mt-4 text-center">
+                            <a href="{% url 'transaction_list' %}" class="text-indigo-600 hover:text-indigo-800 text-sm">
+                                View All Transactions
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="text-gray-500 italic">No transactions yet.</p>
+                {% endif %}
             </div>
-        {% else %}
-            <p class="text-gray-500 italic">No transactions yet.</p>
-        {% endif %}
         </div>
-        </div>
+
 
     
         <!-- Expense Breakdown Chart -->
