@@ -6,6 +6,7 @@ from categories.models import Category
 from .forms import TransactionForm
 from django.db.models import Sum
 from django.http import JsonResponse
+from datetime import date
 import logging
 
 logger = logging.getLogger(__name__)
@@ -117,6 +118,7 @@ def transaction_list(request):
 @login_required
 def transaction_add(request):
     """Add a new transaction."""
+
     # Pre-set the type if provided in GET parameters
     initial_type = None
     if request.GET.get('type') in ['INCOME', 'EXPENSE']:
@@ -131,7 +133,12 @@ def transaction_add(request):
             messages.success(request, 'Transaction added successfully!')
             return redirect('transaction_list')
     else:
-        form = TransactionForm(user=request.user, initial_type=initial_type)
+        # Set today's date as the default date when creating a new form
+        form = TransactionForm(
+            user=request.user,
+            initial_type=initial_type,
+            initial={'date': date.today()}
+        )
 
     context = {
         'form': form,

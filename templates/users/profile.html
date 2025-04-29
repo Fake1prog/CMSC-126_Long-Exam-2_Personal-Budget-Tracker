@@ -1,5 +1,4 @@
 {% extends 'base_dashboard.html' %}
-{% load crispy_forms_tags %}
 
 {% block title %}Profile | Gastadorcheck{% endblock %}
 
@@ -10,65 +9,129 @@
 {% block body_classes %}home-page{% endblock %}
 
 {% block content %}
-<div class="my-8">
-    <div class="max-w-2xl mx-auto">
-        <h2 class="text-3xl flex flex-wrap items-baseline">
-            <span class="font-semibold text-[#FF4300] ml-1">Profile</span>
-        </h2>
-        <!-- Account Information Card -->
-        <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-[40px] shadow-md p-6 mb-6">
-            <h3 class="text-xl font-semibold text-gray-700 mb-4">Account Information</h3>
-            <form method="POST">
-                {% csrf_token %}
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        {{ u_form.username|as_crispy_field }}
-                    </div>
-                    <div>
-                        {{ u_form.email|as_crispy_field }}
-                    </div>
-                </div>
-
-                <h4 class="text-lg font-semibold text-gray-700 mt-4 mb-2">Preferences</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        {{ p_form.default_currency|as_crispy_field }}
-                    </div>
-                    <div>
-                        {{ p_form.date_format_preference|as_crispy_field }}
-                    </div>
-                </div>
-
-                <div class="mt-6 text-right">
-                    <button type="submit" class="bg-[#FD9069] hover:bg-[#e87555] text-white font-bold py-2 px-6 rounded-[10px] transition">
-                        Update Profile
-                    </button>
-                </div>
-            </form>
+<div class="my-8 container mx-auto max-w-6xl px-4">
+    <!-- Profile Title -->
+    <div class="mb-6 flex justify-between items-center">
+        <div class="flex items-center">
+            <h2 class="text-3xl flex flex-wrap items-baseline">
+                <span class="font-semibold text-[#FF4300] ml-1">Profile</span>
+            </h2>
         </div>
+    </div>
 
-        <!-- Account Statistics Card -->
-        <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-[40px] shadow-md p-6">
-            <h3 class="text-xl font-semibold text-gray-700 mb-4">Account Statistics</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="bg-gray-100 p-4 rounded-[10px] text-center">
-                    <p class="text-sm text-gray-500">Total Transactions</p>
-                    <p class="text-xl font-bold text-[#FD9069]">{{ user.transaction_set.count }}</p>
+    <!-- Account Information Card -->
+    <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6 mb-6">
+        <h3 class="text-xl font-semibold text-gray-700 mb-4">Account Information</h3>
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Username field -->
+                <div class="group relative h-24">
+                    <label for="{{ u_form.username.id_for_label }}" class="block text-base font-medium text-gray-700 mb-2">
+                        Username
+                    </label>
+                    <input type="text" name="{{ u_form.username.name }}" id="{{ u_form.username.id_for_label }}" 
+                           value="{{ u_form.username.value|default:'' }}" 
+                           class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300] {% if u_form.username.errors %}border-red-500{% endif %}"
+                           required>
+                    {% if u_form.username.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ u_form.username.errors.0 }}</p>
+                    {% endif %}
+                    <div class="hidden group-hover:block text-xs text-gray-500 mt-1 absolute">
+                        Letters, digits and @/./+/-/_ only. 150 characters or fewer.
+                    </div>
                 </div>
-                <div class="bg-gray-100 p-4 rounded-[10px] text-center">
-                    <p class="text-sm text-gray-500">Categories Created</p>
-                    <p class="text-xl font-bold text-[#FD9069]">{{ user.category_set.count }}</p>
-                </div>
-                <div class="bg-gray-100 p-4 rounded-[10px] text-center">
-                    <p class="text-sm text-gray-500">Active Budgets</p>
-                    <p class="text-xl font-bold text-[#FD9069]">{{ user.budget_set.count }}</p>
+                
+                <!-- Email field -->
+                <div class="group relative h-24">
+                    <label for="{{ u_form.email.id_for_label }}" class="block text-base font-medium text-gray-700 mb-2">
+                        Email
+                    </label>
+                    <input type="email" name="{{ u_form.email.name }}" id="{{ u_form.email.id_for_label }}" 
+                           value="{{ u_form.email.value|default:'' }}" 
+                           class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300] {% if u_form.email.errors %}border-red-500{% endif %}"
+                           required>
+                    {% if u_form.email.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ u_form.email.errors.0 }}</p>
+                    {% endif %}
+                    <div class="hidden group-hover:block text-xs text-gray-500 mt-1 absolute">
+                        Enter a valid email address.
+                    </div>
                 </div>
             </div>
+
+            <h4 class="text-lg font-semibold text-gray-700 mt-6 mb-4">Preferences</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Default Currency (Fixed to PHP) -->
+                <div class="group relative h-24">
+                    <label for="default_currency" class="block text-base font-medium text-gray-700 mb-2">
+                        Default Currency
+                    </label>
+                    <div class="relative">
+                        <input type="text" id="default_currency" value="Philippine Peso (PHP)" 
+                               class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-gray-100 shadow-sm text-gray-500" 
+                               disabled>
+                        <input type="hidden" name="{{ p_form.default_currency.name }}" value="PHP">
+                    </div>
+                    <div class="hidden group-hover:block text-xs text-gray-500 mt-1 absolute">
+                        Currently only supporting Philippine Peso.
+                    </div>
+                </div>
+                
+                <!-- Date Format Preference -->
+                <div class="group relative h-24">
+                    <label for="{{ p_form.date_format_preference.id_for_label }}" class="block text-base font-medium text-gray-700 mb-2">
+                        Date Format
+                    </label>
+                    <select name="{{ p_form.date_format_preference.name }}" id="{{ p_form.date_format_preference.id_for_label }}" 
+                            class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]">
+                        {% for value, display in p_form.fields.date_format_preference.widget.choices %}
+                            <option value="{{ value }}" {% if p_form.date_format_preference.value == value %}selected{% endif %}>
+                                {{ display }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if p_form.date_format_preference.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ p_form.date_format_preference.errors.0 }}</p>
+                    {% endif %}
+                    <div class="hidden group-hover:block text-xs text-gray-500 mt-1 absolute">
+                        Choose your preferred date format for display.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form buttons -->
+            <div class="flex justify-end space-x-4 mt-10">
+                <a href="{% url 'dashboard' %}" 
+                   class="h-12 px-8 flex items-center justify-center bg-white bg-opacity-60 text-gray-700 hover:bg-opacity-70 font-medium rounded-[20px] transition">
+                    Cancel
+                </a>
+                <button type="submit" 
+                        class="h-12 px-8 flex items-center justify-center bg-[#FD9069] hover:opacity-90 text-white font-medium rounded-[20px] transition">
+                    Update Profile
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Account Statistics Card -->
+    <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
+        <h3 class="text-xl font-semibold text-gray-700 mb-4">Account Statistics</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-sm rounded-[20px] p-4 text-center">
+                <p class="text-sm text-gray-500">Total Transactions</p>
+                <p class="text-xl font-bold text-[#FD9069]">{{ user.transaction_set.count }}</p>
+            </div>
+            <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-sm rounded-[20px] p-4 text-center">
+                <p class="text-sm text-gray-500">Categories Created</p>
+                <p class="text-xl font-bold text-[#FD9069]">{{ user.category_set.count }}</p>
+            </div>
+            <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-sm rounded-[20px] p-4 text-center">
+                <p class="text-sm text-gray-500">Active Budgets</p>
+                <p class="text-xl font-bold text-[#FD9069]">{{ user.budget_set.count }}</p>
+            </div>
         </div>
-
-
-
-
     </div>
 </div>
 {% endblock %}

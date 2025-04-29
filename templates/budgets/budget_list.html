@@ -11,86 +11,84 @@
 {% block content %}
     <div class="my-8 container mx-auto max-w-6xl px-4"> <!-- Increased max-width -->
         <!-- Budget Title -->
-        <div class="mb-6 flex justify-between items-center">
-            <div class="flex items-center">
-                <h2 class="text-3xl flex flex-wrap items-baseline">
-                    <span class="font-semibold text-[#FF4300] ml-1">Budgets</span>
-                </h2>
-                
-                <!-- Info Icon with Tooltip -->
-                {% if budgets %}
-                <div class="relative ml-3" x-data="{ showTooltip: false }">
-                    <button @mouseenter="showTooltip = true" @mouseleave="showTooltip = false" 
-                            class="w-6 h-6 rounded-full bg-white bg-opacity-40 flex items-center justify-center text-[#FF4300] hover:bg-opacity-60 transition focus:outline-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </button>
+<div class="mb-6 flex justify-between items-center">
+    <div class="flex items-center">
+        <h2 class="text-3xl flex flex-wrap items-baseline">
+            <span class="font-semibold text-[#FF4300] ml-1">Budgets</span>
+        </h2>
+    </div>
+    <div class="flex items-center">
+        <!-- Info Icon with Tooltip -->
+        <div class="relative mr-3" x-data="{ showTooltip: false }">
+            <button @mouseenter="showTooltip = true" @mouseleave="showTooltip = false" 
+                    class="w-6 h-6 rounded-full bg-white bg-opacity-40 flex items-center justify-center text-gray-500 hover:bg-opacity-60 transition focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </button>
+            
+            <!-- Tooltip Content -->
+            <div x-show="showTooltip" 
+                 class="absolute right-0 z-10 mt-2 w-72 origin-top-right rounded-[20px] bg-gradient-to-br from-rose-50 to-amber-50 bg-opacity-90 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 shadow-lg p-4 transition-all duration-200 ease-in-out"
+                 style="display: none;">
+                <div class="text-gray-700">
+                    <h3 class="text-lg font-semibold mb-3">About Budgets</h3>
                     
-                    <!-- Tooltip Content -->
-                    <div x-show="showTooltip" 
-                         class="absolute left-0 z-10 mt-2 w-72 origin-top-left rounded-[20px] bg-gradient-to-br from-rose-50 to-amber-50 bg-opacity-90 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 shadow-lg p-4 transition-all duration-200 ease-in-out"
-                         style="display: none;">
-                        <div class="text-gray-700">
-                            <h3 class="text-lg font-semibold mb-3">About Budgets</h3>
-                            
-                            <div class="mb-4">
-                                <h4 class="font-medium text-gray-700 mb-2">Budget Insights</h4>
-                                <ul class="space-y-1 text-sm">
-                                    <li class="flex items-start">
-                                        <svg class="h-4 w-4 text-green-500 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                        <span>Set budget limits for your spending categories</span>
-                                    </li>
-                                    <li class="flex items-start">
-                                        <svg class="h-4 w-4 text-green-500 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                        <span>Track your spending against your budget goals</span>
-                                    </li>
-                                    <li class="flex items-start">
-                                        <svg class="h-4 w-4 text-green-500 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                        </svg>
-                                        <span>Easily identify where you're overspending</span>
-                                    </li>
-                                </ul>
-                            </div>
-                            
-                            <div>
-                                <h4 class="font-medium text-gray-700 mb-2">Budget Tips</h4>
-                                <ul class="space-y-1 text-sm">
-                                    <li class="flex items-start">
-                                        <svg class="h-4 w-4 text-amber-500 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        <span>Set realistic budgets based on your spending history</span>
-                                    </li>
-                                    <li class="flex items-start">
-                                        <svg class="h-4 w-4 text-amber-500 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        <span>Review and adjust your budgets monthly</span>
-                                    </li>
-                                    <li class="flex items-start">
-                                        <svg class="h-4 w-4 text-amber-500 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        <span>Use different budget periods for different expenses</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                    <div class="mb-4">
+                        <h4 class="font-medium text-gray-700 mb-2">Budget Insights</h4>
+                        <ul class="space-y-1 text-sm">
+                            <li class="flex items-start">
+                                <svg class="h-4 w-4 text-green-500 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span>Set budget limits for your spending categories</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="h-4 w-4 text-green-500 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span>Track your spending against your budget goals</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="h-4 w-4 text-green-500 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span>Easily identify where you're overspending</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-medium text-gray-700 mb-2">Budget Tips</h4>
+                        <ul class="space-y-1 text-sm">
+                            <li class="flex items-start">
+                                <svg class="h-4 w-4 text-amber-500 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span>Set realistic budgets based on your spending history</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="h-4 w-4 text-amber-500 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span>Review and adjust your budgets monthly</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="h-4 w-4 text-amber-500 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span>Use different budget periods for different expenses</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                {% endif %}
             </div>
-
-            <a href="{% url 'budget_add' %}" class="bg-[#FD9069] hover:opacity-90 text-white h-10 px-4 rounded-[15px] flex items-center transition">
-                Add Budget
-            </a>
         </div>
+        <a href="{% url 'budget_add' %}" class="bg-[#FD9069] hover:opacity-90 text-white h-10 px-4 rounded-[15px] flex items-center transition">
+            Add Budget
+        </a>
+    </div>
+</div>
 
         <!-- Budgets Content - Wider container with reduced corner radius -->
         <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[30px] shadow p-6 w-full"> <!-- Changed from rounded-[40px] to [30px] and added w-full -->
@@ -104,7 +102,7 @@
                             </div>
 
                             <div class="mb-4">
-                                <div class="flex justify-between text-base text-gray-600 mb-2">
+                                <div class="flex justify-between gap-2 text-base text-gray-600 mb-2">
                                     <span>Budget: ₱{{ budget.amount }}</span>
                                     <span>Spent: ₱{{ budget.spent }}</span>
                                 </div>

@@ -12,12 +12,82 @@
 <div class="my-8">
     <!-- Categories Title -->
     <div class="mb-6 flex justify-between items-center">
-        <h2 class="text-3xl flex flex-wrap items-baseline">
-            <span class="font-semibold text-[#FF4300] ml-1">Categories</span>
-        </h2>
-        <a href="{% url 'category_add' %}" class="bg-[#FD9069] hover:opacity-90 text-white px-4 py-2 rounded-[15px] transition">
-            Add Category
-        </a>
+        <div class="flex items-center">
+            <h2 class="text-3xl flex flex-wrap items-baseline">
+                <span class="font-semibold text-[#FF4300] ml-1">Categories</span>
+            </h2>
+        </div>
+        <div class="flex items-center">
+            <!-- Info Icon with Tooltip -->
+            <div class="relative mr-3" x-data="{ showTooltip: false }">
+                <button @mouseenter="showTooltip = true" @mouseleave="showTooltip = false" 
+                        class="w-6 h-6 rounded-full bg-white bg-opacity-40 flex items-center justify-center text-gray-500 hover:bg-opacity-60 transition focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </button>
+                
+                <!-- Tooltip Content -->
+                <div x-show="showTooltip" 
+                     class="absolute right-0 z-10 mt-2 w-72 origin-top-right rounded-[20px] bg-gradient-to-br from-rose-50 to-amber-50 bg-opacity-90 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 shadow-lg p-4 transition-all duration-200 ease-in-out"
+                     style="display: none;">
+                    <div class="text-gray-700">
+                        <h3 class="text-lg font-semibold mb-3">About Categories</h3>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-medium text-gray-700 mb-2">Using Categories</h4>
+                            <ul class="space-y-1 text-sm">
+                                <li class="flex items-start">
+                                    <svg class="h-4 w-4 text-green-500 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span>Categorize transactions to track spending patterns</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="h-4 w-4 text-green-500 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span>Set budgets for specific expense categories</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="h-4 w-4 text-green-500 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span>View detailed reports by category</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-medium text-gray-700 mb-2">Category Management</h4>
+                            <ul class="space-y-1 text-sm">
+                                <li class="flex items-start">
+                                    <svg class="h-4 w-4 text-amber-500 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>Default categories can be customized but not removed</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="h-4 w-4 text-amber-500 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>Categories with transactions will be archived instead of deleted</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="h-4 w-4 text-amber-500 mr-1 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>Each category can have a custom color and icon</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="{% url 'category_add' %}" class="bg-[#FD9069] hover:opacity-90 text-white px-4 py-2 rounded-[15px] transition">
+                Add Category
+            </a>
+        </div>
     </div>
 
     <!-- Categories Grid -->
@@ -97,69 +167,7 @@
         </div>
     </div>
 
-    <!-- About Categories Info Card -->
-    <div class="mt-6 bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
-        <h3 class="text-xl font-semibold text-gray-700 mb-4">About Categories</h3>
-        <div class="text-gray-600">
-            <p class="mb-3">Categories help you organize your income and expenses for better financial tracking:</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-sm rounded-[15px] p-4">
-                    <h4 class="font-medium text-gray-700 mb-2">Using Categories</h4>
-                    <ul class="space-y-2">
-                        <li class="flex items-start">
-                            <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                            </svg>
-                            <span>Categorize transactions to track spending patterns</span>
-                        </li>
-                        <li class="flex items-start">
-                            <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                            </svg>
-                            <span>Set budgets for specific expense categories</span>
-                        </li>
-                        <li class="flex items-start">
-                            <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                            </svg>
-                            <span>View detailed reports by category</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-sm rounded-[15px] p-4">
-                    <h4 class="font-medium text-gray-700 mb-2">Category Management</h4>
-                    <ul class="space-y-2">
-                        <li class="flex items-start">
-                            <svg class="h-5 w-5 text-amber-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <span>Default categories can be customized but not removed</span>
-                        </li>
-                        <li class="flex items-start">
-                            <svg class="h-5 w-5 text-amber-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <span>Categories with transactions will be archived instead of deleted</span>
-                        </li>
-                        <li class="flex items-start">
-                            <svg class="h-5 w-5 text-amber-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <span>Each category can have a custom color and icon</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="flex justify-center mt-4">
-                <a href="{% url 'category_add' %}" class="bg-[#FD9069] hover:opacity-90 text-white px-4 py-2 rounded-[15px] transition inline-flex items-center">
-                    <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                    Create New Category
-                </a>
-            </div>
-        </div>
-    </div>
+
 </div>
 {% endblock %}
 

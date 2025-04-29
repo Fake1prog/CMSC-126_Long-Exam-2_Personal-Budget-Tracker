@@ -13,7 +13,17 @@ def budget_list(request):
 
     # Calculate current status for each budget
     for budget in budgets:
-        budget.spent = budget.calculate_spent()
+        # Force date recalculation when needed
+        today = date.today()
+
+        # Calculate with proper date range
+        if budget.end_date and budget.end_date < today:
+            # If budget period is over, calculate within its date range
+            budget.spent = budget.calculate_spent(budget.start_date, budget.end_date)
+        else:
+            # For ongoing budgets, calculate from start to today
+            budget.spent = budget.calculate_spent(budget.start_date, today)
+
         budget.remaining = budget.calculate_remaining()
         budget.is_over = budget.is_over_budget()
 

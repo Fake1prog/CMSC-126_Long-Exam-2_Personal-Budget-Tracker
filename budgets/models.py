@@ -3,7 +3,9 @@ from django.contrib.auth.models import User
 from categories.models import Category
 from django.core.validators import MinValueValidator
 from decimal import Decimal
-
+from transactions.models import Transaction
+from django.db.models import Sum
+import logging
 
 class Budget(models.Model):
     PERIOD_CHOICES = [
@@ -32,7 +34,9 @@ class Budget(models.Model):
 
     def calculate_spent(self, start_date=None, end_date=None):
         """Calculate how much has been spent under this budget for a given period"""
-        from transactions.models import Transaction
+
+
+        logger = logging.getLogger(__name__)
 
         if not start_date:
             start_date = self.start_date
@@ -40,6 +44,7 @@ class Budget(models.Model):
             from datetime import date
             end_date = date.today()
 
+        # More detailed query with logging
         transactions = Transaction.objects.filter(
             user=self.user,
             category=self.category,
@@ -48,7 +53,18 @@ class Budget(models.Model):
             date__lte=end_date
         )
 
-        return sum(t.amount for t in transactions)
+        # Debug logging
+        logger.debug(f"Budget ID {self.id} for {self.category.name}:")
+        logger.debug(f"Date range: {start_date} to {end_date}")
+        logger.debug(f"Found {transactions.count()} matching transactions")
+
+        for t in transactions:
+            logger.debug(f"Transaction: {t.title}, Amount: {t.amount}, Date: {t.date}")
+
+        total = sum(t.amount for t in transactions)
+        logger.debug(f"Total spent: {total}")
+
+        return total
 
     def calculate_remaining(self, start_date=None, end_date=None):
         """Calculate remaining budget"""

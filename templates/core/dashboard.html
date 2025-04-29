@@ -17,8 +17,6 @@
         </h2>  
     </div>
 
-
-
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Summary Card -->
         <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
@@ -69,13 +67,8 @@
                 >
                     Manage<br>Budgets
                 </a>
-
-
             </div>
-            
         </div>
-  
-  
   
         <!-- Recent Transactions Card -->
         <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6 lg:row-span-2 flex flex-col">
@@ -93,7 +86,7 @@
                                     <p class="font-medium">{{ transaction.title }}</p>
                                     <p class="text-xs text-gray-500">{{ transaction.date }}</p>
                                 </div>
-                                <p class="font-bold">${{ transaction.amount }}</p>
+                                <p class="font-bold">₱{{ transaction.amount }}</p>
                             </div>
                         {% endfor %}
                         <div class="mt-4 text-center">
@@ -107,14 +100,21 @@
                 {% endif %}
             </div>
         </div>
-
-
     
         <!-- Expense Breakdown Chart -->
         <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6 lg:col-span-2">
-            <h3 class="text-xl font-semibold text-gray-700 mb-4">Expense Breakdown</h3>
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-gray-700">Expense Breakdown</h3>
+                
+                <!-- Toggle buttons for chart view -->
+                <div class="flex space-x-2">
+                    <button id="view-by-transaction" class="px-3 py-1 rounded-lg text-sm bg-[#FF4300] text-white">By Transaction</button>
+                    <button id="view-by-category" class="px-3 py-1 rounded-lg text-sm bg-gray-300 text-gray-700">By Category</button>
+                </div>
+            </div>
+            
             <div id="expenseChart" class="h-64">
-                {% if expense_by_category %}
+                {% if expense_by_transaction %}
                     <!-- Chart will be rendered here by JS -->
                 {% else %}
                     <p class="text-center py-20 text-gray-500 italic">
@@ -124,60 +124,216 @@
             </div>
         </div>
     </div>
-    
 </div>
 {% endblock %}
 
 {% block extra_js %}
-{% if expense_by_category %}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> {# Make sure ApexCharts library is loaded #}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Prepare data for pie chart
-        const categories = [
-            {% for category in expense_by_category %}
-                "{{ category.category__name }}",
-            {% endfor %}
+        // DOM elements
+        const viewByTransactionBtn = document.getElementById('view-by-transaction');
+        const viewByCategoryBtn = document.getElementById('view-by-category');
+        const chartElement = document.querySelector("#expenseChart");
+        let chart = null; // Holds the chart instance
+
+        // Color palette for the 'By Transaction' view
+        const colorPalette = [
+            '#FF4300', '#FF9500', '#FFCC00', '#4CAF50', '#2196F3',
+            '#9C27B0', '#E91E63', '#03A9F4', '#8BC34A', '#FF5722',
+            '#673AB7', '#3F51B5', '#00BCD4', '#009688', '#795548',
+            '#607D8B', '#F44336', '#FFC107', '#CDDC39', '#9E9E9E'
         ];
 
-        const amounts = [
-            {% for category in expense_by_category %}
-                {{ category.total }},
-            {% endfor %}
-        ];
+        // Data structure for 'By Transaction' view
+        const transactionData = {
+            series: [
+                {% for transaction in expense_by_transaction %}
+                    {{ transaction.amount }},
+                {% endfor %}
+            ],
+            labels: [
+                {% for transaction in expense_by_transaction %}
+                    "{{ transaction.title|escapejs }} ({{ transaction.date }})", // Use escapejs filter for safety
+                {% endfor %}
+            ]
+        };
 
-        const colors = [
-            {% for category in expense_by_category %}
-                "{{ category.category__color|default:'#7CB9E8' }}",
-            {% endfor %}
-        ];
+        // Data structure for 'By Category' view
+        const categoryData = {
+            series: [
+                {% for category in expense_by_category %}
+                    {{ category.total }},
+                {% endfor %}
+            ],
+            labels: [
+                {% for category in expense_by_category %}
+                    "{{ category.category__name|escapejs }}", // Use escapejs filter for safety
+                {% endfor %}
+            ],
+            colors: [
+                {% for category in expense_by_category %}
+                    "{{ category.category__color|default:'#808080' }}", // Use category color or default gray
+                {% endfor %}
+            ]
+        };
 
-        // Create expense breakdown chart
-        const options = {
-            series: amounts,
+        // Base configuration options shared by both chart views
+        const baseOptions = {
             chart: {
                 type: 'pie',
-                height: 350
+                height: 350,
+                fontFamily: 'Inter, sans-serif',
+                toolbar: {
+                    show: true
+                },
             },
-            labels: categories,
-            colors: colors,
-            responsive: [{
+            legend: {
+                position: 'right',
+                fontSize: '14px',
+                fontFamily: 'Inter, sans-serif',
+                labels: {
+                    colors: '#374151' // Tailwind gray-700
+                },
+                markers: {
+                    width: 12,
+                    height: 12,
+                    radius: 12
+                },
+                offsetY: 0
+            },
+            plotOptions: {
+                pie: {
+                    customScale: 0.9,
+                    dataLabels: { // Configuration for labels inside the pie slices
+                        offset: 0,
+                        minAngleToShowLabel: 10 // Don't show labels for very small slices
+                    }
+                }
+            },
+            states: { // Visual states like hover
+                hover: {
+                    filter: { type: 'darken', value: 0.15 }
+                },
+                active: {
+                    filter: { type: 'darken', value: 0.15 }
+                }
+            },
+            stroke: { // Border around pie slices
+                width: 2,
+                colors: ['#fff']
+            },
+            dataLabels: { // Percentage labels on slices
+                enabled: true,
+                formatter: function(val, opts) {
+                    return Math.round(val) + "%"; // Display percentage
+                },
+                style: {
+                    fontSize: '12px',
+                    fontFamily: 'Inter, sans-serif',
+                    fontWeight: 'bold',
+                    colors: ['#FFF'] // White labels work well on colored slices
+                },
+                dropShadow: { // Adds a slight shadow to labels for better readability
+                    enabled: true,
+                    top: 1, left: 1, blur: 1, color: '#000', opacity: 0.45
+                }
+            },
+            tooltip: { // Tooltip appearance on hover
+                theme: 'light',
+                y: {
+                    formatter: function(value) {
+                        return '₱' + value.toFixed(2); // Format amount in tooltip
+                    }
+                }
+            },
+            responsive: [{ // Adjustments for smaller screens
                 breakpoint: 480,
                 options: {
-                    chart: {
-                        width: 300
-                    },
-                    legend: {
-                        position: 'bottom'
-                    }
+                    chart: { width: 280 }, // Smaller chart width
+                    legend: { position: 'bottom' } // Move legend below
                 }
             }]
         };
 
-        const chart = new ApexCharts(document.querySelector("#expenseChart"), options);
-        chart.render();
+        // Function to destroy the existing chart (if any) and render a new one
+        function renderChart(options) {
+            if (chart) {
+                chart.destroy(); // Clean up the previous chart instance
+            }
+            chartElement.innerHTML = ''; // Clear the container div
+            chart = new ApexCharts(chartElement, options); // Create new chart
+            chart.render(); // Render the new chart
+        }
+
+        // Renders the chart showing expenses broken down by individual transaction
+        function renderTransactionChart() {
+            console.log("Rendering Transaction Chart"); // Debug log
+            const transactionColors = [];
+            // Assign colors from the palette, cycling if necessary
+            for (let i = 0; i < transactionData.series.length; i++) {
+                transactionColors.push(colorPalette[i % colorPalette.length]);
+            }
+
+            // Combine base options with transaction-specific data and colors
+            const options = {
+                ...baseOptions,
+                series: transactionData.series,
+                labels: transactionData.labels,
+                colors: transactionColors
+            };
+            // Optionally hide legend if too many transactions clutter it
+            options.legend.show = transactionData.labels.length <= 15;
+
+            renderChart(options); // Call the unified render function
+
+            // Update button active styles
+            viewByTransactionBtn.classList.remove('bg-gray-300', 'text-gray-700');
+            viewByTransactionBtn.classList.add('bg-[#FF4300]', 'text-white');
+            viewByCategoryBtn.classList.remove('bg-[#FF4300]', 'text-white');
+            viewByCategoryBtn.classList.add('bg-gray-300', 'text-gray-700');
+        }
+
+        // Renders the chart showing expenses grouped by category
+        function renderCategoryChart() {
+            console.log("Rendering Category Chart"); // Debug log
+            console.log("Category Data:", categoryData); // Debug category data
+
+            // Combine base options with category-specific data and colors
+            const options = {
+                ...baseOptions,
+                series: categoryData.series,
+                labels: categoryData.labels,
+                colors: categoryData.colors // Use colors defined in the category data
+            };
+            // Ensure legend is shown for category view
+            options.legend.show = true;
+
+            renderChart(options); // Call the unified render function
+
+            // Update button active styles
+            viewByCategoryBtn.classList.remove('bg-gray-300', 'text-gray-700');
+            viewByCategoryBtn.classList.add('bg-[#FF4300]', 'text-white');
+            viewByTransactionBtn.classList.remove('bg-[#FF4300]', 'text-white');
+            viewByTransactionBtn.classList.add('bg-gray-300', 'text-gray-700');
+        }
+
+        // Add click event listeners to the toggle buttons
+        viewByTransactionBtn.addEventListener('click', renderTransactionChart);
+        viewByCategoryBtn.addEventListener('click', renderCategoryChart);
+
+        // Initial chart render on page load
+        // Check if the chart container exists and if there is any expense data
+        if (chartElement && (transactionData.series.length > 0 || categoryData.series.length > 0)) {
+             console.log("Initial render: Transaction View"); // Debug log
+            renderTransactionChart(); // Default to transaction view
+        } else if (chartElement) {
+            // If no data, optionally keep the placeholder text or clear the area
+            console.log("No expense data to render chart initially."); // Debug log
+        }
+
     });
 </script>
-{% endif %}
 {% endblock %}
 
 {% block footer %}
