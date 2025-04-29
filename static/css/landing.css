@@ -135,13 +135,11 @@ body.home-page {
 }
 
 .feature-card {
-    background-color: rgb(63 63 63 / 10%);
+    background-color: rgb(246 234 203 / 12%);
     border-radius: 40px;
     padding: 2rem 1.5rem;
     text-align: center;
 }
-
-
 
 .feature-icon {
     text-align: center;
