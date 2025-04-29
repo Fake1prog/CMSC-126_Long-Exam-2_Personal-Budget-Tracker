@@ -77,16 +77,16 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
                     <p class="text-sm text-gray-700">Income</p>
-                    <p class="text-2xl font-bold text-green-600">${{ income_total }}</p>
+                    <p class="text-2xl font-bold text-green-600">₱{{ income_total }}</p>
                 </div>
                 <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
                     <p class="text-sm text-gray-700">Expenses</p>
-                    <p class="text-2xl font-bold text-red-600">${{ expense_total }}</p>
+                    <p class="text-2xl font-bold text-red-600">₱{{ expense_total }}</p>
                 </div>
                 <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
                     <p class="text-sm text-gray-700">Balance</p>
                     <p class="text-2xl font-bold {% if balance >= 0 %}text-blue-600{% else %}text-red-600{% endif %}">
-                        ${{ balance }}
+                        ₱{{ balance }}
                     </p>
                 </div>
             </div>
@@ -107,7 +107,7 @@
                                         <span class="w-3 h-3 rounded-full mr-2" style="background-color: {{ category.category__color|default:'#10B981' }}"></span>
                                         <span>{{ category.category__name|default:"Uncategorized" }}</span>
                                     </div>
-                                    <span class="font-semibold">${{ category.total }}</span>
+                                    <span class="font-semibold">₱{{ category.total }}</span>
                                 </div>
                             {% endfor %}
                         </div>
@@ -139,7 +139,7 @@
                                         <span class="w-3 h-3 rounded-full mr-2" style="background-color: {{ category.category__color|default:'#EF4444' }}"></span>
                                         <span>{{ category.category__name|default:"Uncategorized" }}</span>
                                     </div>
-                                    <span class="font-semibold">${{ category.total }}</span>
+                                    <span class="font-semibold">₱{{ category.total }}</span>
                                 </div>
                             {% endfor %}
                         </div>
@@ -196,7 +196,7 @@
                                     </td>
                                     <td class="py-4 px-4">{{ transaction.get_type_display }}</td>
                                     <td class="py-4 px-4 text-right {% if transaction.type == 'INCOME' %}text-green-600{% else %}text-red-600{% endif %} font-medium">
-                                        ${{ transaction.amount }}
+                                        ₱{{ transaction.amount }}
                                     </td>
                                     <td class="py-4 px-4 text-center">
                                         <div class="flex justify-center space-x-3">
@@ -343,7 +343,7 @@
                 theme: 'light',
                 y: {
                     formatter: function(value) {
-                        return '$' + value.toFixed(2);
+                        return '₱' + value.toFixed(2);
                     }
                 }
             }
@@ -431,7 +431,7 @@
                 theme: 'light',
                 y: {
                     formatter: function(value) {
-                        return '$' + value.toFixed(2);
+                        return '₱' + value.toFixed(2);
                     }
                 }
             }

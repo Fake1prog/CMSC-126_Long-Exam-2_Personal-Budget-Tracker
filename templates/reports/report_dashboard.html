@@ -43,16 +43,16 @@
                 <div class="grid grid-cols-3 gap-2">
                     <div>
                         <p class="text-sm text-gray-700">Income</p>
-                        <p class="text-xl font-bold text-green-600">${{ current_month_income }}</p>
+                        <p class="text-xl font-bold text-green-600">₱{{ current_month_income }}</p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-700">Expenses</p>
-                        <p class="text-xl font-bold text-red-600">${{ current_month_expenses }}</p>
+                        <p class="text-xl font-bold text-red-600">₱{{ current_month_expenses }}</p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-700">Balance</p>
                         <p class="text-xl font-bold {% if current_month_balance >= 0 %}text-blue-600{% else %}text-red-600{% endif %}">
-                            ${{ current_month_balance }}
+                            ₱{{ current_month_balance }}
                         </p>
                     </div>
                 </div>
@@ -64,16 +64,16 @@
                 <div class="grid grid-cols-3 gap-2">
                     <div>
                         <p class="text-sm text-gray-700">Income</p>
-                        <p class="text-xl font-bold text-green-600">${{ total_income }}</p>
+                        <p class="text-xl font-bold text-green-600">₱{{ total_income }}</p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-700">Expenses</p>
-                        <p class="text-xl font-bold text-red-600">${{ total_expenses }}</p>
+                        <p class="text-xl font-bold text-red-600">₱{{ total_expenses }}</p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-700">Balance</p>
                         <p class="text-xl font-bold {% if total_balance >= 0 %}text-blue-600{% else %}text-red-600{% endif %}">
-                            ${{ total_balance }}
+                            ₱{{ total_balance }}
                         </p>
                     </div>
                 </div>

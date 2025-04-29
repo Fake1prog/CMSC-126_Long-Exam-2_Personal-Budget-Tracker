@@ -196,6 +196,10 @@ def category_report(request):
     if category:
         transactions = transactions.filter(category=category)
 
+    # Calculate total income and expenses for the summary section
+    total_income = transactions.filter(type='INCOME').aggregate(Sum('amount'))['amount__sum'] or 0
+    total_expenses = transactions.filter(type='EXPENSE').aggregate(Sum('amount'))['amount__sum'] or 0
+
     # Group by date (monthly)
     monthly_data = {}
     for transaction in transactions:
@@ -230,6 +234,8 @@ def category_report(request):
         'transactions': transactions,
         'monthly_data': monthly_data_list,
         'has_any_transactions': has_any_transactions,
+        'total_income': total_income,
+        'total_expenses': total_expenses,
     }
     return render(request, 'reports/category_report.html', context)
 

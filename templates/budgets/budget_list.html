@@ -9,7 +9,7 @@
 {% block body_classes %}home-page{% endblock %}
 
 {% block content %}
-    <div class="my-8">
+    <div class="my-8 container mx-auto max-w-6xl px-4"> <!-- Increased max-width -->
         <!-- Budget Title -->
         <div class="mb-6 flex justify-between items-center">
             <div class="flex items-center">
@@ -93,12 +93,12 @@
             </a>
         </div>
 
-        <!-- Budgets Content -->
-        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
+        <!-- Budgets Content - Wider container with reduced corner radius -->
+        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[30px] shadow p-6 w-full"> <!-- Changed from rounded-[40px] to [30px] and added w-full -->
             {% if budgets %}
-                <div class="grid grid-cols-1 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> <!-- Added responsive grid columns -->
                     {% for budget in budgets %}
-                        <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-sm rounded-[30px] p-6 hover:shadow-md transition">
+                        <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-sm rounded-[20px] p-6 hover:shadow-md transition"> <!-- Changed from rounded-[30px] to [20px] -->
                             <div class="flex justify-between items-center mb-4">
                                 <h3 class="font-semibold text-xl">{{ budget.category.name }}</h3>
                                 <span class="text-sm text-gray-600 bg-white bg-opacity-40 px-3 py-1 rounded-full">{{ budget.get_period_display }}</span>
@@ -106,8 +106,8 @@
 
                             <div class="mb-4">
                                 <div class="flex justify-between text-base text-gray-600 mb-2">
-                                    <span>Budget: ${{ budget.amount }}</span>
-                                    <span>Spent: ${{ budget.spent }}</span>
+                                    <span>Budget: ₱{{ budget.amount }}</span>
+                                    <span>Spent: ₱{{ budget.spent }}</span>
                                 </div>
 
                                 <div class="w-full bg-gray-200 rounded-full h-3 mb-2">
@@ -127,9 +127,9 @@
 
                                 <p class="text-base font-medium {% if budget.is_over %}text-red-600{% elif budget.remaining <= budget.amount|floatformat:2 %}text-yellow-500{% else %}text-green-600{% endif %}">
                                     {% if budget.is_over %}
-                                        Over budget by ${{ budget.remaining|floatformat:2 }}
+                                        Over budget by ₱{{ budget.remaining|floatformat:2 }}
                                     {% else %}
-                                        ${{ budget.remaining|floatformat:2 }} remaining
+                                        ₱{{ budget.remaining|floatformat:2 }} remaining
                                     {% endif %}
                                 </p>
                             </div>
@@ -153,7 +153,7 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <div class="text-center py-10">
+                <div class="text-center py-10 w-full"> <!-- Added w-full -->
                     <div class="text-gray-400 text-5xl mb-4">💰</div>
                     <h3 class="text-xl font-semibold text-gray-700 mb-2">No budgets yet</h3>
                     <p class="text-gray-500 italic mb-4">You don't have any budgets set up yet.</p>
@@ -166,9 +166,6 @@
                 </div>
             {% endif %}
         </div>
-        
-        {% if budgets %}
-        {% endif %}
     </div>
 {% endblock %}
 
