@@ -1,68 +1,145 @@
 {% extends 'base_dashboard.html' %}
 {% block title %}{{ title }} | Gastadorcheck{% endblock %}
+
 {% block extra_css %}
   <link rel="stylesheet" href="/static/css/landing.css">
 {% endblock %}
+
 {% block body_classes %}home-page{% endblock %}
 
-
 {% block content %}
-  <div class="w-full max-w-xl mx-auto my-8">
-    <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow-md p-6">
-      <!-- Title moved inside glass container -->
-      <h2 class="text-3xl font-bold text-[#FD9069] mb-6 text-center">{{ title }}</h2>
+  <div class="my-8">
+    <!-- Form Title -->
+    <div class="mb-6">
+      <h2 class="text-3xl flex flex-wrap items-baseline">
+        {% if 'Add' in title %}
+          <span class="italic text-gray-500">New</span>
+          <span class="font-semibold text-[#FF4300] ml-1">Budget</span>
+        {% else %}
+          <span class="italic text-gray-500">Edit</span>
+          <span class="font-semibold text-[#FF4300] ml-1">Budget</span>
+        {% endif %}
+      </h2>
+    </div>
 
+    <!-- Budget Form -->
+    <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
       <form method="POST" class="space-y-6">
         {% csrf_token %}
 
-        <div>
-          <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
-            {{ form.category.label }}
-          </label>
-          {{ form.category }}
+        <div class="space-y-6">
+          <!-- Category field -->
+          <div>
+            <label for="{{ form.category.id_for_label }}" class="block text-base font-medium text-gray-700 mb-2">
+              {{ form.category.label }}
+            </label>
+            <select name="{{ form.category.name }}" id="{{ form.category.id_for_label }}" 
+                    class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]" required>
+              {% for choice in form.category.field.choices %}
+                <option value="{{ choice.0 }}" {% if form.category.value == choice.0 %}selected{% endif %}>
+                  {{ choice.1 }}
+                </option>
+              {% endfor %}
+            </select>
+            {% if form.category.errors %}
+              <p class="text-red-600 text-sm mt-1">{{ form.category.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <!-- Amount field -->
+          <div>
+            <label for="{{ form.amount.id_for_label }}" class="block text-base font-medium text-gray-700 mb-2">
+              {{ form.amount.label }}
+            </label>
+            <div class="relative rounded-[20px] shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <span class="text-gray-500 sm:text-sm">$</span>
+              </div>
+              <input type="number" name="{{ form.amount.name }}" id="{{ form.amount.id_for_label }}" 
+                     value="{{ form.amount.value|default:'' }}" step="0.01" min="0.01"
+                     class="w-full h-12 pl-8 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]" required>
+            </div>
+            {% if form.amount.errors %}
+              <p class="text-red-600 text-sm mt-1">{{ form.amount.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <!-- Period field -->
+          <div>
+            <label for="{{ form.period.id_for_label }}" class="block text-base font-medium text-gray-700 mb-2">
+              {{ form.period.label }}
+            </label>
+            <select name="{{ form.period.name }}" id="{{ form.period.id_for_label }}" 
+                    class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]" required>
+              {% for choice in form.period.field.choices %}
+                <option value="{{ choice.0 }}" {% if form.period.value == choice.0 %}selected{% endif %}>
+                  {{ choice.1 }}
+                </option>
+              {% endfor %}
+            </select>
+            {% if form.period.errors %}
+              <p class="text-red-600 text-sm mt-1">{{ form.period.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Start date field -->
+            <div>
+              <label for="{{ form.start_date.id_for_label }}" class="block text-base font-medium text-gray-700 mb-2">
+                {{ form.start_date.label }}
+              </label>
+              <div class="relative rounded-[20px] shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <input type="date" name="{{ form.start_date.name }}" id="{{ form.start_date.id_for_label }}" 
+                       value="{{ form.start_date.value|date:'Y-m-d'|default:'' }}" 
+                       class="w-full h-12 pl-12 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]" required>
+              </div>
+              {% if form.start_date.errors %}
+                <p class="text-red-600 text-sm mt-1">{{ form.start_date.errors.0 }}</p>
+              {% endif %}
+            </div>
+
+            <!-- End date field -->
+            <div>
+              <label for="{{ form.end_date.id_for_label }}" class="block text-base font-medium text-gray-700 mb-2">
+                {{ form.end_date.label }}
+              </label>
+              <div class="relative rounded-[20px] shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <input type="date" name="{{ form.end_date.name }}" id="{{ form.end_date.id_for_label }}" 
+                       value="{{ form.end_date.value|date:'Y-m-d'|default:'' }}" 
+                       class="w-full h-12 pl-12 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]">
+              </div>
+              <p class="text-xs text-gray-500 mt-1">Optional. Leave empty for ongoing budgets.</p>
+              {% if form.end_date.errors %}
+                <p class="text-red-600 text-sm mt-1">{{ form.end_date.errors.0 }}</p>
+              {% endif %}
+            </div>
+          </div>
         </div>
 
-        <div>
-          <label for="{{ form.amount.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
-            {{ form.amount.label }}
-          </label>
-          {{ form.amount }}
-        </div>
-
-        <div>
-          <label for="{{ form.period.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
-            {{ form.period.label }}
-          </label>
-          {{ form.period }}
-        </div>
-
-        <div>
-          <label for="{{ form.start_date.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
-            {{ form.start_date.label }}
-          </label>
-          {{ form.start_date }}
-        </div>
-
-        <div>
-          <label for="{{ form.end_date.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
-            {{ form.end_date.label }}
-          </label>
-          {{ form.end_date }}
-        </div>
-
-        <div class="mt-6 flex justify-start space-x-4">
-          <button
-            type="submit"
-            class="bg-[#FD9069] hover:opacity-90 text-white font-semibold py-2 px-6 rounded-[10px] shadow transition"
-          >
-            Save Budget
-          </button>
-          <a
-            href="{% url 'budget_list' %}"
-            class="bg-[#C5C5C5]/50 hover:opacity-90 text-white font-semibold py-2 px-6 rounded-[10px] shadow transition"
-          >
+        <!-- Form buttons -->
+        <div class="flex justify-end space-x-4 mt-10">
+          <a href="{% url 'budget_list' %}" 
+             class="h-12 px-8 flex items-center justify-center bg-white bg-opacity-60 text-gray-700 hover:bg-opacity-70 font-medium rounded-[20px] transition">
             Cancel
           </a>
+          <button type="submit" 
+                  class="h-12 px-8 flex items-center justify-center bg-[#FD9069] hover:opacity-90 text-white font-medium rounded-[20px] transition">
+            {% if 'Add' in title %}
+              Create Budget
+            {% else %}
+              Save Changes
+            {% endif %}
+          </button>
         </div>
       </form>
     </div>
@@ -78,11 +155,19 @@
 {% block extra_js %}
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const opts = { dateFormat: "Y-m-d" };
-    const startEl = document.querySelector('#id_start_date');
-    const endEl   = document.querySelector('#id_end_date');
-    if (startEl) flatpickr(startEl, opts);
-    if (endEl)   flatpickr(endEl,   opts);
+    const opts = { 
+      dateFormat: "Y-m-d",
+      allowInput: true,
+      disableMobile: false,
+      static: true
+    };
+    
+    if (typeof flatpickr !== 'undefined') {
+      const startEl = document.querySelector('#{{ form.start_date.id_for_label }}');
+      const endEl = document.querySelector('#{{ form.end_date.id_for_label }}');
+      if (startEl) flatpickr(startEl, opts);
+      if (endEl) flatpickr(endEl, opts);
+    }
   });
 </script>
 {% endblock %}

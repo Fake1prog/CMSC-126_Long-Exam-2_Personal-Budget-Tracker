@@ -1,73 +1,150 @@
-{% extends 'base_dashboard.html' %}  {# Extends the dashboard base template #}
-{% load crispy_forms_tags %} {# Loads crispy forms tags #}
+{% extends 'base_dashboard.html' %}
+{% load crispy_forms_tags %}
 
-{% block title %}{{ title }} | Gastadorcheck{% endblock %} {# Sets the page title #}
+{% block title %}{{ title }} | Gastadorcheck{% endblock %}
 
 {% block extra_css %}
-    {# Links to additional CSS files #}
-    <link rel="stylesheet" href="/static/css/landing.css"> {# Custom CSS for background #}
-    {# Add any specific CSS for forms if needed #}
+<link rel="stylesheet" href="/static/css/landing.css">
 {% endblock %}
 
-{% block body_classes %}home-page{% endblock %} {# Applies a body class for styling #}
-
-{% block header %}{% endblock %} {# Overrides and removes the header block #}
+{% block body_classes %}home-page{% endblock %}
 
 {% block content %}
-    {# Main content container with background and blur effects #}
-    <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg rounded-lg shadow p-6 my-8">
+<div class="my-8">
+    <!-- Form Title -->
+    <div class="mb-6">
+        <h2 class="text-3xl flex flex-wrap items-baseline">
+            {% if 'Add' in title %}
+                <span class="italic text-gray-500">New</span>
+                <span class="font-semibold text-[#FF4300] ml-1">Category</span>
+            {% else %}
+                <span class="italic text-gray-500">Edit</span>
+                <span class="font-semibold text-[#FF4300] ml-1">Category</span>
+            {% endif %}
+        </h2>  
+    </div>
 
-        {# Content specific to the category add/edit form #}
-        <div class="max-w-xl mx-auto">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6">{{ title }}</h2>
-
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <form method="POST">
-                    {% csrf_token %}
-                    {# Renders form fields manually #}
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700">{{ form.name.label }}</label>
-                            {{ form.name }}
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">{{ form.type.label }}</label>
-                            {{ form.type }}
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">{{ form.color.label }}</label>
-                            {{ form.color }}
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700">{{ form.icon.label }}</label>
-                            {{ form.icon }}
-                        </div>
+    <!-- Category Form -->
+    <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+            
+            <div class="space-y-6">
+                <!-- Name field -->
+                <div>
+                    <label for="{{ form.name.id_for_label }}" class="block text-base font-medium text-gray-700 mb-2">{{ form.name.label }}</label>
+                    <input type="text" name="{{ form.name.name }}" id="{{ form.name.id_for_label }}" value="{{ form.name.value|default:'' }}" 
+                           class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]">
+                    {% if form.name.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.name.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Type field -->
+                    <div>
+                        <label for="{{ form.type.id_for_label }}" class="block text-base font-medium text-gray-700 mb-2">{{ form.type.label }}</label>
+                        <select name="{{ form.type.name }}" id="{{ form.type.id_for_label }}" 
+                                class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]">
+                            {% for choice in form.type.field.choices %}
+                                <option value="{{ choice.0 }}" {% if form.type.value == choice.0 %}selected{% endif %}>{{ choice.1 }}</option>
+                            {% endfor %}
+                        </select>
+                        {% if form.type.errors %}
+                            <p class="text-red-600 text-sm mt-1">{{ form.type.errors.0 }}</p>
+                        {% endif %}
                     </div>
-
-                    <div class="flex space-x-2 mt-4">
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition">
-                            Save Category
-                        </button>
-                        <a href="{% url 'category_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition">
-                            Cancel
-                        </a>
+                    
+                    <!-- Color field -->
+                    <div>
+                        <label for="{{ form.color.id_for_label }}" class="block text-base font-medium text-gray-700 mb-2">{{ form.color.label }}</label>
+                        <div class="flex items-center space-x-4">
+                            <div class="relative w-full">
+                                <input type="color" name="{{ form.color.name }}" id="{{ form.color.id_for_label }}" value="{{ form.color.value|default:'#7CB9E8' }}" 
+                                      class="opacity-0 absolute top-0 left-0 w-full h-12 cursor-pointer z-10">
+                                <div id="color-box" class="w-full h-12 rounded-[20px] border border-gray-300 bg-white flex items-center px-2 overflow-hidden">
+                                    <div id="color-display" class="w-full h-8 rounded-[15px]"></div>
+                                </div>
+                            </div>
+                            <div class="w-12 h-12 rounded-full border border-gray-300 overflow-hidden" id="color-preview"></div>
+                        </div>
+                        {% if form.color.errors %}
+                            <p class="text-red-600 text-sm mt-1">{{ form.color.errors.0 }}</p>
+                        {% endif %}
                     </div>
-                </form>
+                </div>
+                
+                <!-- Icon field -->
+                <div>
+                    <label for="{{ form.icon.id_for_label }}" class="block text-base font-medium text-gray-700 mb-2">{{ form.icon.label }}</label>
+                    <div class="flex items-center space-x-4">
+                        <input type="text" name="{{ form.icon.name }}" id="{{ form.icon.id_for_label }}" value="{{ form.icon.value|default:'' }}" 
+                               placeholder="Enter an emoji or icon name" 
+                               class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]">
+                        <div class="text-3xl w-12 h-12 flex items-center justify-center" id="icon-preview"></div>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">You can use emoji (e.g., 🍎) or an icon name</p>
+                    {% if form.icon.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.icon.errors.0 }}</p>
+                    {% endif %}
+                </div>
             </div>
-        </div>
 
-    </div> {# End main content container #}
-{% endblock %}
-
-{% block footer %}
-    {# Custom footer block #}
-    <footer class="home-footer">
-        <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
-    </footer>
+            <!-- Form buttons -->
+            <div class="flex justify-end space-x-4 mt-10">
+                <a href="{% url 'category_list' %}" 
+                   class="h-12 px-8 flex items-center justify-center bg-white bg-opacity-60 text-gray-700 hover:bg-opacity-70 font-medium rounded-[20px] transition">
+                    Cancel
+                </a>
+                <button type="submit" 
+                        class="h-12 px-8 flex items-center justify-center bg-[#FD9069] hover:opacity-90 text-white font-medium rounded-[20px] transition">
+                    {% if 'Add' in title %}
+                        Create Category
+                    {% else %}
+                        Save Changes
+                    {% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
-    {# Includes additional JavaScript files or scripts #}
-    {# Add Crispy Forms JS media if needed and not already in base_dashboard.html #}
-    {{ form.media.js }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Color preview functionality
+    const colorInput = document.getElementById('{{ form.color.id_for_label }}');
+    const colorPreview = document.getElementById('color-preview');
+    const colorDisplay = document.getElementById('color-display');
+    
+    // Initial color preview
+    colorPreview.style.backgroundColor = colorInput.value;
+    colorDisplay.style.backgroundColor = colorInput.value;
+    
+    // Update color preview on change
+    colorInput.addEventListener('input', function() {
+        colorPreview.style.backgroundColor = this.value;
+        colorDisplay.style.backgroundColor = this.value;
+    });
+    
+    // Icon preview functionality
+    const iconInput = document.getElementById('{{ form.icon.id_for_label }}');
+    const iconPreview = document.getElementById('icon-preview');
+    
+    // Initial icon preview
+    iconPreview.textContent = iconInput.value;
+    
+    // Update icon preview on change
+    iconInput.addEventListener('input', function() {
+        iconPreview.textContent = this.value;
+    });
+});
+</script>
+{% endblock %}
+
+{% block footer %}
+<footer class="home-footer">
+    <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
+</footer>
 {% endblock %}

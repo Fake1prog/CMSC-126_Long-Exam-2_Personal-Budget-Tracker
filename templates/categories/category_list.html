@@ -10,33 +10,38 @@
 
 {% block content %}
 <div class="my-8">
-
+    <!-- Categories Title -->
     <div class="mb-6 flex justify-between items-center">
-        <h2 class="text-3xl font-bold text-[#FD9069]">Categories</h2>
-        <a href="{% url 'category_add' %}" class="bg-[#FD9069] hover:opacity-90 text-white px-4 py-2 rounded-[10px] transition">
+        <h2 class="text-3xl flex flex-wrap items-baseline">
+            <span class="italic text-gray-500">Your</span>
+            <span class="font-semibold text-[#FF4300] ml-1">Categories</span>
+        </h2>
+        <a href="{% url 'category_add' %}" class="bg-[#FD9069] hover:opacity-90 text-white px-4 py-2 rounded-[15px] transition">
             Add Category
         </a>
     </div>
 
+    <!-- Categories Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow-md p-6">
+        <!-- Income Categories Card -->
+        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
             <h3 class="text-xl font-semibold text-green-600 mb-4">Income Categories</h3>
 
             {% if income_categories %}
-                <div class="space-y-2">
+                <div class="space-y-3">
                     {% for category in income_categories %}
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded hover:bg-gray-100 transition">
+                        <div class="flex items-center justify-between p-3 bg-white bg-opacity-40 rounded-[15px] hover:bg-opacity-60 transition">
                             <div class="flex items-center">
-                                <span class="w-4 h-4 rounded-full mr-2" style="background-color: {{ category.color }}"></span>
-                                <span>{{ category.name }}</span>
+                                <span class="w-5 h-5 rounded-full mr-3" style="background-color: {{ category.color }}"></span>
+                                <span class="font-medium">{{ category.name }}</span>
                                 {% if category.is_default %}
                                     <span class="ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">Default</span>
                                 {% endif %}
                                 {% if category.icon %}
-                                    <span class="ml-2">{{ category.icon }}</span>
+                                    <span class="ml-3 text-lg">{{ category.icon }}</span>
                                 {% endif %}
                             </div>
-                            <div class="flex space-x-2">
+                            <div class="flex space-x-3">
                                 <a href="{% url 'category_edit' category.id %}" class="text-indigo-600 hover:text-indigo-800">
                                     Edit
                                 </a>
@@ -48,28 +53,32 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <p class="text-gray-500 italic">No income categories yet. Add your first category using the button above.</p>
+                <div class="text-center py-6 bg-white bg-opacity-20 rounded-[15px]">
+                    <p class="text-gray-500 italic">No income categories yet.</p>
+                    <a href="{% url 'category_add' %}?type=INCOME" class="mt-2 inline-block text-indigo-600 hover:underline">Add your first income category</a>
+                </div>
             {% endif %}
         </div>
 
-        <div class="bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow-md p-6">
+        <!-- Expense Categories Card -->
+        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
             <h3 class="text-xl font-semibold text-red-600 mb-4">Expense Categories</h3>
 
             {% if expense_categories %}
-                <div class="space-y-2">
+                <div class="space-y-3">
                     {% for category in expense_categories %}
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded hover:bg-gray-100 transition">
+                        <div class="flex items-center justify-between p-3 bg-white bg-opacity-40 rounded-[15px] hover:bg-opacity-60 transition">
                             <div class="flex items-center">
-                                <span class="w-4 h-4 rounded-full mr-2" style="background-color: {{ category.color }}"></span>
-                                <span>{{ category.name }}</span>
+                                <span class="w-5 h-5 rounded-full mr-3" style="background-color: {{ category.color }}"></span>
+                                <span class="font-medium">{{ category.name }}</span>
                                 {% if category.is_default %}
                                     <span class="ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">Default</span>
                                 {% endif %}
                                 {% if category.icon %}
-                                    <span class="ml-2">{{ category.icon }}</span>
+                                    <span class="ml-3 text-lg">{{ category.icon }}</span>
                                 {% endif %}
                             </div>
-                            <div class="flex space-x-2">
+                            <div class="flex space-x-3">
                                 <a href="{% url 'category_edit' category.id %}" class="text-indigo-600 hover:text-indigo-800">
                                     Edit
                                 </a>
@@ -81,25 +90,77 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <p class="text-gray-500 italic">No expense categories yet. Add your first category using the button above.</p>
+                <div class="text-center py-6 bg-white bg-opacity-20 rounded-[15px]">
+                    <p class="text-gray-500 italic">No expense categories yet.</p>
+                    <a href="{% url 'category_add' %}?type=EXPENSE" class="mt-2 inline-block text-indigo-600 hover:underline">Add your first expense category</a>
+                </div>
             {% endif %}
         </div>
     </div>
 
-    <div class="mt-6 bg-white bg-opacity-40 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow-md p-6">
+    <!-- About Categories Info Card -->
+    <div class="mt-6 bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
         <h3 class="text-xl font-semibold text-gray-700 mb-4">About Categories</h3>
         <div class="text-gray-600">
-            <p class="mb-2">Categories help you organize your income and expenses for better financial tracking:</p>
-            <ul class="list-disc pl-5 space-y-1 mb-3">
-                <li><span class="text-blue-600 font-medium">Default categories</span> are pre-configured for your convenience.</li>
-                <li>You can <a href="#" class="text-indigo-600 font-medium hover:underline">edit</a> any category to change its name, color, or icon.</li>
-                <li>Categories marked as <span class="text-blue-800 bg-blue-100 px-2 py-0.5 rounded-full text-xs">Default</span> were created automatically but can be customized.</li>
-                <li>When a category is used in transactions, deleting it will archive it instead of removing it completely.</li>
-            </ul>
-            <p>Need a custom category? <a href="{% url 'category_add' %}" class="text-indigo-600 hover:underline">Create one now</a>.</p>
+            <p class="mb-3">Categories help you organize your income and expenses for better financial tracking:</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-sm rounded-[15px] p-4">
+                    <h4 class="font-medium text-gray-700 mb-2">Using Categories</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Categorize transactions to track spending patterns</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>Set budgets for specific expense categories</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>View detailed reports by category</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-sm rounded-[15px] p-4">
+                    <h4 class="font-medium text-gray-700 mb-2">Category Management</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <svg class="h-5 w-5 text-amber-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>Default categories can be customized but not removed</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-5 w-5 text-amber-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>Categories with transactions will be archived instead of deleted</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-5 w-5 text-amber-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>Each category can have a custom color and icon</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="flex justify-center mt-4">
+                <a href="{% url 'category_add' %}" class="bg-[#FD9069] hover:opacity-90 text-white px-4 py-2 rounded-[15px] transition inline-flex items-center">
+                    <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Create New Category
+                </a>
+            </div>
         </div>
     </div>
-
 </div>
 {% endblock %}
 

@@ -29,80 +29,84 @@
         <form method="POST" class="space-y-6">
             {% csrf_token %}
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-6">
                 <!-- Title field -->
-                <div class="md:col-span-2">
-                    <label for="id_title" class="block text-sm font-medium text-gray-700 mb-1">Title</label>
-                    <input type="text" name="title" id="id_title" class="w-full rounded-lg border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" value="{{ form.title.value|default:'' }}" required>
+                <div>
+                    <label for="id_title" class="block text-base font-medium text-gray-700 mb-2">Title</label>
+                    <input type="text" name="title" id="id_title" class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]" value="{{ form.title.value|default:'' }}" required>
                     {% if form.title.errors %}
                         <p class="text-red-600 text-sm mt-1">{{ form.title.errors.0 }}</p>
                     {% endif %}
                 </div>
                 
-                <!-- Amount field -->
-                <div>
-                    <label for="id_amount" class="block text-sm font-medium text-gray-700 mb-1">Amount</label>
-                    <div class="relative rounded-lg shadow-sm">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span class="text-gray-500 sm:text-sm">$</span>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Amount field -->
+                    <div>
+                        <label for="id_amount" class="block text-base font-medium text-gray-700 mb-2">Amount</label>
+                        <div class="relative rounded-[20px] shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <span class="text-gray-500 sm:text-sm">$</span>
+                            </div>
+                            <input type="number" name="amount" id="id_amount" class="w-full h-12 pl-8 rounded-[20px] border-gray-300 bg-white bg-opacity-60 focus:border-[#FF4300] focus:ring-[#FF4300]" value="{{ form.amount.value|default:'' }}" step="0.01" min="0.01" required>
                         </div>
-                        <input type="number" name="amount" id="id_amount" class="w-full pl-8 rounded-lg border-gray-300 bg-white bg-opacity-60 focus:border-indigo-500 focus:ring-indigo-500" value="{{ form.amount.value|default:'' }}" step="0.01" min="0.01" required>
+                        {% if form.amount.errors %}
+                            <p class="text-red-600 text-sm mt-1">{{ form.amount.errors.0 }}</p>
+                        {% endif %}
                     </div>
-                    {% if form.amount.errors %}
-                        <p class="text-red-600 text-sm mt-1">{{ form.amount.errors.0 }}</p>
-                    {% endif %}
-                </div>
-                
-                <!-- Date field -->
-                <div>
-                    <label for="id_date" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
-                    <div class="relative rounded-lg shadow-sm">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
+                    
+                    <!-- Date field -->
+                    <div>
+                        <label for="id_date" class="block text-base font-medium text-gray-700 mb-2">Date</label>
+                        <div class="relative rounded-[20px] shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <input type="date" name="date" id="id_date" class="w-full h-12 pl-12 rounded-[20px] border-gray-300 bg-white bg-opacity-60 focus:border-[#FF4300] focus:ring-[#FF4300]" value="{{ form.date.value|date:'Y-m-d'|default:'' }}" required>
                         </div>
-                        <input type="date" name="date" id="id_date" class="w-full pl-10 rounded-lg border-gray-300 bg-white bg-opacity-60 focus:border-indigo-500 focus:ring-indigo-500" value="{{ form.date.value|date:'Y-m-d'|default:'' }}" required>
+                        {% if form.date.errors %}
+                            <p class="text-red-600 text-sm mt-1">{{ form.date.errors.0 }}</p>
+                        {% endif %}
                     </div>
-                    {% if form.date.errors %}
-                        <p class="text-red-600 text-sm mt-1">{{ form.date.errors.0 }}</p>
-                    {% endif %}
                 </div>
                 
-                <!-- Type field -->
-                <div>
-                    <label for="id_type" class="block text-sm font-medium text-gray-700 mb-1">Type</label>
-                    <select name="type" id="id_type" class="w-full rounded-lg border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                        <option value="INCOME" {% if form.type.value == 'INCOME' %}selected{% endif %}>Income</option>
-                        <option value="EXPENSE" {% if form.type.value == 'EXPENSE' %}selected{% endif %}>Expense</option>
-                    </select>
-                    {% if form.type.errors %}
-                        <p class="text-red-600 text-sm mt-1">{{ form.type.errors.0 }}</p>
-                    {% endif %}
-                </div>
-                
-                <!-- Category field -->
-                <div>
-                    <label for="id_category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                    <select name="category" id="id_category" class="w-full rounded-lg border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        <option value="">---------</option>
-                        {% for choice in form.category.field.choices %}
-                            {% if choice.0 %}
-                                <option value="{{ choice.0 }}" {% if form.category.value|stringformat:"s" == choice.0|stringformat:"s" %}selected{% endif %}>
-                                    {{ choice.1 }}
-                                </option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                    {% if form.category.errors %}
-                        <p class="text-red-600 text-sm mt-1">{{ form.category.errors.0 }}</p>
-                    {% endif %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Type field -->
+                    <div>
+                        <label for="id_type" class="block text-base font-medium text-gray-700 mb-2">Type</label>
+                        <select name="type" id="id_type" class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]" required>
+                            <option value="INCOME" {% if form.type.value == 'INCOME' %}selected{% endif %}>Income</option>
+                            <option value="EXPENSE" {% if form.type.value == 'EXPENSE' %}selected{% endif %}>Expense</option>
+                        </select>
+                        {% if form.type.errors %}
+                            <p class="text-red-600 text-sm mt-1">{{ form.type.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Category field -->
+                    <div>
+                        <label for="id_category" class="block text-base font-medium text-gray-700 mb-2">Category</label>
+                        <select name="category" id="id_category" class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]">
+                            <option value="">---------</option>
+                            {% for choice in form.category.field.choices %}
+                                {% if choice.0 %}
+                                    <option value="{{ choice.0 }}" {% if form.category.value|stringformat:"s" == choice.0|stringformat:"s" %}selected{% endif %}>
+                                        {{ choice.1 }}
+                                    </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        {% if form.category.errors %}
+                            <p class="text-red-600 text-sm mt-1">{{ form.category.errors.0 }}</p>
+                        {% endif %}
+                    </div>
                 </div>
                 
                 <!-- Notes field -->
-                <div class="md:col-span-2">
-                    <label for="id_notes" class="block text-sm font-medium text-gray-700 mb-1">Notes (Optional)</label>
-                    <textarea name="notes" id="id_notes" rows="3" class="w-full rounded-lg border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ form.notes.value|default:'' }}</textarea>
+                <div>
+                    <label for="id_notes" class="block text-base font-medium text-gray-700 mb-2">Notes (Optional)</label>
+                    <textarea name="notes" id="id_notes" rows="4" class="w-full px-4 py-3 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]">{{ form.notes.value|default:'' }}</textarea>
                     {% if form.notes.errors %}
                         <p class="text-red-600 text-sm mt-1">{{ form.notes.errors.0 }}</p>
                     {% endif %}
@@ -110,11 +114,13 @@
             </div>
 
             <!-- Form buttons -->
-            <div class="flex justify-end space-x-4 mt-8 pt-4">
-                <a href="{% url 'transaction_list' %}" class="bg-white bg-opacity-60 text-gray-700 hover:bg-opacity-70 font-medium py-2 px-4 rounded-[15px] transition duration-150">
+            <div class="flex justify-end space-x-4 mt-10">
+                <a href="{% url 'transaction_list' %}" 
+                   class="h-12 px-8 flex items-center justify-center bg-white bg-opacity-60 text-gray-700 hover:bg-opacity-70 font-medium rounded-[20px] transition duration-150">
                     Cancel
                 </a>
-                <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-[15px] transition duration-150">
+                <button type="submit" 
+                        class="h-12 px-8 flex items-center justify-center bg-[#FD9069] hover:opacity-90 text-white font-medium rounded-[20px] transition duration-150">
                     {% if 'Add' in title %}
                         Create Transaction
                     {% else %}
@@ -178,6 +184,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof flatpickr !== 'undefined') {
         flatpickr("#id_date", {
             dateFormat: "Y-m-d",
+            disableMobile: false,
+            static: true,
         });
     }
 });
