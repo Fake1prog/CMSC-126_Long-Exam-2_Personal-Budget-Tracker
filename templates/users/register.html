@@ -4,149 +4,174 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="/static/css/landing.css">
+
+<!-- Added custom style for footer kay gahig ulo, dli ma fix sa bottom sa screen haha -->
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+
+    .page-container {
+        min-height: 100vh;
+        position: relative;
+        padding-bottom: 60px;
+    }
+
+    .home-footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 60px;
+        text-align: center;
+        padding: 20px 0;
+    }
+</style>
 {% endblock %}
 
 {% block body_classes %}home-page{% endblock %}
 {% block main_classes %}{% endblock %}
 
 {% block content %}
-<!-- Header -->
-<div class="home-header">
-    <a href="{% url 'home' %}" class="home-logo">GastadorCheck</a>
-    <nav class="home-nav">
-        <a href="{% url 'about' %}" class="nav-link">About</a>
-        <a href="{% url 'contact' %}" class="nav-link">Contact</a>
-        <a href="{% url 'login' %}" class="get-started-btn">Log In</a>
-    </nav>
-</div>
+<div class="page-container">
+    <!-- Header -->
+    <div class="home-header">
+        <a href="{% url 'home' %}" class="home-logo">GastadorCheck</a>
+        <nav class="home-nav">
+            <a href="{% url 'about' %}" class="nav-link">About</a>
+            <a href="{% url 'contact' %}" class="nav-link">Contact</a>
+            <a href="{% url 'login' %}" class="get-started-btn">Log In</a>
+        </nav>
+    </div>
 
-<!-- Registration Form Container -->
-<div class="auth-container max-w-md mx-auto">
-    <h2 class="auth-title">Create an Account</h2>
+    <!-- Registration Form Container -->
+    <div class="auth-container max-w-md mx-auto">
+        <h2 class="auth-title">Create an Account</h2>
 
-    <form method="POST" class="space-y-4">
-        {% csrf_token %}
-        
-        <!-- Username Field -->
-        <div class="group">
-            <label for="{{ form.username.id_for_label }}" class="block font-medium text-gray-700 mb-2">
-                Username
-            </label>
-            <input 
-                type="text" 
-                name="{{ form.username.name }}" 
-                id="{{ form.username.id_for_label }}" 
-                value="{{ form.username.value|default:'' }}"
-                class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300] {% if form.username.errors %}border-red-500{% endif %}"
-                autocomplete="username"
-                required
-            >
-            {% if form.username.errors %}
-                <p class="text-red-600 text-sm mt-1">{{ form.username.errors.0 }}</p>
-            {% endif %}
-            <div class="hidden group-hover:block text-xs text-gray-500 mt-1">
-                {{ form.username.help_text }}
-            </div>
-        </div>
-        
-        <!-- Email Field -->
-        <div class="group">
-            <label for="{{ form.email.id_for_label }}" class="block font-medium text-gray-700 mb-2">
-                Email
-            </label>
-            <input 
-                type="email" 
-                name="{{ form.email.name }}" 
-                id="{{ form.email.id_for_label }}" 
-                value="{{ form.email.value|default:'' }}"
-                class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300] {% if form.email.errors %}border-red-500{% endif %}"
-                autocomplete="email"
-                placeholder="user@example.com"
-                required
-            >
-            {% if form.email.errors %}
-                <p class="text-red-600 text-sm mt-1">{{ form.email.errors.0 }}</p>
-            {% endif %}
-            <div class="hidden group-hover:block text-xs text-gray-500 mt-1">
-                Please use a valid email address including the @ symbol.
-            </div>
-        </div>
-        
-        <!-- Password Field -->
-        <div class="group">
-            <label for="{{ form.password1.id_for_label }}" class="block font-medium text-gray-700 mb-2">
-                Password
-            </label>
-            <input 
-                type="password" 
-                name="{{ form.password1.name }}" 
-                id="{{ form.password1.id_for_label }}" 
-                class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300] {% if form.password1.errors %}border-red-500{% endif %}"
-                autocomplete="new-password"
-                required
-            >
-            {% if form.password1.errors %}
-                <p class="text-red-600 text-sm mt-1">{{ form.password1.errors.0 }}</p>
-            {% endif %}
-            <div class="hidden group-hover:block text-xs text-gray-500 mt-1">
-                <p>Your password:</p>
-                <ul class="list-disc ml-4">
-                    <li>Can't be too similar to your personal information</li>
-                    <li>Must contain at least 8 characters</li>
-                    <li>Can't be a commonly used password</li>
-                    <li>Can't be entirely numeric</li>
-                </ul>
-            </div>
-        </div>
-        
-        <!-- Confirm Password Field -->
-        <div class="group">
-            <label for="{{ form.password2.id_for_label }}" class="block font-medium text-gray-700 mb-2">
-                Confirm Password
-            </label>
-            <input 
-                type="password" 
-                name="{{ form.password2.name }}" 
-                id="{{ form.password2.id_for_label }}" 
-                class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300] {% if form.password2.errors %}border-red-500{% endif %}"
-                autocomplete="new-password"
-                required
-            >
-            {% if form.password2.errors %}
-                <p class="text-red-600 text-sm mt-1">{{ form.password2.errors.0 }}</p>
-            {% endif %}
-            <div class="hidden group-hover:block text-xs text-gray-500 mt-1">
-                Enter the same password as before, for verification.
-            </div>
-        </div>
-        
-        <!-- Non-field errors -->
-        {% if form.non_field_errors %}
-            <div class="bg-red-50 border-l-4 border-red-500 p-4">
-                <div class="flex">
-                    <div class="ml-3">
-                        <p class="text-sm text-red-700">
-                            {% for error in form.non_field_errors %}
-                                {{ error }}
-                            {% endfor %}
-                        </p>
-                    </div>
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+
+            <!-- Username Field -->
+            <div class="group">
+                <label for="{{ form.username.id_for_label }}" class="block font-medium text-gray-700 mb-2">
+                    Username
+                </label>
+                <input
+                    type="text"
+                    name="{{ form.username.name }}"
+                    id="{{ form.username.id_for_label }}"
+                    value="{{ form.username.value|default:'' }}"
+                    class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300] {% if form.username.errors %}border-red-500{% endif %}"
+                    autocomplete="username"
+                    required
+                >
+                {% if form.username.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ form.username.errors.0 }}</p>
+                {% endif %}
+                <div class="hidden group-hover:block text-xs text-gray-500 mt-1">
+                    {{ form.username.help_text }}
                 </div>
             </div>
-        {% endif %}
-        
-        <button type="submit" class="auth-button mt-6 w-full">Sign Up</button>
-    </form>
 
-    <div class="mt-6 text-center">
-        <p class="auth-link">
-            Already have an account? <a href="{% url 'login' %}" class="auth-link-anchor">Log In</a>
-        </p>
+            <!-- Email Field -->
+            <div class="group">
+                <label for="{{ form.email.id_for_label }}" class="block font-medium text-gray-700 mb-2">
+                    Email
+                </label>
+                <input
+                    type="email"
+                    name="{{ form.email.name }}"
+                    id="{{ form.email.id_for_label }}"
+                    value="{{ form.email.value|default:'' }}"
+                    class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300] {% if form.email.errors %}border-red-500{% endif %}"
+                    autocomplete="email"
+                    placeholder="user@example.com"
+                    required
+                >
+                {% if form.email.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ form.email.errors.0 }}</p>
+                {% endif %}
+                <div class="hidden group-hover:block text-xs text-gray-500 mt-1">
+                    Please use a valid email address including the @ symbol.
+                </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="group">
+                <label for="{{ form.password1.id_for_label }}" class="block font-medium text-gray-700 mb-2">
+                    Password
+                </label>
+                <input
+                    type="password"
+                    name="{{ form.password1.name }}"
+                    id="{{ form.password1.id_for_label }}"
+                    class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300] {% if form.password1.errors %}border-red-500{% endif %}"
+                    autocomplete="new-password"
+                    required
+                >
+                {% if form.password1.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ form.password1.errors.0 }}</p>
+                {% endif %}
+                <div class="hidden group-hover:block text-xs text-gray-500 mt-1">
+                    <p>Your password:</p>
+                    <ul class="list-disc ml-4">
+                        <li>Can't be too similar to your personal information</li>
+                        <li>Must contain at least 8 characters</li>
+                        <li>Can't be a commonly used password</li>
+                        <li>Can't be entirely numeric</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Confirm Password Field -->
+            <div class="group">
+                <label for="{{ form.password2.id_for_label }}" class="block font-medium text-gray-700 mb-2">
+                    Confirm Password
+                </label>
+                <input
+                    type="password"
+                    name="{{ form.password2.name }}"
+                    id="{{ form.password2.id_for_label }}"
+                    class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300] {% if form.password2.errors %}border-red-500{% endif %}"
+                    autocomplete="new-password"
+                    required
+                >
+                {% if form.password2.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ form.password2.errors.0 }}</p>
+                {% endif %}
+                <div class="hidden group-hover:block text-xs text-gray-500 mt-1">
+                    Enter the same password as before, for verification.
+                </div>
+            </div>
+
+            <!-- Non-field errors -->
+            {% if form.non_field_errors %}
+                <div class="bg-red-50 border-l-4 border-red-500 p-4">
+                    <div class="flex">
+                        <div class="ml-3">
+                            <p class="text-sm text-red-700">
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <button type="submit" class="auth-button mt-6 w-full">Sign Up</button>
+        </form>
+
+        <div class="mt-6 text-center">
+            <p class="auth-link">
+                Already have an account? <a href="{% url 'login' %}" class="auth-link-anchor">Log In</a>
+            </p>
+        </div>
     </div>
-</div>
 
-<!-- Footer -->
-<footer class="home-footer">
-    <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
-</footer>
+    <!-- Footer -->
+    <footer class="home-footer">
+        <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
+    </footer>
+</div>
 {% endblock %}
