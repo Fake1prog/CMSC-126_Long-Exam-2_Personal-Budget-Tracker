@@ -6,105 +6,78 @@
 {% block extra_css %}
     <link rel="stylesheet" href="/static/css/landing.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <style>
-      /* Custom range slider styles */
-      .range-slider {
-        -webkit-appearance: none;
-        width: 100%;
-        height: 8px;
-        border-radius: 5px;
-        background: #d3d3d3;
-        outline: none;
-      }
-
-      .range-slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: #5bf19d;
-        cursor: pointer;
-      }
-
-      .range-slider::-moz-range-thumb {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: #5bf19d;
-        cursor: pointer;
-      }
-    </style>
+   
 {% endblock %}
 
 {% block body_classes %}home-page{% endblock %}
 
 {% block content %}
-<div class="my-8">
+<!-- Main container -->
+<div class="px-4 sm:px-6 my-6 sm:my-8">
     <!-- Transactions Title -->
-    <div class="mb-6">
-        <h2 class="text-3xl flex flex-wrap items-baseline">
+    <div class="mb-4 sm:mb-6">
+        <h2 class="text-2xl sm:text-3xl flex flex-wrap items-baseline">
             <span class="font-semibold text-[#FF4300] ml-1">Transactions</span>
         </h2>
     </div>
 
-    <!-- Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
-            <p class="text-sm text-gray-500">Income</p>
-            <p class="text-2xl font-bold text-green-600">₱{{ income_total }}</p>
+    <!-- Summary Cards  -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6 mb-6 sm:mb-8">
+        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[30px] sm:rounded-[40px] shadow p-4 sm:p-6">
+            <p class="text-xs sm:text-sm text-gray-500">Income</p>
+            <p class="text-xl sm:text-2xl font-bold text-green-600">₱{{ income_total }}</p>
         </div>
-        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
-            <p class="text-sm text-gray-500">Expenses</p>
-            <p class="text-2xl font-bold text-red-600">₱{{ expense_total }}</p>
+        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[30px] sm:rounded-[40px] shadow p-4 sm:p-6">
+            <p class="text-xs sm:text-sm text-gray-500">Expenses</p>
+            <p class="text-xl sm:text-2xl font-bold text-red-600">₱{{ expense_total }}</p>
         </div>
-        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
-            <p class="text-sm text-gray-500">Balance</p>
-            <p class="text-2xl font-bold {% if balance >= 0 %}text-blue-600{% else %}text-red-600{% endif %}">₱{{ balance }}</p>
+        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[30px] sm:rounded-[40px] shadow p-4 sm:p-6 sm:col-span-1 col-span-1">
+            <p class="text-xs sm:text-sm text-gray-500">Balance</p>
+            <p class="text-xl sm:text-2xl font-bold {% if balance >= 0 %}text-blue-600{% else %}text-red-600{% endif %}">₱{{ balance }}</p>
         </div>
     </div>
 
     <!-- Action Buttons -->
-    <div class="flex justify-end mb-6 space-x-4">
+    <div class="flex flex-col sm:flex-row sm:justify-end mb-4 sm:mb-6 space-y-2 sm:space-y-0 sm:space-x-4">
         <a href="{% url 'transaction_add' %}?type=INCOME"
-           class="bg-[#FD9069] hover:opacity-90 text-white h-10 hover:opacity-50 px-4 rounded-[15px] transition duration-150 flex items-center">
+           class="bg-[#FD9069] hover:opacity-90 text-white py-2 px-4 rounded-[15px] transition duration-150 flex items-center justify-center">
             Add Income
         </a>
         <a href="{% url 'transaction_add' %}?type=EXPENSE"
-           class="bg-[#6AC28F] text-white hover:opacity-50 py-2 px-4 rounded-[15px] transition duration-150 flex items-center">
+           class="bg-[#6AC28F] text-white hover:opacity-50 py-2 px-4 rounded-[15px] transition duration-150 flex items-center justify-center">
             Add Expense
         </a>
     </div>
 
-    <!-- Improved Filters Panel - Keep open when in use -->
-    <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6 mb-6" 
+    <!-- Improved Filters Panel  -->
+    <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[25px] sm:rounded-[40px] shadow p-4 sm:p-6 mb-4 sm:mb-6" 
          id="filters-panel"
          data-show-filters="{% if request.GET %}true{% else %}false{% endif %}"
          data-min-amount="{{ request.GET.amount__gt|default:0 }}"
          data-max-amount="{{ request.GET.amount__lt|default:1000000 }}">
         <div class="flex justify-between items-center">
-            <h3 class="text-xl font-semibold text-gray-700">Filters</h3>
+            <h3 class="text-lg sm:text-xl font-semibold text-gray-700">Filters</h3>
             <button id="toggle-filters-btn" class="text-[#FF4300] hover:text-[#FF6B30] transition duration-150">
                 <span class="show-filters-text {% if request.GET %}hidden{% endif %}">Show Filters</span>
                 <span class="hide-filters-text {% if not request.GET %}hidden{% endif %}">Hide Filters</span>
             </button>
         </div>
 
-        <div id="filters-container" class="mt-6 space-y-5 transition-all duration-300 ease-in-out {% if not request.GET %}hidden{% endif %}">
-            <form method="get" class="space-y-5">
+        <div id="filters-container" class="mt-4 sm:mt-6 space-y-4 sm:space-y-5 transition-all duration-300 ease-in-out {% if not request.GET %}hidden{% endif %}">
+            <form method="get" class="space-y-4 sm:space-y-5">
                 <!-- Title contains -->
-                <div class="mb-4">
-                    <label for="title__icontains" class="block text-base font-medium text-gray-700 mb-2">Title contains</label>
-                    <input type="text" name="title__icontains" id="title__icontains" value="{{ request.GET.title__icontains|default:'' }}" class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]">
+                <div class="mb-3 sm:mb-4">
+                    <label for="title__icontains" class="block text-sm sm:text-base font-medium text-gray-700 mb-1 sm:mb-2">Title contains</label>
+                    <input type="text" name="title__icontains" id="title__icontains" value="{{ request.GET.title__icontains|default:'' }}" class="w-full h-10 sm:h-12 px-3 sm:px-4 rounded-[15px] sm:rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]">
                 </div>
 
                 <!-- Amount Range -->
-                <div class="mb-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                <div class="mb-3 sm:mb-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 items-center">
                         <div>
-                            <label for="amount__gt" class="block text-base font-medium text-gray-700 mb-2">Amount is greater than</label>
+                            <label for="amount__gt" class="block text-sm sm:text-base font-medium text-gray-700 mb-1 sm:mb-2">Amount is greater than</label>
                             <div class="relative rounded-lg shadow-sm">
-                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <div class="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
                                     <span class="text-gray-500 sm:text-sm">₱</span>
                                 </div>
                                 <input
@@ -112,14 +85,14 @@
                                     name="amount__gt"
                                     id="amount__gt"
                                     value="{{ request.GET.amount__gt|default:0 }}"
-                                    class="w-full h-12 pl-8 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]"
+                                    class="w-full h-10 sm:h-12 pl-6 sm:pl-8 rounded-[15px] sm:rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]"
                                 >
                             </div>
                         </div>
                         <div>
-                            <label for="amount__lt" class="block text-base font-medium text-gray-700 mb-2">Amount is less than</label>
+                            <label for="amount__lt" class="block text-sm sm:text-base font-medium text-gray-700 mb-1 sm:mb-2">Amount is less than</label>
                             <div class="relative rounded-lg shadow-sm">
-                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <div class="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
                                     <span class="text-gray-500 sm:text-sm">₱</span>
                                 </div>
                                 <input
@@ -127,17 +100,17 @@
                                     name="amount__lt"
                                     id="amount__lt"
                                     value="{{ request.GET.amount__lt|default:1000000 }}"
-                                    class="w-full h-12 pl-8 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]"
+                                    class="w-full h-10 sm:h-12 pl-6 sm:pl-8 rounded-[15px] sm:rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]"
                                 >
                             </div>
                         </div>
                     </div>
-                <!-- Range slider visualization - simplified and color-matched -->
-                <div class="mt-2 px-2">
+                <!-- Range slider visualization -->
+                <div class="mt-2 px-1 sm:px-2">
                     <div class="relative pt-1">
                         <p class="text-xs text-gray-500 mb-1">Min amount: ₱<span id="min-amount-display">{{ request.GET.amount__gt|default:0 }}</span></p>
                         <div class="flex items-center">
-                            <span class="text-xs text-gray-500 mr-2">₱0</span>
+                            <span class="text-xs text-gray-500 mr-1 sm:mr-2">₱0</span>
                             <input
                                 type="range"
                                 id="min-amount-slider"
@@ -145,14 +118,14 @@
                                 max="1000000"
                                 step="10"
                                 value="{{ request.GET.amount__gt|default:0 }}"
-                                class="range-slider mb-3 w-full h-2 appearance-none bg-blue-100 rounded-full"
+                                class="range-slider mb-2 sm:mb-3 w-full h-2 appearance-none bg-blue-100 rounded-full"
                             >
-                            <span class="text-xs text-gray-500 ml-2">₱1000000</span>
+                            <span class="text-xs text-gray-500 ml-1 sm:ml-2">₱1M</span>
                         </div>
 
                         <p class="text-xs text-gray-500 mb-1">Max amount: ₱<span id="max-amount-display">{{ request.GET.amount__lt|default:1000000 }}</span></p>
                         <div class="flex items-center">
-                            <span class="text-xs text-gray-500 mr-2">₱0</span>
+                            <span class="text-xs text-gray-500 mr-1 sm:mr-2">₱0</span>
                             <input
                                 type="range"
                                 id="max-amount-slider"
@@ -162,20 +135,20 @@
                                 value="{{ request.GET.amount__lt|default:1000000 }}"
                                 class="range-slider w-full h-2 appearance-none bg-blue-100 rounded-full"
                             >
-                            <span class="text-xs text-gray-500 ml-2">₱1000000</span>
+                            <span class="text-xs text-gray-500 ml-1 sm:ml-2">₱1M</span>
                         </div>
                     </div>
                 </div>
                 </div>
 
-                <!-- Date Range Picker with proper IDs -->
-                <div class="mb-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Date Range Picker with proper sizing  -->
+                <div class="mb-3 sm:mb-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div>
-                            <label for="gastador_date_start" class="block text-base font-medium text-gray-700 mb-2">Date from</label>
+                            <label for="gastador_date_start" class="block text-sm sm:text-base font-medium text-gray-700 mb-1 sm:mb-2">Date from</label>
                             <div class="relative rounded-lg shadow-sm">
-                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <div class="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                     </svg>
                                 </div>
@@ -183,7 +156,7 @@
                                     type="text"
                                     name="date_start"
                                     id="gastador_date_start"
-                                    class="datepicker w-full h-12 pl-12 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]"
+                                    class="datepicker w-full h-10 sm:h-12 pl-10 sm:pl-12 rounded-[15px] sm:rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]"
                                     placeholder="Select start date"
                                     value="{{ request.GET.date_start|default:'' }}"
                                 >
@@ -192,10 +165,10 @@
                             </div>
                         </div>
                         <div>
-                            <label for="gastador_date_end" class="block text-base font-medium text-gray-700 mb-2">Date to</label>
+                            <label for="gastador_date_end" class="block text-sm sm:text-base font-medium text-gray-700 mb-1 sm:mb-2">Date to</label>
                             <div class="relative rounded-lg shadow-sm">
-                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <div class="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                     </svg>
                                 </div>
@@ -203,7 +176,7 @@
                                     type="text"
                                     name="date_end"
                                     id="gastador_date_end"
-                                    class="datepicker w-full h-12 pl-12 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]"
+                                    class="datepicker w-full h-10 sm:h-12 pl-10 sm:pl-12 rounded-[15px] sm:rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]"
                                     placeholder="Select end date"
                                     value="{{ request.GET.date_end|default:'' }}"
                                 >
@@ -214,11 +187,11 @@
                     </div>
                 </div>
 
-                <!-- Type and Category -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <!-- Type and Category  -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
                     <div>
-                        <label for="type" class="block text-base font-medium text-gray-700 mb-2">Type</label>
-                        <select name="type" id="type" class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]">
+                        <label for="type" class="block text-sm sm:text-base font-medium text-gray-700 mb-1 sm:mb-2">Type</label>
+                        <select name="type" id="type" class="w-full h-10 sm:h-12 px-3 sm:px-4 rounded-[15px] sm:rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]">
                             <option value="">All</option>
                             <option value="INCOME" {% if request.GET.type == 'INCOME' %}selected{% endif %}>Income</option>
                             <option value="EXPENSE" {% if request.GET.type == 'EXPENSE' %}selected{% endif %}>Expense</option>
@@ -226,8 +199,8 @@
                     </div>
 
                     <div>
-                        <label for="category" class="block text-base font-medium text-gray-700 mb-2">Category</label>
-                        <select name="category" id="category" class="w-full h-12 px-4 rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]">
+                        <label for="category" class="block text-sm sm:text-base font-medium text-gray-700 mb-1 sm:mb-2">Category</label>
+                        <select name="category" id="category" class="w-full h-10 sm:h-12 px-3 sm:px-4 rounded-[15px] sm:rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-[#FF4300] focus:ring-[#FF4300]">
                             <option value="">All Categories</option>
                             {% for category in categories %}
                                 <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
@@ -238,12 +211,12 @@
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
-                <div class="flex justify-end space-x-4 mt-6">
-                    <button type="submit" class=" py-2 px-4 bg-[rgba(253,144,105,0.45)] hover:bg-[#FF6B30] text-white rounded-[15px] transition duration-150">
+                <!-- Action Buttons  -->
+                <div class="flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-4 mt-4 sm:mt-6">
+                    <button type="submit" class="py-2 px-4 bg-[rgba(253,144,105,0.45)] hover:bg-[#FF6B30] text-white rounded-[15px] transition duration-150 w-full sm:w-auto">
                         Apply Filters
                     </button>
-                    <a href="{% url 'transaction_list' %}" class=" py-2 px-4 flex items-center justify-center bg-gray-200 text-gray-500 hover:bg-gray-300  rounded-[15px] transition duration-150">
+                    <a href="{% url 'transaction_list' %}" class="py-2 px-4 flex items-center justify-center bg-gray-200 text-gray-500 hover:bg-gray-300 rounded-[15px] transition duration-150 w-full sm:w-auto">
                         Clear Filters
                     </a>
                 </div>
@@ -251,33 +224,34 @@
         </div>
     </div>
 
-    <!-- Transactions Table -->
-    <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-xl font-semibold text-gray-700">Transactions</h3>
+    <!-- Transactions Container -->
+    <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[25px] sm:rounded-[40px] shadow p-4 sm:p-6">
+        <div class="flex flex-wrap justify-between items-center gap-2 mb-4">
+            <h3 class="text-lg sm:text-xl font-semibold text-gray-700">Transactions</h3>
             {% if transactions.count > 0 %}
-                <span class="text-sm text-gray-700">Showing {{ transactions.count }} transaction(s)</span>
+                <span class="text-xs sm:text-sm text-gray-700">Showing {{ transactions.count }} transaction(s)</span>
             {% endif %}
         </div>
 
         {% if transactions %}
-            <div class="overflow-x-auto">
+            <!-- Table view for tablets and desktop -->
+            <div class="transaction-table overflow-x-auto">
                 <table class="min-w-full">
                     <thead>
                         <tr>
-                            <th class="py-4 px-4 text-left font-semibold text-gray-700">Date</th>
-                            <th class="py-4 px-4 text-left font-semibold text-gray-700">Title</th>
-                            <th class="py-4 px-4 text-left font-semibold text-gray-700">Category</th>
-                            <th class="py-4 px-4 text-right font-semibold text-gray-700">Amount</th>
-                            <th class="py-4 px-4 text-center font-semibold text-gray-700">Actions</th>
+                            <th class="py-3 sm:py-4 px-2 sm:px-4 text-left font-semibold text-gray-700">Date</th>
+                            <th class="py-3 sm:py-4 px-2 sm:px-4 text-left font-semibold text-gray-700">Title</th>
+                            <th class="py-3 sm:py-4 px-2 sm:px-4 text-left font-semibold text-gray-700">Category</th>
+                            <th class="py-3 sm:py-4 px-2 sm:px-4 text-right font-semibold text-gray-700">Amount</th>
+                            <th class="py-3 sm:py-4 px-2 sm:px-4 text-center font-semibold text-gray-700">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for transaction in transactions %}
                             <tr class="border-b border-gray-100">
-                                <td class="py-4 px-4">{{ transaction.date }}</td>
-                                <td class="py-4 px-4">{{ transaction.title }}</td>
-                                <td class="py-4 px-4">
+                                <td class="py-3 sm:py-4 px-2 sm:px-4">{{ transaction.date }}</td>
+                                <td class="py-3 sm:py-4 px-2 sm:px-4">{{ transaction.title }}</td>
+                                <td class="py-3 sm:py-4 px-2 sm:px-4">
                                     {% if transaction.category %}
                                         <div class="flex items-center">
                                             <span class="w-3 h-3 rounded-full mr-2" style="background-color: {{ transaction.category.color }}"></span>
@@ -287,16 +261,16 @@
                                         <span class="text-gray-500">Uncategorized</span>
                                     {% endif %}
                                 </td>
-                                <td class="py-4 px-4 text-right {% if transaction.type == 'INCOME' %}text-green-600{% else %}text-red-600{% endif %} font-medium">
+                                <td class="py-3 sm:py-4 px-2 sm:px-4 text-right {% if transaction.type == 'INCOME' %}text-green-600{% else %}text-red-600{% endif %} font-medium">
                                     ₱{{ transaction.amount }}
                                 </td>
-                                <td class="py-4 px-4 text-center">
-                                    <div class="flex justify-center space-x-3">
-                                        <a href="{% url 'transaction_edit' transaction.id %}" class="text-indigo-600 hover:text-indigo-800 text-sm">
+                                <td class="py-3 sm:py-4 px-2 sm:px-4 text-center">
+                                    <div class="flex justify-center space-x-2 sm:space-x-3">
+                                        <a href="{% url 'transaction_edit' transaction.id %}" class="text-indigo-600 hover:text-indigo-800 text-xs sm:text-sm">
                                             Edit
                                         </a>
                                         <span class="text-gray-300">·</span>
-                                        <a href="{% url 'transaction_delete' transaction.id %}" class="text-red-600 hover:text-red-800 text-sm">
+                                        <a href="{% url 'transaction_delete' transaction.id %}" class="text-red-600 hover:text-red-800 text-xs sm:text-sm">
                                             Delete
                                         </a>
                                     </div>
@@ -306,19 +280,59 @@
                     </tbody>
                 </table>
             </div>
+            
+            <!-- Card view -->
+            <div class="transaction-card">
+                <div class="space-y-3">
+                    {% for transaction in transactions %}
+                        <div class="bg-white bg-opacity-60 p-3 rounded-xl border border-gray-100">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <h4 class="font-medium">{{ transaction.title }}</h4>
+                                    <p class="text-xs text-gray-500">{{ transaction.date }}</p>
+                                </div>
+                                <p class="{% if transaction.type == 'INCOME' %}text-green-600{% else %}text-red-600{% endif %} font-medium">
+                                    ₱{{ transaction.amount }}
+                                </p>
+                            </div>
+                            
+                            <div class="flex justify-between items-center text-sm">
+                                <div>
+                                    {% if transaction.category %}
+                                        <div class="flex items-center text-xs">
+                                            <span class="w-2 h-2 rounded-full mr-1" style="background-color: {{ transaction.category.color }}"></span>
+                                            {{ transaction.category.name }}
+                                        </div>
+                                    {% else %}
+                                        <span class="text-gray-500 text-xs">Uncategorized</span>
+                                    {% endif %}
+                                </div>
+                                <div class="flex space-x-3">
+                                    <a href="{% url 'transaction_edit' transaction.id %}" class="text-indigo-600 hover:text-indigo-800 text-xs">
+                                        Edit
+                                    </a>
+                                    <a href="{% url 'transaction_delete' transaction.id %}" class="text-red-600 hover:text-red-800 text-xs">
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
         {% else %}
-            <div class="text-center py-10">
-                <div class="text-gray-400 text-5xl mb-4">📋</div>
-                <h3 class=" mb-2">No transactions yet</h3>
-                <p class="text-gray-500 italic mb-4">Start adding income and expenses to track your finances.</p>
+            <div class="text-center py-6 sm:py-10">
+                <div class="text-gray-400 text-4xl sm:text-5xl mb-3 sm:mb-4">📋</div>
+                <h3 class="text-base sm:text-lg mb-1 sm:mb-2">No transactions yet</h3>
+                <p class="text-gray-500 text-sm italic mb-3 sm:mb-4">Start adding income and expenses to track your finances.</p>
 
-                <div class="flex justify-center space-x-4">
+                <div class="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4">
                     <a href="{% url 'transaction_add' %}?type=INCOME"
-                       class="bg-[rgba(253,144,105,0.45)] text-white hover:opacity-90 py-2 px-4 rounded-[15px] transition duration-150">
+                       class="bg-[rgba(253,144,105,0.45)] text-white hover:opacity-90 py-2 px-4 rounded-[15px] transition duration-150 flex items-center justify-center">
                         Add Income
                     </a>
                     <a href="{% url 'transaction_add' %}?type=EXPENSE"
-                       class="bg-[rgba(106,194,143,0.77)] text-white hover:opacity-90 py-2 px-4 rounded-[15px] transition duration-150">
+                       class="bg-[rgba(106,194,143,0.77)] text-white hover:opacity-90 py-2 px-4 rounded-[15px] transition duration-150 flex items-center justify-center">
                         Add Expense
                     </a>
                 </div>
@@ -437,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function() {
 {% endblock %}
 
 {% block footer %}
-    <footer class="home-footer">
+    <footer class="home-footer py-4 px-4 text-center text-sm">
         <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
     </footer>
 {% endblock %}
