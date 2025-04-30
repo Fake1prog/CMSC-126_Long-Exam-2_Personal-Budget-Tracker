@@ -1,0 +1,1 @@
+web: gunicorn CMSC_126_Long_Exam_2_Personal_Budget_Tracker.wsgi:application
