@@ -21,17 +21,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# Use environment variable in production, fallback to this only in development
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-5mi46^azplgapc$^pcpxk)4$lfk1l^73l107%iqr$nn^(#=cq#')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = 'RENDER' not in os.environ
+DEBUG = os.environ.get('DEBUG', 'true').lower() == 'true'
 
 # Configure allowed hosts based on environment
 ALLOWED_HOSTS = []
 if not DEBUG:
     ALLOWED_HOSTS.extend(
-        ['.render.com', os.environ.get('RENDER_EXTERNAL_HOSTNAME', '')]
+        ['*', '.fly.dev']  # Allow all hosts in Fly.io
     )
 
 
@@ -101,10 +100,11 @@ WSGI_APPLICATION = 'CMSC_126_Long_Exam_2_Personal_Budget_Tracker.wsgi.applicatio
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# For Fly.io with persistent SQLite
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join('/app/data', 'db.sqlite3') if 'FLY_APP_NAME' in os.environ else BASE_DIR / 'db.sqlite3',
     }
 }
 

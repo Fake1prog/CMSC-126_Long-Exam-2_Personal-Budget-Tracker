@@ -1,0 +1,13 @@
+.git
+.env
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+db.sqlite3
+media
+staticfiles
+.DS_Store
+.idea/
+venv/
+.venv/
