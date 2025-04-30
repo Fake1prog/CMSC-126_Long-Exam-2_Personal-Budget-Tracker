@@ -415,3 +415,41 @@ body.home-page {
           display: block;
         }
       }
+
+/* Add responsive styles for mobile/desktop view for */
+@media (max-width: 640px) {
+    .transaction-table {
+        display: none;
+    }
+    .transaction-card {
+        display: block;
+    }
+}
+
+@media (min-width: 641px) {
+    .transaction-table {
+        display: table;
+    }
+    .transaction-card {
+        display: none;
+    }
+}
+
+/* Add responsive styles for mobile/desktop view */
+@media (max-width: 640px) {
+    .transaction-table, .trend-table {
+        display: none;
+    }
+    .transaction-card, .trend-card {
+        display: block;
+    }
+}
+
+@media (min-width: 641px) {
+    .transaction-table, .trend-table {
+        display: table;
+    }
+    .transaction-card, .trend-card {
+        display: none;
+    }
+}

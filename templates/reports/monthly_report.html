@@ -9,17 +9,17 @@
 {% block body_classes %}home-page{% endblock %}
 
 {% block content %}
-<div class="my-8">
-    <div class="flex justify-between items-center mb-6">
+<div class="px-4 sm:px-6 my-6 sm:my-8">
+    <div class="flex justify-between items-center mb-4 sm:mb-6">
         <div>
-            <h2 class="text-3xl flex flex-wrap items-baseline">
+            <h2 class="text-2xl sm:text-3xl flex flex-wrap items-baseline">
                 <span class="font-semibold text-[#FF4300] ml">Monthly</span>
                 <span class="font-semibold text-[#FF4300] ml-1">Report</span>
             </h2>
-            <p class="text-gray-600">{{ start_date|date:"F Y" }}</p>
+            <p class="text-xs sm:text-sm text-gray-600">{{ start_date|date:"F Y" }}</p>
         </div>
-        <a href="{% url 'report_dashboard' %}" class="text-indigo-600 hover:text-indigo-800 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <a href="{% url 'report_dashboard' %}" class="text-indigo-600 hover:text-indigo-800 flex items-center text-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             Back to Reports
@@ -27,16 +27,16 @@
     </div>
 
     {% if not has_any_transactions %}
-        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
-            <div class="text-center py-10">
-                <div class="text-amber-500 text-5xl mb-4">📊</div>
-                <h3 class="text-xl font-semibold text-amber-700 mb-2">No transactions yet!</h3>
+        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[25px] sm:rounded-[40px] shadow p-4 sm:p-6">
+            <div class="text-center py-6 sm:py-10">
+                <div class="text-amber-500 text-4xl sm:text-5xl mb-3 sm:mb-4">📊</div>
+                <h3 class="text-lg sm:text-xl font-semibold text-amber-700 mb-2">No transactions yet!</h3>
                 <p class="text-amber-600 mb-4">Start adding income and expenses to see your monthly reports.</p>
-                <div class="flex justify-center space-x-4">
-                    <a href="{% url 'transaction_add' %}?type=INCOME" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition">
+                <div class="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <a href="{% url 'transaction_add' %}?type=INCOME" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition flex items-center justify-center">
                         Add Income
                     </a>
-                    <a href="{% url 'transaction_add' %}?type=EXPENSE" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition">
+                    <a href="{% url 'transaction_add' %}?type=EXPENSE" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition flex items-center justify-center">
                         Add Expense
                     </a>
                 </div>
@@ -44,11 +44,11 @@
         </div>
     {% else %}
         <!-- Month Selector -->
-        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6 mb-6">
-            <form method="get" class="flex flex-wrap items-center gap-3">
+        <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[25px] sm:rounded-[40px] shadow p-4 sm:p-6 mb-4 sm:mb-6">
+            <form method="get" class="flex flex-wrap items-center gap-2 sm:gap-3">
                 <div class="flex-grow">
-                    <label for="month_selector" class="block text-sm text-gray-700 mb-1">Select Month</label>
-                    <select id="month_selector" name="month_year" onchange="this.form.submit()" class="w-full rounded-md border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <label for="month_selector" class="block text-xs sm:text-sm text-gray-700 mb-1 sm:mb-2">Select Month</label>
+                    <select id="month_selector" name="month_year" onchange="this.form.submit()" class="w-full h-10 sm:h-12 px-3 sm:px-4 text-sm rounded-[15px] sm:rounded-[20px] border-gray-300 bg-white bg-opacity-60 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                         {% if month_options %}
                             {% for option in month_options %}
                                 <option value="{{ option.month }},{{ option.year }}" {% if option.selected %}selected{% endif %}>
@@ -60,9 +60,9 @@
                         {% endif %}
                     </select>
                 </div>
-                <div class="flex space-x-2 mt-6">
+                <div class="w-full sm:w-auto mt-2 sm:mt-6">
                     <a href="{% url 'export_data' %}?start_date={{ start_date|date:'Y-m-d' }}&end_date={{ end_date|date:'Y-m-d' }}"
-                       class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded text-sm transition flex items-center">
+                       class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded text-xs sm:text-sm transition flex items-center justify-center sm:justify-start w-full sm:w-auto">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
@@ -74,49 +74,49 @@
 
         {% if transactions %}
             <!-- Financial Summary -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
-                    <p class="text-sm text-gray-700">Income</p>
-                    <p class="text-2xl font-bold text-green-600">₱{{ income_total }}</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6 mb-4 sm:mb-6">
+                <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[25px] sm:rounded-[40px] shadow p-4 sm:p-6">
+                    <p class="text-xs sm:text-sm text-gray-700">Income</p>
+                    <p class="text-xl sm:text-2xl font-bold text-green-600">₱{{ income_total }}</p>
                 </div>
-                <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
-                    <p class="text-sm text-gray-700">Expenses</p>
-                    <p class="text-2xl font-bold text-red-600">₱{{ expense_total }}</p>
+                <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[25px] sm:rounded-[40px] shadow p-4 sm:p-6">
+                    <p class="text-xs sm:text-sm text-gray-700">Expenses</p>
+                    <p class="text-xl sm:text-2xl font-bold text-red-600">₱{{ expense_total }}</p>
                 </div>
-                <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
-                    <p class="text-sm text-gray-700">Balance</p>
-                    <p class="text-2xl font-bold {% if balance >= 0 %}text-blue-600{% else %}text-red-600{% endif %}">
+                <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[25px] sm:rounded-[40px] shadow p-4 sm:p-6 sm:col-span-1 col-span-1">
+                    <p class="text-xs sm:text-sm text-gray-700">Balance</p>
+                    <p class="text-xl sm:text-2xl font-bold {% if balance >= 0 %}text-blue-600{% else %}text-red-600{% endif %}">
                         ₱{{ balance }}
                     </p>
                 </div>
             </div>
 
             <!-- Category Breakdown -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
                 <!-- Income by Category -->
-                <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
-                    <h3 class="text-xl font-semibold text-gray-700 mb-4">Income by Category</h3>
+                <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[25px] sm:rounded-[40px] shadow p-4 sm:p-6">
+                    <h3 class="text-lg sm:text-xl font-semibold text-gray-700 mb-3 sm:mb-4">Income by Category</h3>
 
                     {% if income_by_category %}
-                        <div id="income-chart" class="h-64"></div>
+                        <div id="income-chart" class="h-48 sm:h-64"></div>
 
-                        <div class="mt-4 space-y-0">
+                        <div class="mt-3 sm:mt-4 space-y-0">
                             {% for category in income_by_category %}
-                                <div class="flex justify-between items-center py-4 px-2 border-b border-gray-100">
+                                <div class="flex justify-between items-center py-3 sm:py-4 px-2 border-b border-gray-100">
                                     <div class="flex items-center">
-                                        <span class="w-3 h-3 rounded-full mr-2" style="background-color: {{ category.category__color|default:'#10B981' }}"></span>
-                                        <span>{{ category.category__name|default:"Uncategorized" }}</span>
+                                        <span class="w-2 h-2 sm:w-3 sm:h-3 rounded-full mr-1 sm:mr-2" style="background-color: {{ category.category__color|default:'#10B981' }}"></span>
+                                        <span class="text-xs sm:text-sm">{{ category.category__name|default:"Uncategorized" }}</span>
                                     </div>
-                                    <span class="font-semibold">₱{{ category.total }}</span>
+                                    <span class="text-xs sm:text-sm font-semibold">₱{{ category.total }}</span>
                                 </div>
                             {% endfor %}
                         </div>
                     {% else %}
-                        <div class="flex flex-col items-center justify-center h-48">
-                            <p class="text-green-400 text-4xl mb-2">💵</p>
-                            <p class="text-gray-700 italic text-center">No income transactions in this period.</p>
-                            <a href="{% url 'transaction_add' %}?type=INCOME" class="mt-3 text-green-600 hover:text-green-800 text-sm flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div class="flex flex-col items-center justify-center h-40 sm:h-48">
+                            <p class="text-green-400 text-3xl sm:text-4xl mb-2">💵</p>
+                            <p class="text-gray-700 italic text-center text-xs sm:text-sm">No income transactions in this period.</p>
+                            <a href="{% url 'transaction_add' %}?type=INCOME" class="mt-3 text-green-600 hover:text-green-800 text-xs sm:text-sm flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                 </svg>
                                 Add Income
@@ -126,29 +126,29 @@
                 </div>
 
                 <!-- Expenses by Category -->
-                <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
-                    <h3 class="text-xl font-semibold text-gray-700 mb-4">Expenses by Category</h3>
+                <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[25px] sm:rounded-[40px] shadow p-4 sm:p-6">
+                    <h3 class="text-lg sm:text-xl font-semibold text-gray-700 mb-3 sm:mb-4">Expenses by Category</h3>
 
                     {% if expense_by_category %}
-                        <div id="expense-chart" class="h-64"></div>
+                        <div id="expense-chart" class="h-48 sm:h-64"></div>
 
-                        <div class="mt-4 space-y-0">
+                        <div class="mt-3 sm:mt-4 space-y-0">
                             {% for category in expense_by_category %}
-                                <div class="flex justify-between items-center py-4 px-2 border-b border-gray-100">
+                                <div class="flex justify-between items-center py-3 sm:py-4 px-2 border-b border-gray-100">
                                     <div class="flex items-center">
-                                        <span class="w-3 h-3 rounded-full mr-2" style="background-color: {{ category.category__color|default:'#EF4444' }}"></span>
-                                        <span>{{ category.category__name|default:"Uncategorized" }}</span>
+                                        <span class="w-2 h-2 sm:w-3 sm:h-3 rounded-full mr-1 sm:mr-2" style="background-color: {{ category.category__color|default:'#EF4444' }}"></span>
+                                        <span class="text-xs sm:text-sm">{{ category.category__name|default:"Uncategorized" }}</span>
                                     </div>
-                                    <span class="font-semibold">₱{{ category.total }}</span>
+                                    <span class="text-xs sm:text-sm font-semibold">₱{{ category.total }}</span>
                                 </div>
                             {% endfor %}
                         </div>
                     {% else %}
-                        <div class="flex flex-col items-center justify-center h-48">
-                            <p class="text-red-400 text-4xl mb-2">💳</p>
-                            <p class="text-gray-700 italic text-center">No expense transactions in this period.</p>
-                            <a href="{% url 'transaction_add' %}?type=EXPENSE" class="mt-3 text-red-600 hover:text-red-800 text-sm flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div class="flex flex-col items-center justify-center h-40 sm:h-48">
+                            <p class="text-red-400 text-3xl sm:text-4xl mb-2">💳</p>
+                            <p class="text-gray-700 italic text-center text-xs sm:text-sm">No expense transactions in this period.</p>
+                            <a href="{% url 'transaction_add' %}?type=EXPENSE" class="mt-3 text-red-600 hover:text-red-800 text-xs sm:text-sm flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                 </svg>
                                 Add Expense
@@ -159,52 +159,53 @@
             </div>
 
             <!-- Transactions List -->
-            <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-xl font-semibold text-gray-700">Transactions</h3>
+            <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[25px] sm:rounded-[40px] shadow p-4 sm:p-6">
+                <div class="flex justify-between items-center mb-3 sm:mb-4">
+                    <h3 class="text-lg sm:text-xl font-semibold text-gray-700">Transactions</h3>
                     {% if transactions.count > 0 %}
-                        <span class="text-sm text-gray-700">Showing {{ transactions.count }} transaction(s)</span>
+                        <span class="text-xs sm:text-sm text-gray-700">Showing {{ transactions.count }} transaction(s)</span>
                     {% endif %}
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="min-w-full">
+                    <!-- Table view for tablets and desktop -->
+                    <table class="min-w-full transaction-table">
                         <thead>
                             <tr>
-                                <th class="py-4 px-4 text-left font-semibold text-gray-700">Date</th>
-                                <th class="py-4 px-4 text-left font-semibold text-gray-700">Title</th>
-                                <th class="py-4 px-4 text-left font-semibold text-gray-700">Category</th>
-                                <th class="py-4 px-4 text-left font-semibold text-gray-700">Type</th>
-                                <th class="py-4 px-4 text-right font-semibold text-gray-700">Amount</th>
-                                <th class="py-4 px-4 text-center font-semibold text-gray-700">Actions</th>
+                                <th class="py-3 sm:py-4 px-2 sm:px-4 text-left font-semibold text-gray-700 text-xs sm:text-sm">Date</th>
+                                <th class="py-3 sm:py-4 px-2 sm:px-4 text-left font-semibold text-gray-700 text-xs sm:text-sm">Title</th>
+                                <th class="py-3 sm:py-4 px-2 sm:px-4 text-left font-semibold text-gray-700 text-xs sm:text-sm">Category</th>
+                                <th class="py-3 sm:py-4 px-2 sm:px-4 text-left font-semibold text-gray-700 text-xs sm:text-sm">Type</th>
+                                <th class="py-3 sm:py-4 px-2 sm:px-4 text-right font-semibold text-gray-700 text-xs sm:text-sm">Amount</th>
+                                <th class="py-3 sm:py-4 px-2 sm:px-4 text-center font-semibold text-gray-700 text-xs sm:text-sm">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for transaction in transactions %}
                                 <tr class="border-b border-gray-100">
-                                    <td class="py-4 px-4">{{ transaction.date }}</td>
-                                    <td class="py-4 px-4">{{ transaction.title }}</td>
-                                    <td class="py-4 px-4">
+                                    <td class="py-3 sm:py-4 px-2 sm:px-4 text-xs sm:text-sm">{{ transaction.date }}</td>
+                                    <td class="py-3 sm:py-4 px-2 sm:px-4 text-xs sm:text-sm">{{ transaction.title }}</td>
+                                    <td class="py-3 sm:py-4 px-2 sm:px-4 text-xs sm:text-sm">
                                         {% if transaction.category %}
                                             <div class="flex items-center">
-                                                <span class="w-3 h-3 rounded-full mr-2" style="background-color: {{ transaction.category.color }}"></span>
+                                                <span class="w-2 h-2 sm:w-3 sm:h-3 rounded-full mr-1 sm:mr-2" style="background-color: {{ transaction.category.color }}"></span>
                                                 {{ transaction.category.name }}
                                             </div>
                                         {% else %}
-                                            Uncategorized
+                                            <span class="text-gray-500">Uncategorized</span>
                                         {% endif %}
                                     </td>
-                                    <td class="py-4 px-4">{{ transaction.get_type_display }}</td>
-                                    <td class="py-4 px-4 text-right {% if transaction.type == 'INCOME' %}text-green-600{% else %}text-red-600{% endif %} font-medium">
+                                    <td class="py-3 sm:py-4 px-2 sm:px-4 text-xs sm:text-sm">{{ transaction.get_type_display }}</td>
+                                    <td class="py-3 sm:py-4 px-2 sm:px-4 text-right text-xs sm:text-sm {% if transaction.type == 'INCOME' %}text-green-600{% else %}text-red-600{% endif %} font-medium">
                                         ₱{{ transaction.amount }}
                                     </td>
-                                    <td class="py-4 px-4 text-center">
-                                        <div class="flex justify-center space-x-3">
-                                            <a href="{% url 'transaction_edit' transaction.id %}" class="text-indigo-600 hover:text-indigo-800 text-sm">
+                                    <td class="py-3 sm:py-4 px-2 sm:px-4 text-center">
+                                        <div class="flex justify-center space-x-2 sm:space-x-3">
+                                            <a href="{% url 'transaction_edit' transaction.id %}" class="text-indigo-600 hover:text-indigo-800 text-xs sm:text-sm">
                                                 Edit
                                             </a>
                                             <span class="text-gray-300">·</span>
-                                            <a href="{% url 'transaction_delete' transaction.id %}" class="text-red-600 hover:text-red-800 text-sm">
+                                            <a href="{% url 'transaction_delete' transaction.id %}" class="text-red-600 hover:text-red-800 text-xs sm:text-sm">
                                                 Delete
                                             </a>
                                         </div>
@@ -213,37 +214,78 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    
+                    <!-- Card view for mobile -->
+                    <div class="transaction-card">
+                        <div class="space-y-3">
+                            {% for transaction in transactions %}
+                                <div class="bg-white bg-opacity-60 p-3 rounded-xl border border-gray-100">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div>
+                                            <h4 class="font-medium text-sm">{{ transaction.title }}</h4>
+                                            <p class="text-xs text-gray-500">{{ transaction.date }}</p>
+                                        </div>
+                                        <p class="{% if transaction.type == 'INCOME' %}text-green-600{% else %}text-red-600{% endif %} font-medium text-sm">
+                                            ₱{{ transaction.amount }}
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            {% if transaction.category %}
+                                                <div class="flex items-center text-xs">
+                                                    <span class="w-2 h-2 rounded-full mr-1" style="background-color: {{ transaction.category.color }}"></span>
+                                                    {{ transaction.category.name }}
+                                                </div>
+                                            {% else %}
+                                                <span class="text-gray-500 text-xs">Uncategorized</span>
+                                            {% endif %}
+                                            <div class="text-xs text-gray-500">{{ transaction.get_type_display }}</div>
+                                        </div>
+                                        <div class="flex space-x-3">
+                                            <a href="{% url 'transaction_edit' transaction.id %}" class="text-indigo-600 hover:text-indigo-800 text-xs">
+                                                Edit
+                                            </a>
+                                            <a href="{% url 'transaction_delete' transaction.id %}" class="text-red-600 hover:text-red-800 text-xs">
+                                                Delete
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
             </div>
         {% else %}
-            <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[40px] shadow p-6">
-                <div class="text-center py-10">
-                    <div class="text-gray-400 text-5xl mb-4">📅</div>
-                    <h3 class="text-xl font-semibold text-gray-700 mb-2">No transactions for {{ start_date|date:"F Y" }}</h3>
-                    <p class="text-gray-700 mb-6">There are no transactions recorded for this period.</p>
+            <div class="bg-white bg-opacity-30 backdrop-filter backdrop-blur-lg border border-white border-opacity-20 rounded-[25px] sm:rounded-[40px] shadow p-4 sm:p-6">
+                <div class="text-center py-6 sm:py-10">
+                    <div class="text-gray-400 text-4xl sm:text-5xl mb-3 sm:mb-4">📅</div>
+                    <h3 class="text-lg sm:text-xl font-semibold text-gray-700 mb-1 sm:mb-2">No transactions for {{ start_date|date:"F Y" }}</h3>
+                    <p class="text-gray-700 mb-4 sm:mb-6 text-xs sm:text-sm">There are no transactions recorded for this period.</p>
 
-                    <div class="flex justify-center space-x-3">
-                        <a href="{% url 'transaction_add' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition">
+                    <div class="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-3">
+                        <a href="{% url 'transaction_add' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition flex items-center justify-center w-full sm:w-auto text-xs sm:text-sm">
                             Add Transaction
                         </a>
 
                         {% if month_options and month_options|length > 1 %}
-                            <div class="relative" x-data="{ open: false }">
-                                <button @click="open = !open" class="bg-white bg-opacity-30 hover:bg-opacity-40 text-gray-800 px-4 py-2 rounded transition flex items-center">
+                            <div class="relative w-full sm:w-auto" x-data="{ open: false }">
+                                <button @click="open = !open" class="bg-white bg-opacity-30 hover:bg-opacity-40 text-gray-800 px-4 py-2 rounded transition flex items-center justify-center w-full sm:w-auto text-xs sm:text-sm">
                                     Try Another Month
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                     </svg>
                                 </button>
 
-                                <div class="absolute mt-2 w-56 rounded-md shadow-lg bg-white bg-opacity-80 backdrop-filter backdrop-blur-md ring-1 ring-black ring-opacity-5 z-10"
+                                <div class="absolute mt-2 w-full sm:w-56 rounded-md shadow-lg bg-white bg-opacity-80 backdrop-filter backdrop-blur-md ring-1 ring-black ring-opacity-5 z-10"
                                      x-show="open"
                                      @click.away="open = false">
                                     <div class="py-1" role="menu" aria-orientation="vertical">
                                         {% for option in month_options %}
                                             {% if not option.selected %}
                                                 <a href="?month={{ option.month }}&year={{ option.year }}"
-                                                   class="block px-4 py-2 text-sm text-gray-700 hover:bg-white hover:bg-opacity-50 hover:text-gray-900"
+                                                   class="block px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 hover:bg-white hover:bg-opacity-50 hover:text-gray-900"
                                                    role="menuitem">
                                                     {{ option.name }}
                                                 </a>
@@ -263,6 +305,25 @@
 
 {% block extra_js %}
 {% if income_by_category or expense_by_category %}
+<style>
+/* Add responsive styles for mobile/desktop view */
+.transaction-card {
+    display: none;
+}
+
+.transaction-table {
+    display: table;
+}
+
+@media (max-width: 640px) {
+    .transaction-table {
+        display: none;
+    }
+    .transaction-card {
+        display: block;
+    }
+}
+</style>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         {% if income_by_category %}
@@ -332,10 +393,12 @@
                 breakpoint: 480,
                 options: {
                     chart: {
-                        width: 200
+                        width: 200,
+                        height: 200
                     },
                     legend: {
-                        position: 'bottom'
+                        position: 'bottom',
+                        fontSize: '12px'
                     }
                 }
             }],
@@ -420,10 +483,12 @@
                 breakpoint: 480,
                 options: {
                     chart: {
-                        width: 200
+                        width: 200,
+                        height: 200
                     },
                     legend: {
-                        position: 'bottom'
+                        position: 'bottom',
+                        fontSize: '12px'
                     }
                 }
             }],
@@ -446,7 +511,7 @@
 {% endblock %}
 
 {% block footer %}
-    <footer class="home-footer">
+    <footer class="home-footer py-4 px-4 text-center text-xs sm:text-sm">
         <p>&copy; {% now "Y" %} GastadorCheck Budget Tracker. All rights reserved.</p>
     </footer>
 {% endblock %}
