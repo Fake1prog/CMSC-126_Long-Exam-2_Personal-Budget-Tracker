@@ -187,6 +187,82 @@ The project is configured for deployment on Render.
    - Choose date range for export
    - Download a CSV file of your transactions
 
+## 🧪 Testing
+Follow these steps to run the tests on your local machine:
+
+### Prerequisites
+
+1. **Install testing dependencies**
+   ```
+   pip install pytest pytest-django
+   ```
+
+2. **Ensure you have activated your virtual environment**
+   ```
+   # On Windows
+   venv\Scripts\activate
+   
+   # On macOS/Linux
+   source venv/bin/activate
+   ```
+
+### Running Tests
+
+1. **Run all tests**
+   ```
+   pytest
+   ```
+
+2. **Run tests with verbose output**
+   ```
+   pytest -v
+   ```
+
+3. **Run tests for a specific app**
+   ```
+   pytest core/
+   pytest users/
+   pytest transactions/
+   ```
+
+4. **Run a specific test file**
+   ```
+   pytest core/tests.py
+   ```
+
+5. **Run a specific test class or function**
+   ```
+   pytest core/tests.py::test_dashboard_view_logged_in
+   ```
+
+### Test Configuration
+
+The project uses pytest.ini and conftest.py to properly configure Django integration:
+- pytest.ini sets the Django settings module and test file patterns
+- conftest.py ensures proper path configuration and Django initialization
+
+If you add new test files, follow the existing naming pattern (tests.py or test_*.py) and the test discovery will find them automatically.
+
+### Coverage Report
+
+To generate a test coverage report:
+
+1. **Install coverage tools**
+   ```
+   pip install pytest-cov
+   ```
+
+2. **Run tests with coverage**
+   ```
+   pytest --cov=.
+   ```
+
+3. **Generate an HTML coverage report**
+   ```
+   pytest --cov=. --cov-report=html
+   ```
+   This will create a `htmlcov` directory - open `htmlcov/index.html` in your browser to view the report.
+
 ## 🛠️ Technical Details
 
 - **Frontend**: HTML, Tailwind CSS, AlpineJS
