@@ -27,11 +27,37 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-5mi46^azplgapc$^pcpxk
 DEBUG = os.environ.get('DEBUG', 'true').lower() == 'true'
 
 # Configure allowed hosts based on environment
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']  # Always include localhost for development
+
+# Check for deployment environments using environment variables
+if os.environ.get('RENDER', '').lower() == 'true':
+    # Add specific Render domain and wildcard for any future subdomain changes
+    render_site = os.environ.get('RENDER_EXTERNAL_URL', '')
+    if render_site:
+        # Extract the host from the full URL if needed
+        from urllib.parse import urlparse
+        render_host = urlparse(render_site).netloc or render_site
+        ALLOWED_HOSTS.append(render_host)
+
+    # Include the current specific domain and the wildcard
+    ALLOWED_HOSTS.extend([
+        'cmsc-126-long-exam-2-personal-budget.onrender.com',
+        '.onrender.com',  # Wildcard for all Render subdomains
+    ])
+
+# Check for Fly.io deployment
+if 'FLY_APP_NAME' in os.environ:
+    ALLOWED_HOSTS.extend([
+        f"{os.environ.get('FLY_APP_NAME')}.fly.dev",  # Specific app domain
+        '.fly.dev',  # Wildcard for all Fly.io subdomains
+    ])
+
+# For any production environment (This serves as a fallback)
 if not DEBUG:
-    ALLOWED_HOSTS.extend(
-        ['*', '.fly.dev']  # Allow all hosts in Fly.io
-    )
+    # Get the host from the ALLOWED_HOST environment variable if set
+    allowed_host = os.environ.get('ALLOWED_HOST')
+    if allowed_host:
+        ALLOWED_HOSTS.append(allowed_host)
 
 
 # Application definition
