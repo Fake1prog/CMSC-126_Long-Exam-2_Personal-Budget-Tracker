@@ -45,13 +45,13 @@
             <div class="grid grid-cols-2 gap-4 justify-items-center">
                 <a
                     href="{% url 'transaction_add' %}?type=INCOME"
-                    class="w-28 aspect-square bg-[#FD9069] hover:bg-[rgba(253,144,105,0.45)] text-white font-bold rounded-[15px] transition transform hover:scale-105 hover:shadow-md flex items-center justify-center p-2 text-center"
+                    class="w-28 aspect-square bg-[#6AC28F] hover:bg-[rgba(106,194,143,0.65)] text-white font-bold rounded-[15px] transition transform hover:scale-105 hover:shadow-md flex items-center justify-center p-2 text-center"
                 >
                     Add<br>Income
                 </a>
                 <a
                     href="{% url 'transaction_add' %}?type=EXPENSE"
-                    class="w-28 aspect-square bg-[#6AC28F] hover:bg-[rgba(106,194,143,0.65)] text-white font-bold rounded-[15px] transition transform hover:scale-105 hover:shadow-md flex items-center justify-center p-2 text-center"
+                    class="w-28 aspect-square bg-[#FD9069] hover:bg-[rgba(253,144,105,0.45)] text-white font-bold rounded-[15px] transition transform hover:scale-105 hover:shadow-md flex items-center justify-center p-2 text-center"
                 >
                     Add<br>Expenses
                 </a>
@@ -96,9 +96,11 @@
                         </div>
                     </div>
                 {% else %}
-                    <p class="text-gray-500 italic">No transactions yet.</p>
+                    <div class="flex items-center justify-center h-full text-gray-500 italic text-center">
+                        No transactions yet.
+                    </div>
                 {% endif %}
-            </div>
+            </div>            
         </div>
     
         <!-- Expense Breakdown Chart -->
@@ -106,11 +108,14 @@
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-xl font-semibold text-gray-700">Expense Breakdown</h3>
                 
-                <!-- Toggle buttons for chart view -->
-                <div class="flex space-x-2">
-                    <button id="view-by-transaction" class="px-3 py-1 rounded-lg text-sm bg-[#FF4300] text-white">By Transaction</button>
-                    <button id="view-by-category" class="px-3 py-1 rounded-lg text-sm bg-gray-300 text-gray-700">By Category</button>
-                </div>
+                {% if expense_by_transaction or expense_by_category %}
+                    <!-- Toggle buttons for chart view -->
+                    <div class="flex space-x-2">
+                        <button id="view-by-category" class="px-3 py-1 rounded-lg text-sm bg-[#FF4300] text-white">By Category</button>
+                        <button id="view-by-transaction" class="px-3 py-1 rounded-lg text-sm bg-gray-300 text-gray-700">By Transaction</button>
+                    </div>
+                {% endif %}
+
             </div>
             
             <div id="expenseChart" class="h-64">
@@ -288,10 +293,12 @@
             renderChart(options); // Call the unified render function
 
             // Update button active styles
-            viewByTransactionBtn.classList.remove('bg-gray-300', 'text-gray-700');
             viewByTransactionBtn.classList.add('bg-[#FF4300]', 'text-white');
+            viewByTransactionBtn.classList.remove('bg-gray-300', 'text-gray-700');
             viewByCategoryBtn.classList.remove('bg-[#FF4300]', 'text-white');
             viewByCategoryBtn.classList.add('bg-gray-300', 'text-gray-700');
+
+
         }
 
         // Renders the chart showing expenses grouped by category
@@ -326,7 +333,7 @@
         // Check if the chart container exists and if there is any expense data
         if (chartElement && (transactionData.series.length > 0 || categoryData.series.length > 0)) {
              console.log("Initial render: Transaction View"); // Debug log
-            renderTransactionChart(); // Default to transaction view
+             renderCategoryChart();
         } else if (chartElement) {
             // If no data, optionally keep the placeholder text or clear the area
             console.log("No expense data to render chart initially."); // Debug log
