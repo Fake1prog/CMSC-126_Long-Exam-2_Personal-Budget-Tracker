@@ -32,9 +32,10 @@ class Transaction(models.Model):
 
     class Meta:
         ordering = ['-date', '-created_at']
+        verbose_name_plural = 'Transactions'
 
     def __str__(self):
-        return f"{self.title} - {self.amount} ({self.get_type_display()})"
+        return f"{self.title} - {self.amount:.2f} ({self.get_type_display()})"
 
     def save(self, *args, **kwargs):
         # Ensure category type matches transaction type
